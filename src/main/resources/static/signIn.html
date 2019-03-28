@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign In</title>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Style Sheet -->
+    <link href="stylesheet/theme.css" type="text/css" rel="stylesheet">
+    <link href="stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="stylesheet/login.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+</head>
+<body>
+<!-- Header Banner -->
+<!--div class="header"-->
+<table class="header webfont semibold">
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="" class="headerSelected">Home</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected">Discover</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected">Search</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- Right Part -->
+        <td style="width: 5em;">
+            <table style="padding: 0; margin: 0; align: right;">
+                <tr style="align: right;">
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected"><i class='fas fa-user-circle headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<!--/div-->
+<div class="loginBlock webfont">
+    <p class="loginTitle webfont">Sign In</p>
+    <form action="" method="post">
+        <div class="loginInfo webfont">
+            Username: <br>
+        </div>
+        <input type="text" name="username" value="" maxlength="24" class="loginTextfield webfont"><br>
+        <div class="loginInfo webfont">
+            Password: <br>
+        </div>
+        <input type="password" name="password" value="" maxlength="24" class="loginTextfield webfont"><br><br>
+        <!-- Display error message if necessary -->
+        <div class="error webfont">
+            [Error Placeholder]
+        </div>
+        <input type="submit" value="Login" class="button webfont">
+    </form>
+    <div style="width: 100%" class="linkText">
+        <a href="">
+            New to Celeste? Join now!
+        </a>
+    </div>
+
+
+</div>
+</body>
+</html>

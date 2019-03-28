@@ -1,0 +1,89 @@
+@CHARSET "UTF-8";
+
+.loginBlock {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -200px;
+    margin-top: -200px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 25px;
+    padding-bottom: 30px;
+    background-color: white;
+    min-width: 300px;
+    min-height: 300px;
+    width: 300px;
+    max-width: 300px;
+    border-radius: 10px;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
+}
+
+.loginTitle {
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.6em;
+}
+
+.loginInfo {
+    margin-left: 0;
+    line-height: 1.8;
+    /*font-weight: bold;*/
+    font-size: 1em;
+}
+
+.loginTextfield {
+    align: center;
+    width: 280px;
+    font-size: 1em;
+    letter-spacing: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.button {
+    color: white;
+    background: #30c5c5;;
+    border-color: #bababa;
+    width: 100px;
+    margin-left: 100px;
+    letter-spacing: 1.5px;
+    font-size: 1em;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.button:hover {
+    background: #269b9b;
+    text-decoration: none;
+}
+
+.error {
+    color: red;
+    font-size: 1em;
+    font-weight: 400;
+    text-align: center;
+    margin-top: -15px;
+    margin-bottom: 10px;
+}
+
+.linkText {
+    text-align: center;
+    margin-top: 0.5em;
+    color: #aaaaaa;
+}
+
+.linkText a:link, .linkText a:visited {
+    color: #aaaaaa;
+    text-decoration: none;
+}
+
+.linkText a:hover {
+    color: #666666;
+    text-decoration: none;
+}

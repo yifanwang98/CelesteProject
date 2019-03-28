@@ -1,0 +1,61 @@
+@charset "UTF-8";
+
+body {
+    background-color: #f3f3f3;
+    background-image: url("../images/full-bloom.png");
+    margin: 0;
+}
+
+.header {
+    background-color: #fff;
+    width: 100%;
+    height: 2.5em;
+    padding: 0;
+    margin: 0;
+    text-align: justify-all;
+    font-size: 1.15em;
+}
+
+.headerIcon {
+    font-size: 1.3em;
+}
+
+.headerSelected:link, .headerSelected:visited {
+    color: #30c5c5;
+    text-decoration: none;
+    cursor: auto;
+    opacity: 1.0;
+}
+
+.headerSelected:hover {
+    color: #1c7373;
+    text-decoration: none;
+}
+
+.headerUnselected:link, .headerUnselected:visited {
+    color: #b6b6b6;
+    text-decoration: none;
+    cursor: auto;
+    opacity: 1.0;
+}
+
+.headerUnselected:hover {
+    color: #1c7373;
+    text-decoration: none;
+}
+
+.headerCellPadding {
+    padding: 0 0.5em;
+}
+
+.logo {
+    width: 2.4em;
+    padding: 0;
+    margin: 0;
+
+    background-image: url("../images/Logo.jpeg");
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 2.4em;
+}
