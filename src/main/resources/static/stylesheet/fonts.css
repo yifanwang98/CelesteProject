@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+.webfont {
+    font-family: "Avenir Next", Helvetica, "Times New Roman";
+}
+
+.semibold {
+    font-weight: 500;
+}
+
+.bold {
+    font-weight: bold;
+}
