@@ -28,7 +28,7 @@ body {
 }
 
 .headerSelected:hover {
-    color: #1c7373;
+    color: #218787;
     text-decoration: none;
 }
 
@@ -40,7 +40,7 @@ body {
 }
 
 .headerUnselected:hover {
-    color: #1c7373;
+    color: #218787;
     text-decoration: none;
 }
 

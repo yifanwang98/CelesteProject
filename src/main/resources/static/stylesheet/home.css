@@ -1,0 +1,116 @@
+
+.profileColumn-td {
+    padding: 0em 0em;
+    width: 21em;
+    vertical-align: top;
+}
+
+.profileColumn {
+    background: white;
+    border-radius: 5px;
+}
+
+.mainContent {
+    width: 100%;
+    padding: 1em 2em;
+}
+
+.button-link {
+    border-radius: 10px;
+}
+
+.button-link a:link, a:visited {
+    color: #9a9a9a;
+    text-decoration: none;
+}
+
+.button-link a:hover {
+    color: #218787;
+    text-decoration: none;
+}
+
+.button-icon {
+    font-size: 1.5em;
+}
+
+.top-search-block {
+    padding: 1em;
+}
+
+.home-posts-card {
+    background: white;
+    border-radius: 5px;
+    margin-bottom: 1em;
+}
+
+.post-avatar {
+    font-size: 1.7em;
+    padding: 0em 1.5em;
+    width: 1em;
+}
+
+.post-author {
+    font-size: 1em;
+    font-weight: 500;
+}
+
+.post-time {
+    font-size: 0.7em;
+    color: #9a9a9a;
+}
+
+.post-image-single {
+    max-height: 15em;
+    max-height: 22em;
+    width: 15em;
+    border: #ccc 1px solid;
+    border-radius: 3px;
+    margin-right: 1em;
+    object-fit: cover;
+}
+
+.post-image-multiple {
+    width: 15em;
+    height: 15em;
+    border: #ccc 1px solid;
+    border-radius: 3px;
+    margin-right: 1em;
+    object-fit: cover;
+}
+
+.post-text {
+    padding: 0.25em 0;
+    text-align: justify-all;
+}
+
+.post-action {
+    padding: 0.25em;
+    text-align: center;
+    font-size: 0.9em;
+    color: #666666;
+    border-top: #ccc 1px solid;
+}
+
+.post-action-cell {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-action-cell a:link, .post-action-cell a:visited {
+    text-decoration: none;
+}
+
+.post-action-cell a:hover {
+    color: #218787;
+    text-decoration: none;
+}
+
+.post-action-more:link, .post-action-more:visited {
+    color: #666666;
+    text-decoration: none;
+}
+
+.post-action-more:hover {
+    color: #218787;
+    text-decoration: none;
+}
