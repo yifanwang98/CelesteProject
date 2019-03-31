@@ -1,0 +1,38 @@
+
+.profile-section {
+    margin: 2em 12.5%;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.avatar-image {
+    margin: 1em;
+    border: #30c5c5 2px solid;
+    border-radius: 50%;
+    width: 8em;
+    height: 8em;
+}
+
+.profile-name {
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: -1em;
+}
+
+.profile-follow-info {
+    text-align: center;
+    font-size: 0.9em;
+    padding-bottom: 0.5em;
+    color: #666666;
+}
+
+.profile-button-table {
+    padding: 2em 12.5%;
+    width: 100%;
+    text-align: center;
+}
+
+.profile-button-table-cell {
+    background: rgba(255, 255, 255, 0.6);
+    height: 5em;
+    padding: 1em 0;
+}
