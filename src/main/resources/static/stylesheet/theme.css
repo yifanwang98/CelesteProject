@@ -14,6 +14,7 @@ body {
     margin: 0;
     text-align: justify-all;
     font-size: 1.15em;
+    position: fixed;
 }
 
 .headerIcon {

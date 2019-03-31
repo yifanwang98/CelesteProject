@@ -114,3 +114,20 @@
     color: #218787;
     text-decoration: none;
 }
+
+.post-action-follow {
+    border: #269b9b 1px solid;
+    text-align: center;
+    border-radius: 2px;
+    font-size: 0.9em;
+}
+
+.post-action-follow a:link, .post-action-follow a:visited {
+    color: #269b9b;
+    text-decoration: none;
+}
+
+.post-action-follow a:hover {
+    color: #30c5c5;
+    text-decoration: none;
+}
