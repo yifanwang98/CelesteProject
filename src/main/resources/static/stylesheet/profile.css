@@ -1,7 +1,7 @@
 
 .profile-section {
-    margin: 2em 12.5%;
-    background: rgba(255, 255, 255, 0.6);
+    margin: 2em 12.5% 0.75em 12.5%;
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .avatar-image {
@@ -26,13 +26,56 @@
 }
 
 .profile-button-table {
-    padding: 2em 12.5%;
+    padding: 0.5em 12.5%;
     width: 100%;
     text-align: center;
 }
 
 .profile-button-table-cell {
-    background: rgba(255, 255, 255, 0.6);
-    height: 5em;
-    padding: 1em 0;
+    background: rgba(255, 255, 255, 0.7);
+    height: 8em;
 }
+
+.profile-index-section {
+    margin: 0em 12.5%;
+    padding: 0.25em 0.5em;
+    background: rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.profile-index-cell-border {
+    border-right: #9a9a9a 1px solid;
+}
+
+.profile-index-cell-selected {
+    font-weight: 500;
+    color: #269b9b;
+}
+
+.profile-index-cell-selected a:link, .profile-index-cell-selected a:visited {
+    text-decoration: none;
+    color: #269b9b;
+}
+
+.profile-index-cell-selected a:hover {
+    text-decoration: none;
+    color: #218787;
+    font-style: italic;
+}
+
+.profile-index-cell-unselected {
+    font-weight: 400;
+    color: #9a9a9a;
+}
+
+.profile-index-cell-unselected a:link, .profile-index-cell-unselected a:visited {
+    text-decoration: none;
+    color: #9a9a9a;
+}
+
+.profile-index-cell-unselected a:hover {
+    text-decoration: none;
+    color: #269b9b;
+    font-style: italic;
+}
+
