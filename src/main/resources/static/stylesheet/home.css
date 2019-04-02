@@ -45,8 +45,8 @@
 
 .post-avatar {
     font-size: 1.7em;
-    padding: 0em 1.5em;
-    width: 1em;
+    padding: 0em 1em;
+    width: 1.7em;
 }
 
 .post-author {
@@ -133,7 +133,7 @@
 }
 
 .post-avatar-image {
-    width: 1.3em;
+    width: 1.75em;
     border-radius: 50%;
     border: #30c5c5 1px solid;
 }

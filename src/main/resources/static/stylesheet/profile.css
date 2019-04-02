@@ -109,3 +109,12 @@
     text-decoration: none;
 }
 
+.series-subscription-card {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1em;
+}
+
+.series-cover-image {
+    width: 10em;
+    border-radius: 5px;
+}
