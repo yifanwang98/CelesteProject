@@ -79,3 +79,33 @@
     font-style: italic;
 }
 
+.post-stared {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-stared a:link, .post-stared a:visited {
+    text-decoration: none;
+    color: goldenrod;
+}
+
+.post-stared a:hover {
+    color: #666666;
+    text-decoration: none;
+}
+
+.post-liked {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-liked a:link, .post-liked a:visited {
+    text-decoration: none;
+    color: #3973a0;
+}
+
+.post-liked a:hover {
+    color: #666666;
+    text-decoration: none;
+}
+
