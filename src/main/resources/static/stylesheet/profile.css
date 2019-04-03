@@ -196,3 +196,61 @@ s
 .series-add-tag:hover {
     border: #218787 1px solid;
 }
+
+.analysis-card {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1em;
+    border-radius: 5px;
+}
+
+.analysis-card-left {
+    margin-right: 1em;
+}
+
+.analysis-card-right {
+    margin-left: 1em;
+}
+
+.analysis-icon {
+    font-size: 6em;
+    padding: 0.01em 0.25em;
+    color: rgba(200, 200, 200, 0.5);
+}
+
+.analysis-title {
+    font-size: 1.1em;
+    padding: 0.25em;
+    text-align: left;
+}
+
+.analysis-increment {
+    font-size: 1.5em;
+    padding: 0.2em 0.25em;
+    text-align: left;
+    font-weight: 500;
+    color: #218787;
+}
+
+.analysis-duration {
+    font-size: 0.9em;
+    text-align: right;
+    font-weight: 500;
+}
+
+.analysis-duration {
+    font-size: 0.75em;
+    text-align: right;
+    font-weight: 500;
+    color: #9a9a9a;
+}
+
+.analysis-duration-not-selected:link, .analysis-duration-not-selected:visited {
+    color: #9a9a9a;
+    text-decoration: none;
+}
+
+.analysis-duration-selected:link, .analysis-duration-selected:visited, .analysis-duration-not-selected:hover {
+    color: #218787;
+    font-weight: 500;
+    text-decoration: none;
+}
