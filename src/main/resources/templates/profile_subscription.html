@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Stars</title>
+    <title>My Subscription</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -99,10 +99,10 @@
                 <a href="profile_post.html">Post (2)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a href="profile_series.html">Series (15)</a>
+                <a href="profile_series.html">Series (1)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-selected">
-                <a href="">Subscription (158)</a>
+                <a href="">Subscription (1)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-unselected">
                 <a href="profile_star.html">Stars (1)</a>
@@ -117,23 +117,40 @@
 <!---------------------------------------->
 <div class="webfont" style="margin: 1em 12.5%;">
     <div class="series-subscription-card">
-        <table style="margin: 0; padding: 0;">
+        <table cellpadding="0" cellspacing="0">
             <col width="12em;"/>
+            <col width="90%"/>
+            <col width="5em;"/>
             <tr>
+                <!-- Image Cover -->
                 <td>
                     <img src="../static/images/samplePost/seriesCover1.jpg" class="series-cover-image">
                 </td>
+                <!-- Series Description -->
                 <td>
-                    <div>
-                        <div>
-                            Author: xxx
+                    <div style="padding: 0 1.5em">
+                        <div class="subscription-series-title">
+                            <a href="">Subscribed Series Title Placeholder</a>
                         </div>
-                        <div>
-                            Created On: September 2, 2018
+                        <div class="subscription-series-author">
+                            <span class="semibold">Author: </span>xxx
                         </div>
-                        <div>
-                            #blackandwhite #irony
+                        <div class="subscription-series-date">
+                            <span class="semibold">Created On: </span>September 2, 2018
                         </div>
+                        <div class="subscription-series-date">
+                            <span class="semibold">Subscribers: </span>24601
+                        </div>
+                        <div class="subscription-series-tag">
+                            <a href="">#tag1</a>
+                            <a href="">#tag2</a>
+                        </div>
+                    </div>
+                </td>
+                <!-- Unsubscribe -->
+                <td>
+                    <div class="subscription-series-unsubscribe">
+                        <a href="">Unsubscribe</a>
                     </div>
                 </td>
             </tr>

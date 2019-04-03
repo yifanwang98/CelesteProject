@@ -31,6 +31,8 @@
     text-align: center;
 }
 
+s
+
 .profile-button-table-cell {
     background: rgba(255, 255, 255, 0.7);
     height: 8em;
@@ -117,4 +119,80 @@
 .series-cover-image {
     width: 10em;
     border-radius: 5px;
+    margin: 0 1em;
+    padding: 0;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.subscription-series-title {
+    font-weight: 500;
+    font-size: 1.25em;
+    margin: 0.5em 0;
+}
+
+.subscription-series-title a:link, .subscription-series-title a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+.subscription-series-title a:hover {
+    color: #218787;
+}
+
+.subscription-series-author, .subscription-series-date {
+    color: #666666;
+    font-size: 0.9em;
+    margin: 0.2em 0;
+}
+
+.subscription-series-tag {
+    margin: 0.5em 0;
+    font-size: 0.95em;
+}
+
+.subscription-series-tag a:link, .subscription-series-tag a:visited {
+    text-decoration: none;
+    color: black;
+    margin-right: 0.75em;
+}
+
+.subscription-series-tag a:hover {
+    font-weight: 500;
+    color: #218787;
+}
+
+.subscription-series-unsubscribe {
+    margin-right: 0.75em;
+    padding: 0.25em 0.5em;
+    font-size: 0.95em;
+    border: #218787 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.subscription-series-unsubscribe:hover {
+    border: #218787 1.5px solid;
+}
+
+.subscription-series-unsubscribe a:link, .subscription-series-unsubscribe a:visited {
+    text-decoration: none;
+    color: #218787;
+}
+
+.subscription-series-unsubscribe a:hover {
+    font-weight: 500;
+    color: #218787;
+}
+
+.series-add-tag {
+    border: #000 1px solid;
+    border-radius: 5px;
+    padding: 0 0.3em;
+    color: #218787;
+    font-size: 0.9em;
+}
+
+.series-add-tag:hover {
+    border: #218787 1px solid;
 }
