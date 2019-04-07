@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+.create-post-title {
+    font-size: 1.5em;
+    padding: 0.5em 0;
+}
+
+.content-textarea {
+    width: 100%;
+    height: 3em;
+    resize: none;
+    font-size: 1em;
+    padding: 0.5em;
+}
+
+.char-count {
+    text-align: right;
+    margin-top: -0.5em;
+}
+
+.add-img-button-container {
+    background: white;
+    border-radius: 5px;
+    border: #9a9a9a 1px solid;
+    padding: 0.25em;
+}
+
+.add-img-button {
+    color: #269b9b;
+    background: none;
+    border: none;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.uploaded-image {
+    width: 10em;
+    height: 10em;
+    border: #ccc 1px solid;
+    border-radius: 3px;
+    margin-right: 1em;
+    object-fit: cover;
+}
