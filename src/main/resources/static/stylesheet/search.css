@@ -1,0 +1,30 @@
+
+.searchTextfield {
+    align: center;
+    width: 80%;
+    font-size: 1em;
+    letter-spacing: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.button {
+    color: white;
+    background: #30c5c5;;
+    border: none;
+    width: 15%;
+    letter-spacing: 1px;
+    font-size: 1em;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.button:hover {
+    background: #269b9b;
+    text-decoration: none;
+    cursor: pointer;
+}

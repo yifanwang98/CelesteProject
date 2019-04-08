@@ -45,8 +45,8 @@
 
 .post-avatar {
     font-size: 1.7em;
-    padding: 0em 1.5em;
-    width: 1em;
+    padding: 0em 1em;
+    width: 1.7em;
 }
 
 .post-author {
@@ -113,4 +113,27 @@
 .post-action-more:hover {
     color: #218787;
     text-decoration: none;
+}
+
+.post-action-follow {
+    border: #269b9b 1px solid;
+    text-align: center;
+    border-radius: 2px;
+    font-size: 0.9em;
+}
+
+.post-action-follow a:link, .post-action-follow a:visited {
+    color: #269b9b;
+    text-decoration: none;
+}
+
+.post-action-follow a:hover {
+    color: #30c5c5;
+    text-decoration: none;
+}
+
+.post-avatar-image {
+    width: 1.75em;
+    border-radius: 50%;
+    border: #30c5c5 1px solid;
 }

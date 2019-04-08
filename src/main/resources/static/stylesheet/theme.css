@@ -14,6 +14,7 @@ body {
     margin: 0;
     text-align: justify-all;
     font-size: 1.15em;
+    position: fixed;
 }
 
 .headerIcon {
@@ -58,4 +59,25 @@ body {
     background-repeat: no-repeat;
     background-size: contain;
     height: 2.4em;
+}
+
+.header-avatar-image {
+    border: #30c5c5 1px solid;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3em;
+    background-color: white;
+    text-align: center;
+}
+
+.error-color {
+    color: #c90000;
 }

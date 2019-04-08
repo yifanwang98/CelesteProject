@@ -1,0 +1,256 @@
+
+.profile-section {
+    margin: 2em 12.5% 0.75em 12.5%;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.avatar-image {
+    margin: 1em;
+    border: #30c5c5 2px solid;
+    border-radius: 50%;
+    width: 8em;
+    height: 8em;
+}
+
+.profile-name {
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: -1em;
+}
+
+.profile-follow-info {
+    text-align: center;
+    font-size: 0.9em;
+    padding-bottom: 0.5em;
+    color: #666666;
+}
+
+.profile-button-table {
+    padding: 0.5em 12.5%;
+    width: 100%;
+    text-align: center;
+}
+
+s
+
+.profile-button-table-cell {
+    background: rgba(255, 255, 255, 0.7);
+    height: 8em;
+}
+
+.profile-index-section {
+    margin: 0em 12.5%;
+    padding: 0.25em 0.5em;
+    background: rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.profile-index-cell-border {
+    border-right: #9a9a9a 1px solid;
+}
+
+.profile-index-cell-selected {
+    font-weight: 500;
+    color: #269b9b;
+}
+
+.profile-index-cell-selected a:link, .profile-index-cell-selected a:visited {
+    text-decoration: none;
+    color: #269b9b;
+}
+
+.profile-index-cell-selected a:hover {
+    text-decoration: none;
+    color: #218787;
+    font-style: italic;
+}
+
+.profile-index-cell-unselected {
+    font-weight: 400;
+    color: #9a9a9a;
+}
+
+.profile-index-cell-unselected a:link, .profile-index-cell-unselected a:visited {
+    text-decoration: none;
+    color: #9a9a9a;
+}
+
+.profile-index-cell-unselected a:hover {
+    text-decoration: none;
+    color: #269b9b;
+    font-style: italic;
+}
+
+.post-stared {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-stared a:link, .post-stared a:visited {
+    text-decoration: none;
+    color: goldenrod;
+}
+
+.post-stared a:hover {
+    color: #666666;
+    text-decoration: none;
+}
+
+.post-liked {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-liked a:link, .post-liked a:visited {
+    text-decoration: none;
+    color: #3973a0;
+}
+
+.post-liked a:hover {
+    color: #666666;
+    text-decoration: none;
+}
+
+.series-subscription-card {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1em;
+}
+
+.series-cover-image {
+    width: 10em;
+    border-radius: 5px;
+    margin: 0 1em;
+    padding: 0;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.subscription-series-title {
+    font-weight: 500;
+    font-size: 1.25em;
+    margin: 0.5em 0;
+}
+
+.subscription-series-title a:link, .subscription-series-title a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+.subscription-series-title a:hover {
+    color: #218787;
+}
+
+.subscription-series-author, .subscription-series-date {
+    color: #666666;
+    font-size: 0.9em;
+    margin: 0.2em 0;
+}
+
+.subscription-series-tag {
+    margin: 0.5em 0;
+    font-size: 0.95em;
+}
+
+.subscription-series-tag a:link, .subscription-series-tag a:visited {
+    text-decoration: none;
+    color: black;
+    margin-right: 0.75em;
+}
+
+.subscription-series-tag a:hover {
+    font-weight: 500;
+    color: #218787;
+}
+
+.subscription-series-unsubscribe {
+    margin-right: 0.75em;
+    padding: 0.25em 0.5em;
+    font-size: 0.95em;
+    border: #218787 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.subscription-series-unsubscribe:hover {
+    border: #218787 1.5px solid;
+}
+
+.subscription-series-unsubscribe a:link, .subscription-series-unsubscribe a:visited {
+    text-decoration: none;
+    color: #218787;
+}
+
+.subscription-series-unsubscribe a:hover {
+    font-weight: 500;
+    color: #218787;
+}
+
+.series-add-tag {
+    border: #000 1px solid;
+    border-radius: 5px;
+    padding: 0 0.3em;
+    color: #218787;
+    font-size: 0.9em;
+}
+
+.series-add-tag:hover {
+    border: #218787 1px solid;
+}
+
+.analysis-card {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1em;
+    border-radius: 5px;
+}
+
+.analysis-card-left {
+    margin-right: 1em;
+}
+
+.analysis-card-right {
+    margin-left: 1em;
+}
+
+.analysis-icon {
+    font-size: 6em;
+    padding: 0.01em 0.25em;
+    color: rgba(200, 200, 200, 0.5);
+}
+
+.analysis-title {
+    font-size: 1.1em;
+    padding: 0.25em;
+    text-align: left;
+}
+
+.analysis-increment {
+    font-size: 1.5em;
+    padding: 0.2em 0.25em;
+    text-align: left;
+    font-weight: 500;
+    color: #218787;
+}
+
+.analysis-duration {
+    font-size: 0.9em;
+    text-align: right;
+    font-weight: 500;
+}
+
+.analysis-duration {
+    font-size: 0.75em;
+    text-align: right;
+    font-weight: 500;
+    color: #9a9a9a;
+}
+
+.analysis-duration-not-selected:link, .analysis-duration-not-selected:visited {
+    color: #9a9a9a;
+    text-decoration: none;
+}
+
+.analysis-duration-selected:link, .analysis-duration-selected:visited, .analysis-duration-not-selected:hover {
+    color: #218787;
+    font-weight: 500;
+    text-decoration: none;
+}
