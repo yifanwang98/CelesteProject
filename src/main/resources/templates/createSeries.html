@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Series - Celeste</title>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Style Sheet -->
+    <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/createSeries.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+</head>
+<body>
+<!-- Header Banner -->
+<table class="header webfont semibold">
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="home.html" class="headerUnselected">Home</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="discover.html" class="headerUnselected">Discover</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="search.html" class="headerUnselected">Search</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- Right Part -->
+        <td style="width: 5em;">
+            <table style="padding: 0; margin: 0; align: right;">
+                <tr style="align: right;">
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="profile_post.html" class="headerUnselected"><i
+                                class='fas fa-user-circle headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div style="height: 2.75em;"></div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="margin: 3em 30%; background: rgba(255,255,255,0.75); border-radius: 8px;" class="webfont">
+    <div class="create-series-inner-container">
+        <!-- Header -->
+        <div class="create-series-title semibold">Create Series</div>
+        <form>
+            <!-- Title -->
+            <div class="series-title semibold">Title</div>
+            <input type="text" placeholder="Enter Title Here" class="create-series-textfield" maxlength="24" required>
+            <div style="padding: 0.5em;"></div>
+            <!-- Description -->
+            <div class="series-title semibold">Description</div>
+            <textarea type="text" placeholder="Enter Description Here (Optional)" maxlength="100"
+                      class="create-series-textfield"></textarea>
+            <!-- Options -->
+            <div style="padding: 0.75em;"></div>
+            <div class="series-title semibold">Setting</div>
+            <div>
+                <table style="border-spacing: 0; width: 100%">
+                    <col width="4%"/>
+                    <col width="32%"/>
+                    <col width="32%"/>
+                    <col width="32%"/>
+                    <tr>
+                        <td></td>
+                        <td>
+                            Open For Wiki:
+                        </td>
+                        <td style="text-align: center">
+                            <input type="radio" name="wiki" value="Yes"/> Yes
+                        </td>
+                        <td style="text-align: center">
+                            <input type="radio" checked="checked" name="wiki" value="No"/> No
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Error -->
+            <div style="padding: 1em; text-align: center;" class="error-color">
+                [Error Placeholder]
+            </div>
+            <!-- Button -->
+            <table style="border-spacing: 0; width: 100%">
+                <col width="50%"/>
+                <col width="50%"/>
+                <tr>
+                    <td style="text-align: left">
+                        <a href="home.html" class="cancel-button">Cancel</a>
+                    </td>
+                    <td style="text-align: right">
+                        <input type="submit" value="Done" class="create-button">
+                    </td>
+                </tr>
+            </table>
+            <div style="padding: 0.25em;"></div>
+        </form>
+    </div>
+</div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 2em;"></div>
+</body>
+</html>

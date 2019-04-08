@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+.create-series-inner-container {
+    padding: 1.5em 2em;
+}
+
+.create-series-title {
+    font-size: 2em;
+    margin: 0.5em 0;
+    color: #269b9b;
+}
+
+.series-title {
+    font-size: 1.2em;
+    margin: 0.25em 0;
+}
+
+.create-series-textfield {
+    font-size: 1.05em;
+    width: 100%;
+    padding: 0.2em 0.1em;
+    resize: none;
+}
+
+.create-button {
+    color: white;
+    background: #218787;
+    border: none;
+    width: 50%;
+    height: 100%;
+    font-size: 1em;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.create-button:hover {
+    background: #269b9b;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cancel-button:link, .cancel-button:visited {
+    color: #9a9a9a;
+    border: none;
+    width: 40%;
+    font-size: 1em;
+    border-radius: 8px;
+    padding: 10px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.cancel-button:hover {
+    color: white;
+    background: #9a9a9a;
+    text-decoration: none;
+}

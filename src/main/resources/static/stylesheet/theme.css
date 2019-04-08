@@ -77,3 +77,7 @@ body {
     background-color: white;
     text-align: center;
 }
+
+.error-color {
+    color: #c90000;
+}
