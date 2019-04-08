@@ -14,16 +14,17 @@
 .button {
     color: white;
     background: #30c5c5;;
-    border-color: #bababa;
+    border: none;
     width: 15%;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     font-size: 1em;
     font-weight: 500;
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 5px;
+    padding: 8px;
 }
 
 .button:hover {
     background: #269b9b;
     text-decoration: none;
+    cursor: pointer;
 }
