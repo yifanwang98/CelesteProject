@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>HelloSpringLeaf</title>
+</head>
+<body>
+<h1>Hello Celeste</h1>
+<!--<img src="EEE.png" />-->
+<a href="next">next page</a>
+<a href="xx">data</a>
+<div>
+    <!--<img th:src="${'data:image/png;base64,'+users.avatar}"/>-->
+    <image th:if="${users!= null}" th:src="'data:image/png;base64,'+${users.avatar}"></image>
+    <!--<img th:src="@{'data:image/png;base64,'+users}"/>-->
+    <!--<img th:src="*{'data:image/jpeg;base64,'+${users}}"/>-->
+    <!--<img th:src="@{'data:image/jpeg;base64,'+${users}}"/>-->
+
+    <ul>
+        <li  th:each="note:${notes}">
+            <span th:text="${note.id}"></span>-
+            <span th:text="${note.content}"></span>-
+            <span th:text="${note.title}"></span>-
+            <span th:text="${note.createdAt}"></span>-
+            <span th:text="${note.updatedAt}"></span>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

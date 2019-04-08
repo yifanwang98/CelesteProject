@@ -1,4 +1,4 @@
-package com.example.demo;
+package celeste.comic_community_4_1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
