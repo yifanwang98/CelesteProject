@@ -64,15 +64,18 @@ public class PageController{
         Optional<User> a = userRepository.findById(username);
         User b= a.get();
         model.addAttribute("User",b);
-//       String avatarPath = "src/main/resources/static/EEE.png";
+        //----------------------avatar---------------
+//       String avatarPath = "src/main/resources/static/images/cat.jpg";
 //        File x = new File(avatarPath);
 //        BufferedImage bImage = ImageIO.read(x);
 //        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        ImageIO.write(bImage, "png", bos );
+//        ImageIO.write(bImage, "jpg", bos );
 //        byte [] data = bos.toByteArray();
 //        String base64 = Base64.getEncoder().encodeToString(data);
 //        b.setAvatar(base64);
 //        userRepository.save(b);
+        //----------------------avatar---------------
+
         //Get Follows
         List<Follow> c = followRepository.findByFollowIndentityUserone(b);
         model.addAttribute("following",c.size());
@@ -89,6 +92,62 @@ public class PageController{
     public String signUp() {
         return "signUp";
     }
+    @GetMapping("/backtosignin")
+    public String backtosignin() {
+        return "index";
+    }
+    @PostMapping("/signUpSignIn")
+    public String signUpSignIn(@RequestParam(value = "username" ) String username,
+                               @RequestParam(value = "password" ) String password,
+                               @RequestParam(value = "email" ) String email,
+                               @RequestParam(value = "gender" ) String gender,
+                               ModelMap model, HttpServletRequest request) throws Exception{
+        System.out.println(gender);
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setCreatedAt(new Date());
+        newUser.setPassword(password);
+        newUser.setEmail(email);
+        newUser.setGender(gender);
+
+        String avatarPath = "src/main/resources/static/images/default-avatar.png";
+        File x = new File(avatarPath);
+        BufferedImage bImage = ImageIO.read(x);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bImage, "png", bos );
+        byte [] data = bos.toByteArray();
+        String base64 = Base64.getEncoder().encodeToString(data);
+
+        newUser.setAvatar(base64);
+        userRepository.save(newUser);
+
+        model.addAttribute("User",newUser);
+
+        //Get Follows
+        List<Follow> c = followRepository.findByFollowIndentityUserone(newUser);
+        model.addAttribute("following",c.size());
+        //Get Followers
+        List<Follow> d = followRepository.findByFollowIndentityUsertwo(newUser);
+        model.addAttribute("followers",d.size());
+
+//        System.out.println("Following:" + c.size() + ". Followers:" + d.size()+".");
+        return "profile_post";
+    }
+
+
+    @ResponseBody
+    @GetMapping("/checkusername")
+    public String testtt(@RequestParam(value = "username" ,required = false) String username){
+        Optional<User> a=  userRepository.findById(username);
+//        System.out.println(a);
+        if(a.isPresent()){
+            return "Taken";
+        }
+        else {
+            return "Not taken";
+        }
+    }
+
 //    @RequestMapping(value = "/next")
 ////    @ResponseBody
 //    public String login() {

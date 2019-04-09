@@ -50,8 +50,8 @@
                         <a href="" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><img src="../static/images/avatar1.jpg"
-                                                                 class="header-avatar-image"></a>
+                        <a href="" class="headerUnselected"><image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                                                   class="header-avatar-image"></image></a>
                     </td>
                     <td class="headerCellPadding"></td>
                 </tr>

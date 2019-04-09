@@ -14,11 +14,39 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
-            $("button").click(function(){
-                $.ajax({url: "demo_test.txt", success: function(result){
-                        $("#div1").html(result);
-                    }});
+            $('input[name=passwordConfirm],input[name=password]').on("input propertychange",function() {
+                var pwd = $('input[name=password]').val();
+                var pwd1 = $('input[name=passwordConfirm]').val();
+                if(pwd == pwd1)
+                {
+                    $('#confirmpass').css("color","green");
+                    $('input[name=submit]').attr("disabled",false);
+                }
+                else {
+                    $('#confirmpass').css("color","red");
+                    $('input[name=submit]').attr("disabled",true);
+                }
             });
+            $('input[name=username]').on("input propertychange",function() {
+                $.ajax({
+                    type : "GET",
+                    url : 'checkusername',
+                    data:{ username: $('input[name=username]').val()},
+                    // dataType : "json",
+                    cache : false,
+                    success : function(data) {
+                        if(data == "Taken"){
+                            $('#uuu').text("Username: (username exists!)")
+                        }
+                        else {
+                            $('#uuu').text("Username: ")
+                        }
+                    },
+                    error: function(){
+                        alert(arguments[1]);
+                    }
+                });
+            })
         });
     </script>
 </head>
@@ -72,26 +100,26 @@
 <div class="loginBlock webfont">
     <p class="loginTitle webfont">Join Celeste</p>
     <form action="signUpSignIn" method="post">
-        <div class="loginInfo webfont">
+        <div class="loginInfo webfont" id = "uuu">
             Username: <br>
         </div>
-        <input type="text" name="username" value="" maxlength="24" class="loginTextfield webfont"><br>
+        <input type="text" name="username" value="" maxlength="24" class="loginTextfield webfont" required><br>
 
         <div class="loginInfo webfont">
             Password:<br>
         </div>
-        <input type="password" name="password" value="" maxlength="24" class="loginTextfield webfont"><br>
+        <input type="password" name="password" value="" maxlength="24" class="loginTextfield webfont" required><br>
 
-        <div class="loginInfo webfont">
+        <div id = "confirmpass"class="loginInfo webfont">
             Confirm Password: <br>
         </div>
-        <input type="password" name="passwordConfirm" value="" maxlength="24" class="loginTextfield webfont"><br>
+        <input type="password" name="passwordConfirm" value="" maxlength="24" class="loginTextfield webfont" required><br>
 
         <div class="loginInfo webfont">
             Email Address: <br>
         </div>
 
-        <input type="text" name="email" value="" class="loginTextfield webfont"><br>
+        <input type="email" name="email" value="" class="loginTextfield webfont" required><br>
 
 
 
@@ -117,12 +145,12 @@
         <br>
         <!-- Display error message if necessary -->
         <div class="error webfont">
-            [Error Placeholder]
+
         </div>
-        <input type="submit" value="Sign Up" class="button webfont">
+        <input type="submit" value="Sign Up" class="button webfont" name = "submit">
     </form>
     <div style="width: 100%" class="linkText">
-        <a href="">
+        <a href="backtosignin">
             Have an account? Sign In!
         </a>
     </div>
