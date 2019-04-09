@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Sign In</title>
     <!-- Metadata -->
@@ -60,7 +61,7 @@
 <!--/div-->
 <div class="loginBlock webfont">
     <p class="loginTitle webfont">Sign In</p>
-    <form action="" method="post">
+    <form action="profile_post" method="post">
         <div class="loginInfo webfont">
             Username: <br>
         </div>
@@ -70,13 +71,14 @@
         </div>
         <input type="password" name="password" value="" maxlength="24" class="loginTextfield webfont" required><br><br>
         <!-- Display error message if necessary -->
-        <div class="error webfont">
-            [Error Placeholder]
+        <div class="error webfont" th:text="${errors}">
+
         </div>
         <input type="submit" value="Login" class="button webfont">
     </form>
     <div style="width: 100%" class="linkText">
-        <a href="">
+
+        <a href="signUp">
             New to Celeste? Join now!
         </a>
     </div>

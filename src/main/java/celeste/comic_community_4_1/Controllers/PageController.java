@@ -1,19 +1,20 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.model.EmbeddedClasses.FollowIndentity;
+import celeste.comic_community_4_1.model.Follow;
 import celeste.comic_community_4_1.model.Note;
 import celeste.comic_community_4_1.model.User;
+import celeste.comic_community_4_1.repository.FollowRepository;
 import celeste.comic_community_4_1.repository.NoteRepository;
 import celeste.comic_community_4_1.repository.UserRepository;
 import com.mysql.cj.jdbc.Blob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +30,12 @@ public class PageController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    FollowRepository followRepository;
 
 
-    @PostMapping("/login")
+
+    @PostMapping("/profile_post")
     public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
                              @RequestParam(value = "password" ,required = false) String password,
                              ModelMap model, HttpServletRequest request) {
@@ -39,14 +43,14 @@ public class PageController {
         if(request.getSession().getAttribute("username")!=null){
             request.getSession().removeAttribute("username");
         }
-        if(username.isEmpty()){
-            model.addAttribute("errors","This username can't be empty.");
-            return "index";
-        }
-        if(password.isEmpty()){
-            model.addAttribute("errors","This password can't be empty.");
-            return "index";
-        }
+//        if(username.isEmpty()){
+//            model.addAttribute("errors","This username can't be empty.");
+//            return "index";
+//        }
+//        if(password.isEmpty()){
+//            model.addAttribute("errors","This password can't be empty.");
+//            return "index";
+//        }
         if (!userRepository.existsById(username)) {
             model.addAttribute("errors","This username doesn't exist.");
             return "index";
@@ -57,10 +61,27 @@ public class PageController {
             model.addAttribute("errors","Your password is incorrect.");
             return "index";
         }
+//        Follow f = new Follow();
+//        FollowIndentity fi = new FollowIndentity();
+//        User u = new User();
+//        u.setUsername("abc");
+//        fi.setUser1(u);
+//        f.setFollowIndentity(fi);
+//        Example<Follow> ex = Example.of(f);
+//        List<Follow> followTable = followRepository.findAll(ex);
+        int count = 0;
+        //for(int i =0; i<)
+//       System.out.println(followTable.get(0));
+        model.addAttribute("follows","Your password is incorrect.");
+        return "profile_post";
 
-        return "profile";
 
-
+    }
+    @GetMapping("/signUpSignIn")
+    public String signUp(@RequestParam(value = "username" ,required = false) String username,
+                         @RequestParam(value = "password" ,required = false) String password,
+                         ModelMap model, HttpServletRequest request) {
+        return "signUp";
     }
 //    @RequestMapping(value = "/next")
 ////    @ResponseBody

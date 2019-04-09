@@ -11,6 +11,16 @@
     <link href="../static/stylesheet/login.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("button").click(function(){
+                $.ajax({url: "demo_test.txt", success: function(result){
+                        $("#div1").html(result);
+                    }});
+            });
+        });
+    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -61,7 +71,7 @@
 <!--/div-->
 <div class="loginBlock webfont">
     <p class="loginTitle webfont">Join Celeste</p>
-    <form action="" method="post">
+    <form action="signUpSignIn" method="post">
         <div class="loginInfo webfont">
             Username: <br>
         </div>
@@ -80,8 +90,30 @@
         <div class="loginInfo webfont">
             Email Address: <br>
         </div>
+
         <input type="text" name="email" value="" class="loginTextfield webfont"><br>
 
+
+
+
+        <div class="webfont loginInfo">
+            <table style="width: 100%;">
+                <col width="34%"/>
+                <col width="33%"/>
+                <col width="33%"/>
+                <tr>
+                    <td>
+                        Gender:
+                    </td>
+                    <td>
+                        <input type="radio" value="male" checked="checked" name="gender"> Male
+                    </td>
+                    <td>
+                        <input type="radio" value="female" name="gender"> Female
+                    </td>
+                </tr>
+            </table>
+        </div>
         <br>
         <!-- Display error message if necessary -->
         <div class="error webfont">
