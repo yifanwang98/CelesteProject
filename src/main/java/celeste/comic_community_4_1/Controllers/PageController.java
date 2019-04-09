@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.*;
 
 @Controller
-public class PageController {
+public class PageController{
 
 
     @Autowired
@@ -38,7 +38,7 @@ public class PageController {
     @PostMapping("/profile_post")
     public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
                              @RequestParam(value = "password" ,required = false) String password,
-                             ModelMap model, HttpServletRequest request) {
+                             ModelMap model, HttpServletRequest request) throws Exception{
 //        System.out.println("123123");
         if(request.getSession().getAttribute("username")!=null){
             request.getSession().removeAttribute("username");
@@ -61,30 +61,32 @@ public class PageController {
             model.addAttribute("errors","Your password is incorrect.");
             return "index";
         }
-//        Follow f = new Follow();
-//        FollowIndentity fi = new FollowIndentity();
-//        User u = new User();
-//        u.setUsername("abc");
-//        fi.setUser1(u);
-//        f.setFollowIndentity(fi);
-//        Example<Follow> ex = Example.of(f);
-//        List<Follow> followTable = followRepository.findAll(ex);
-//        int count = 0;
-        //for(int i =0; i<)
-//       System.out.println(followRepository.findAllByFollowIndentity("abc"));
         Optional<User> a = userRepository.findById(username);
         User b= a.get();
+        model.addAttribute("User",b);
+//       String avatarPath = "src/main/resources/static/EEE.png";
+//        File x = new File(avatarPath);
+//        BufferedImage bImage = ImageIO.read(x);
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        ImageIO.write(bImage, "png", bos );
+//        byte [] data = bos.toByteArray();
+//        String base64 = Base64.getEncoder().encodeToString(data);
+//        b.setAvatar(base64);
+//        userRepository.save(b);
+        //Get Follows
         List<Follow> c = followRepository.findByFollowIndentityUserone(b);
-        System.out.println(c.size());
-        model.addAttribute("follows","Your password is incorrect.");
+        model.addAttribute("following",c.size());
+        //Get Followers
+        List<Follow> d = followRepository.findByFollowIndentityUsertwo(b);
+        model.addAttribute("followers",d.size());
+
+//        System.out.println("Following:" + c.size() + ". Followers:" + d.size()+".");
         return "profile_post";
 
 
     }
-    @GetMapping("/signUpSignIn")
-    public String signUp(@RequestParam(value = "username" ,required = false) String username,
-                         @RequestParam(value = "password" ,required = false) String password,
-                         ModelMap model, HttpServletRequest request) {
+    @GetMapping("/signup")
+    public String signUp() {
         return "signUp";
     }
 //    @RequestMapping(value = "/next")

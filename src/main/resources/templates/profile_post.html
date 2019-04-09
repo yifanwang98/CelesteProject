@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>My Series</title>
     <!-- Metadata -->
@@ -65,21 +66,21 @@
 
 <div class="profile-section webfont">
     <div style="text-align: center">
-        <img src="../static/images/avatar1.jpg" class="avatar-image">
+        <image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="avatar-image"></image>
     </div>
-    <div class="profile-name">
-        Abracadabra
+    <div class="profile-name" th:text="${User.getUsername()}">
+
     </div>
     <div class="profile-follow-info">
         <table width="100%">
             <col width="50%"/>
             <col width="50%"/>
             <tr style="">
-                <td style="text-align: right; border-right: #b6b6b6 1px solid; color: #666666;">
-                    Following: 123&nbsp;
+                <td style="text-align: right; border-right: #b6b6b6 1px solid; color: #666666;" th:text="'Following: '+ ${following}">
+
                 </td>
-                <td style="text-align: left;color: #666666;">
-                    &nbsp;Follower: 321
+                <td style="text-align: left;color: #666666;" th:text="'Follower: '+ ${followers}">
+
                 </td>
             </tr>
         </table>
@@ -122,14 +123,14 @@
             <tr>
                 <td class="post-avatar">
                     <a href="">
-                        <img src="../static/images/avatar1.jpg" class="post-avatar-image">
+                        <image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="post-avatar-image"></image>
                     </a>
                 </td>
                 <td>
                     <table width="100%">
                         <tr>
                             <td>
-                                <span class="post-author">Abracadabra</span><br>
+                                <span class="post-author" th:text="${User.getUsername()}"></span><br>
                                 <span class="post-time">14:37 Mar 29, 2019</span>
                             </td>
                             <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
@@ -184,14 +185,14 @@
             <tr>
                 <td class="post-avatar">
                     <a href="">
-                        <img src="../static/images/avatar1.jpg" class="post-avatar-image">
+                        <image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="post-avatar-image"></image>
                     </a>
                 </td>
                 <td>
                     <table width="100%">
                         <tr>
                             <td>
-                                <span class="post-author">Abracadabra</span><br>
+                                <span class="post-author"th:text="${User.getUsername()}"></span><br>
                                 <span class="post-time">14:37 Mar 29, 2019</span>
                             </td>
                             <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
