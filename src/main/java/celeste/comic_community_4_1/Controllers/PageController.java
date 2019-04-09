@@ -69,9 +69,13 @@ public class PageController {
 //        f.setFollowIndentity(fi);
 //        Example<Follow> ex = Example.of(f);
 //        List<Follow> followTable = followRepository.findAll(ex);
-        int count = 0;
+//        int count = 0;
         //for(int i =0; i<)
-//       System.out.println(followTable.get(0));
+//       System.out.println(followRepository.findAllByFollowIndentity("abc"));
+        Optional<User> a = userRepository.findById(username);
+        User b= a.get();
+        List<Follow> c = followRepository.findByFollowIndentityUserone(b);
+        System.out.println(c.size());
         model.addAttribute("follows","Your password is incorrect.");
         return "profile_post";
 

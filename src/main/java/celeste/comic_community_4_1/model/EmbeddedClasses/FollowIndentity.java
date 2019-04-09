@@ -13,26 +13,26 @@ public class FollowIndentity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "username1")
-    private User user1;
+    private User userone;
 
     @ManyToOne
     @JoinColumn(name = "username2")
-    private User user2;
+    private User usertwo;
 
     public User getUser1() {
-        return user1;
+        return userone;
     }
 
     public void setUser1(User user1) {
-        this.user1 = user1;
+        this.userone = user1;
     }
 
     public User getUser2() {
-        return user2;
+        return usertwo;
     }
 
     public void setUser2(User user2) {
-        this.user2 = user2;
+        this.usertwo = user2;
     }
 
     @Override
