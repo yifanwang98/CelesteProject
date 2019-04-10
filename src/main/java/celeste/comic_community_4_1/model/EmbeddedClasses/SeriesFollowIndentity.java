@@ -3,6 +3,7 @@ package celeste.comic_community_4_1.model.EmbeddedClasses;
 import celeste.comic_community_4_1.model.Series;
 import celeste.comic_community_4_1.model.User;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Embeddable
 public class SeriesFollowIndentity implements Serializable {
 
-    @ManyToOne
+    @ManyToOne //(cascade= CascadeType.ALL)
     @JoinColumn(name = "username")
     private User user;
 
