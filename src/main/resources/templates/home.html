@@ -121,7 +121,7 @@
                     <col width="25%"/>
                     <tr>
                         <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                            <a href=""><i class='fas fa-share-square'></i> Share (1w+)</a>
+                            <a href=""><i th:text="'Share ('+${repostsForeachPost.get(post.getPostID())}+')'"class='fas fa-share-square'></i></a>
                         </td>
                         <td class="post-action-cell" style="border-right: #ccc 1px solid">
                             <a href=""><i class='far fa-comment-dots'></i> Comment (1k+)</a>
@@ -130,7 +130,7 @@
                             <a href=""><i class='fas fa-star'></i> Star (128)</a>
                         </td>
                         <td class="post-action-cell">
-                            <a href=""><i class='far fa-thumbs-up'></i> Like (10w+)</a>
+                            <a href=""><i th:text="'Like ('+${likesForeachPost.get(post.getPostID())}+')'" class='far fa-thumbs-up'></i></a>
                         </td>
                     </tr>
                 </table>
@@ -283,21 +283,21 @@
                             <td class="button-link">
                                 <a href="">
                                     <div style="padding: 1em 0;">
-                                        <span class="semibold" style="font-size: 1.05em;">Following</span><br>123
+                                        <span class="semibold" style="font-size: 1.05em;">Following</span><br><span th:text="${following}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
                                 </a>
                             </td>
                             <td class="button-link">
                                 <a href="">
                                     <div>
-                                        <span class="semibold" style="font-size: 1.05em;">Follower</span><br>3000
+                                        <span class="semibold" style="font-size: 1.05em;">Follower</span><br><span th:text="${followers}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
                                 </a>
                             </td>
                             <td class="button-link">
                                 <a href="">
                                     <div>
-                                        <span class="semibold" style="font-size: 1.05em;">My Post</span><br>20
+                                        <span class="semibold" style="font-size: 1.05em;">My Post</span><br><span th:text="${postsCount}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
                                 </a>
                             </td>
