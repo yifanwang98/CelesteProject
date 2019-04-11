@@ -41,6 +41,9 @@ public class indexController{
     @Autowired
     LikeRepository likeRepository;
 
+    @Autowired
+    StarRepository starRepository;
+
     @PostMapping("/home")
     public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
                              @RequestParam(value = "password" ,required = false) String password,
@@ -147,6 +150,10 @@ public class indexController{
         for(int i =0; i<postlist.size();i++){
             likesForeachPost.put(postlist.get(i).getPostID(),likeRepository.findByPostIndentityPost(postlist.get(i)).size());
         }
+        HashMap<Long, Integer> starsForeachPost = new HashMap<Long, Integer>();
+        for(int i =0; i<postlist.size();i++){
+            starsForeachPost.put(postlist.get(i).getPostID(),starRepository.findByPostIndentityPost(postlist.get(i)).size());
+        }
 
         HashMap<Long, Integer> repostsForeachPost = new HashMap<Long, Integer>();
         for(int i =0; i<postlist.size();i++){
@@ -155,6 +162,7 @@ public class indexController{
 
         model.addAttribute("repostsForeachPost",repostsForeachPost);
         model.addAttribute("likesForeachPost",likesForeachPost);
+        model.addAttribute("starsForeachPost",starsForeachPost);
 
 
 //        System.out.println("Following:" + c.size() + ". Followers:" + d.size()+".");
