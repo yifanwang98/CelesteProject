@@ -38,42 +38,24 @@ public class PageController{
     @Autowired
     PostContentRepository postContentRepository;
 
-    @PostMapping("/profile_post")
-    public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
-                             @RequestParam(value = "password" ,required = false) String password,
-                             ModelMap model, HttpServletRequest request) throws Exception{
-//        System.out.println("123123");
-        if(request.getSession().getAttribute("username")!=null){
-            request.getSession().removeAttribute("username");
-        }
-//        if(username.isEmpty()){
-//            model.addAttribute("errors","This username can't be empty.");
-//            return "index";
-//        }
-//        if(password.isEmpty()){
-//            model.addAttribute("errors","This password can't be empty.");
-//            return "index";
-//        }
-        if (!userRepository.existsById(username)) {
-            model.addAttribute("errors","This username doesn't exist.");
-            return "index";
-        }
+    @GetMapping("/profile_post")
+    public String userprofile(ModelMap model, HttpServletRequest request) throws Exception{
+        String username = (String)request.getSession().getAttribute("username");
+        String password = (String)request.getSession().getAttribute("password");
+
         User founduser = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        if(!password.equals(founduser.getPassword())){
-            model.addAttribute("errors","Your password is incorrect.");
-            return "index";
-        }
+
         Optional<User> a = userRepository.findById(username);
         User b= a.get();
         model.addAttribute("User",b);
         //All the post by this user
         List<Post> postlist = postRepository.findByUser(b);
         //All the post by this user's follows
-        List<Follow> followlist = followRepository.findByFollowIndentityUserone(b);
-        for(int i =0; i<followlist.size();i++){
-            postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
-        }
+//        List<Follow> followlist = followRepository.findByFollowIndentityUserone(b);
+//        for(int i =0; i<followlist.size();i++){
+//            postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
+//        }
 //        postContentRepository.findByPostIndentityPost()
 
         model.addAttribute("postlist",postlist);
@@ -116,15 +98,15 @@ public class PageController{
 //        postRepository.save(newPost);
         //----------------------post---------------
         //----------------------avatar---------------
-//       String avatarPath = "src/main/resources/static/images/cat.jpg";
+//       String avatarPath = "src/main/resources/static/images/default-avatar.png";
 //        File x = new File(avatarPath);
 //        BufferedImage bImage = ImageIO.read(x);
 //        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        ImageIO.write(bImage, "jpg", bos );
+//        ImageIO.write(bImage, "png", bos );
 //        byte [] data = bos.toByteArray();
 //        String base64 = Base64.getEncoder().encodeToString(data);
-//        b.setAvatar(base64);
-//        userRepository.save(b);
+////        b.setAvatar(base64);
+//        userRepository.findById("2").get().setAvatar(base64);
         //----------------------avatar---------------
 
         //Get Follows
@@ -136,6 +118,63 @@ public class PageController{
 
 //        System.out.println("Following:" + c.size() + ". Followers:" + d.size()+".");
         return "profile_post";
+
+
+
+    }
+    @PostMapping("/home")
+    public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
+                             @RequestParam(value = "password" ,required = false) String password,
+                             ModelMap model, HttpServletRequest request) throws Exception{
+//        System.out.println("123123");
+        if(request.getSession().getAttribute("username")!=null){
+            request.getSession().removeAttribute("username");
+        }
+//        if(username.isEmpty()){
+//            model.addAttribute("errors","This username can't be empty.");
+//            return "index";
+//        }
+//        if(password.isEmpty()){
+//            model.addAttribute("errors","This password can't be empty.");
+//            return "index";
+//        }
+        if (!userRepository.existsById(username)) {
+            model.addAttribute("errors","This username doesn't exist.");
+            return "index";
+        }
+        User founduser = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        if(!password.equals(founduser.getPassword())){
+            model.addAttribute("errors","Your password is incorrect.");
+            return "index";
+        }
+        Optional<User> a = userRepository.findById(username);
+        User b= a.get();
+        model.addAttribute("User",b);
+        //All the post by this user
+        List<Post> postlist = postRepository.findByUser(b);
+        //All the post by this user's follows
+        List<Follow> followlist = followRepository.findByFollowIndentityUserone(b);
+        for(int i =0; i<followlist.size();i++){
+            postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
+        }
+//        postContentRepository.findByPostIndentityPost()
+
+        model.addAttribute("postlist",postlist);
+        model.addAttribute("postContentRepository",postContentRepository);
+
+
+        //Get Follows
+        List<Follow> c = followRepository.findByFollowIndentityUserone(b);
+        model.addAttribute("following",c.size());
+        //Get Followers
+        List<Follow> d = followRepository.findByFollowIndentityUsertwo(b);
+        model.addAttribute("followers",d.size());
+
+//        System.out.println("Following:" + c.size() + ". Followers:" + d.size()+".");
+        request.getSession().setAttribute("username",username);
+        request.getSession().setAttribute("password",password);
+        return "home";
 
 
     }
