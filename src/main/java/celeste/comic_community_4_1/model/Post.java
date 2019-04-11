@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,7 +24,7 @@ public class Post implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long postID;
 
-    @NotBlank
+    @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "username")
@@ -37,16 +38,16 @@ public class Post implements Serializable {
     private Date createdAt=new Date();
 
 
-    @NotBlank
+    @NotNull
     private long viewCount=0;
 
-    @NotBlank
+    @NotNull
     private String postComment="";
 
-    @NotBlank
+    @NotNull
     private boolean isRepost=false;
 
-    @NotBlank
+    @NotNull
     private long originalPostID=postID;
 
     public long getPostID() {

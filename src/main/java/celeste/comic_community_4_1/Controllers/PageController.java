@@ -1,13 +1,9 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.model.EmbeddedClasses.FollowIndentity;
-import celeste.comic_community_4_1.model.Follow;
-import celeste.comic_community_4_1.model.Note;
-import celeste.comic_community_4_1.model.User;
-import celeste.comic_community_4_1.repository.FollowRepository;
-import celeste.comic_community_4_1.repository.NoteRepository;
-import celeste.comic_community_4_1.repository.UserRepository;
+import celeste.comic_community_4_1.repository.*;
 import com.mysql.cj.jdbc.Blob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -33,7 +29,14 @@ public class PageController{
     @Autowired
     FollowRepository followRepository;
 
+    @Autowired
+    WorkRepository workRepository;
 
+    @Autowired
+    PostRepository postRepository;
+
+    @Autowired
+    PostContentRepository postContentRepository;
 
     @PostMapping("/profile_post")
     public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
@@ -64,6 +67,54 @@ public class PageController{
         Optional<User> a = userRepository.findById(username);
         User b= a.get();
         model.addAttribute("User",b);
+        //All the post by this user
+        List<Post> postlist = postRepository.findByUser(b);
+        //All the post by this user's follows
+        List<Follow> followlist = followRepository.findByFollowIndentityUserone(b);
+        for(int i =0; i<followlist.size();i++){
+            postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
+        }
+//        postContentRepository.findByPostIndentityPost()
+
+        model.addAttribute("postlist",postlist);
+        model.addAttribute("postContentRepository",postContentRepository);
+        //----------------------work---------------
+//        Work newwork = new Work();
+//        newwork.setWorkID(123456);
+//        newwork.setGenre("genre1");
+//        newwork.setName("work1");
+//        newwork.setUser(b);
+//        String avatarPath = "src/main/resources/static/images/samplePost/S-1-1.jpg";
+//        File x = new File(avatarPath);
+//        BufferedImage bImage = ImageIO.read(x);
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        ImageIO.write(bImage, "jpg", bos );
+//        byte [] data = bos.toByteArray();
+//        String base64 = Base64.getEncoder().encodeToString(data);
+//        newwork.setContent(base64);
+//        workRepository.save(newwork);
+
+//        Work newwork = new Work();
+//        newwork.setWorkID(222222);
+//        newwork.setGenre("genre2");
+//        newwork.setName("work2");
+//        newwork.setUser(userRepository.findById("2").get());
+//        String avatarPath = "src/main/resources/static/images/samplePost/S-1-2.jpg";
+//        File x = new File(avatarPath);
+//        BufferedImage bImage = ImageIO.read(x);
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        ImageIO.write(bImage, "jpg", bos );
+//        byte [] data = bos.toByteArray();
+//        String base64 = Base64.getEncoder().encodeToString(data);
+//        newwork.setContent(base64);
+//        workRepository.save(newwork);
+        //----------------------work---------------
+        //----------------------post---------------
+//        Post newPost = new Post();
+//        newPost.setUser(userRepository.findById("2").get());
+//
+//        postRepository.save(newPost);
+        //----------------------post---------------
         //----------------------avatar---------------
 //       String avatarPath = "src/main/resources/static/images/cat.jpg";
 //        File x = new File(avatarPath);
