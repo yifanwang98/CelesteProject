@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface PostContentRepository extends JpaRepository<PostContent, PostContentIndentity> {
-    List<PostContent> findByPostIndentityPost(Post post);
+    List<PostContent> findByPostIndentityPostPostID(long post);
     List<PostContent> findByPostIndentityWork(Work work);
 }
 

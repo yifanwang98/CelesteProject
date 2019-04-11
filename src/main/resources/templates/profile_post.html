@@ -123,7 +123,7 @@
             <tr>
                 <td class="post-avatar">
                     <a href="">
-                        <image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="post-avatar-image"></image>
+                        <image th:src="'data:image/png;base64,'+${post.getUser().getAvatar()}" class="post-avatar-image"></image>
                     </a>
                 </td>
                 <td>
@@ -133,8 +133,8 @@
                                 <span class="post-author" th:text="${post.getUser().getUsername()}"></span><br>
                                 <span class="post-time" th:text="${post.getCreatedAt()}"></span>
                             </td>
-                            <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
-                                <a href="" class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                            <td th:switch="${User.getUsername()}" width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
+                                <a href="" th:case="${post.getUser().getUsername()}" class="post-action-more"><i class='far fa-trash-alt'></i></a>
                             </td>
                         </tr>
                     </table>
@@ -144,16 +144,17 @@
             <tr>
                 <td></td>
                 <td>
-                    <div class="post-text"></div>
+                    <div th:text="${post.getPostComment()}" class="post-text"></div>
                 </td>
             </tr>
             <!-- Images -->
             <tr>
                 <td></td>
                 <td>
-                    <div th:each="work:${postContentRepository.findByPostIndentityPost(post)}">
-                        <image th:src="'data:image/png;base64,'+${work.getPostIndentity().getWork().getContent()}" th:class="${postContentRepository.findByPostIndentityPost(post).size()>1} ? 'post-image-multiple': 'post-image-single'" ></image>
-                        <!--<img src="../static/images/samplePost/T-2-1.jpg" class="post-image-single">-->
+                    <div >
+                        <span th:each="work:${imgsForeachPost.get(post.getPostID())}">
+                            <image th:src="'data:image/png;base64,'+${work}" th:class="${imgsForeachPost.get(post.getPostID()).size()>1} ? 'post-image-multiple': 'post-image-single'" ></image>
+                        </span><!--<img src="../static/images/samplePost/T-2-1.jpg" class="post-image-single">-->
                     </div>
                 </td>
             </tr>
