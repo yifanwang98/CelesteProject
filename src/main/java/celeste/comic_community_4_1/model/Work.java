@@ -20,7 +20,7 @@ import java.util.Date;
 public class Work implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long workID;
+    private long workID;
 
     @NotNull
     @ManyToOne

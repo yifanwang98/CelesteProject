@@ -144,7 +144,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <div class="post-text"></div>
+                    <div th:text="${post.getPostComment()}" class="post-text"></div>
                 </td>
             </tr>
             <!-- Images -->
@@ -152,9 +152,8 @@
                 <td></td>
                 <td>
                     <div >
-                        <span th:each="work:${postContentRepository.findByPostIndentityPost(post)}">
-                            <image th:src="'data:image/png;base64,'+${work.getPostIndentity().getWork().getContent()}" th:class="${postContentRepository.findByPostIndentityPost(post).size()>1} ? 'post-image-multiple': 'post-image-single'" ></image>
-
+                        <span th:each="work:${imgsForeachPost.get(post.getPostID())}">
+                            <image th:src="'data:image/png;base64,'+${work}" th:class="${imgsForeachPost.get(post.getPostID()).size()>1} ? 'post-image-multiple': 'post-image-single'" ></image>
                         </span><!--<img src="../static/images/samplePost/T-2-1.jpg" class="post-image-single">-->
                     </div>
                 </td>
