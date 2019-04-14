@@ -9,6 +9,7 @@
     <!-- Style Sheet -->
     <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -86,8 +87,19 @@
                                         <span class="post-author" th:text="${post.getUser().getUsername()}"></span><br>
                                         <span class="post-time" th:text="${post.getCreatedAt()}"></span>
                                     </td>
-                                    <td th:switch="${User.getUsername()}" width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
-                                        <a href="" th:case="${post.getUser().getUsername()}" class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                    <!--<td th:switch="${User.getUsername()}" width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">-->
+                                    <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
+                                        <a href="" th:if="${User.getUsername() == post.getUser().getUsername()}"
+                                           class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                        <!--<a href="" th:unless="${User.getUsername() == post.getUser().getUsername()}" class="post-action-more"><i class='fas fa-ellipsis-v'></i></a>-->
+                                        <div class="dropdown"
+                                             th:unless="${User.getUsername() == post.getUser().getUsername()}">
+                                            <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
+                                            <div class="dropdown-content">
+                                                <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
+                                                <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
