@@ -19,6 +19,9 @@ public class CreatePostOptionController {
 
     @GetMapping("/createPostOption")
     public String getAnalysis(ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
         // Find Current User
         String username = (String) request.getSession().getAttribute("username");
         User founduser = userRepository.findById(username)

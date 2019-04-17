@@ -38,6 +38,9 @@ public class ProfileController {
     @GetMapping("/view_profile")
     public String viewProfile(@RequestParam(value = "user") String linkedUsername,
                               ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
 
         // Session User
         String username = (String) request.getSession().getAttribute("username");
