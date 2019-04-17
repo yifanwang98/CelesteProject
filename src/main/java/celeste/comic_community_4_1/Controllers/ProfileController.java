@@ -50,6 +50,7 @@ public class ProfileController {
         model.addAttribute("isOthersProfile", !username.equals(linkedUsername));
         User linkedUser = userRepository.findById(linkedUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
+        model.addAttribute("profileOwner", linkedUser);
 
         //All the post by this user
         List<Post> postlist = postRepository.findByUser(linkedUser);
