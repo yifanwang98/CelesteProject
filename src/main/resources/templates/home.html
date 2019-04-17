@@ -180,17 +180,20 @@
                     <col width="25%"/>
                     <tr>
                         <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                            <a href=""><i class='fas fa-share-square'></i> <span
+                            <a href="">
+                                <i class='fas fa-share-square'></i> <span
                                     th:text="'Share ('+${repostsForeachPost.get(post.getPostID())}+')'"></span></a>
                         </td>
                         <td class="post-action-cell" style="border-right: #ccc 1px solid">
                             <a href=""><i class='far fa-comment-dots'></i> Comment (1k+)</a>
                         </td>
                         <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                            <a href=""><i th:text="'Like ('+${starsForeachPost.get(post.getPostID())}+')'"class='fas fa-star'></i></a>
+                            <a href=""><i class='fas fa-star'></i> <span
+                                    th:text="'Star ('+${starsForeachPost.get(post.getPostID())}+')'"></span></a>
                         </td>
                         <td class="post-action-cell">
-                            <a href=""><i th:text="'Like ('+${likesForeachPost.get(post.getPostID())}+')'" class='far fa-thumbs-up'></i></a>
+                            <a href=""><i class='far fa-thumbs-up'></i> <span
+                                    th:text="'Like ('+${likesForeachPost.get(post.getPostID())}+')'"></span></a>
                         </td>
                     </tr>
                 </table>
