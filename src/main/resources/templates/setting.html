@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Setting</title>
     <!-- Metadata -->
@@ -26,7 +27,7 @@
                         <div class="logo"></div>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="home.html" class="headerUnselected">Home</a>
+                        <a href="/mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="discover.html" class="headerUnselected">Discover</a>
@@ -45,7 +46,7 @@
                         <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                        <a href="/setting" class="headerSelected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="profile_post.html" class="headerUnselected"><i
@@ -77,7 +78,7 @@
                         Avatar
                     </td>
                     <td style="text-align: center;">
-                        <img src="../static/images/default-avatar.png" class="setting-avatar">
+                        <image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="setting-avatar"></image>
                     </td>
                     <td style="text-align: right">
                         <input type="file" accept="image/*" style="display: none;" id="new-avatar">
@@ -97,13 +98,13 @@
                 <tr>
                     <td class="setting-subtitle">Username</td>
                     <td>
-                        <div>[Username Placeholder Fixed]</div>
+                        <div th:text="${User.getUsername()}"></div>
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle">Password</td>
                     <td>
-                        <div>[Password ****** Placeholder When Not Editing]</div>
+                        <div>********</div>
                         <input type="password" form="profile-form" name="new-password" class="setting-textfield">
                     </td>
                 </tr>
@@ -117,14 +118,14 @@
                 <tr>
                     <td class="setting-subtitle">Email</td>
                     <td>
-                        <div>[Email@placeholder.com When Not Editing]</div>
+                        <div th:text="${User.getEmail()}"></div>
                         <input type="email" form="profile-form" name="new-email" class="setting-textfield">
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle">Gender</td>
                     <td>
-                        <div>[Male / Female When Not Editing]</div>
+                        <div th:text="${User.getGender() == 0 ? 'Male' : 'Female'}"></div>
                         <table style="border-spacing: 0; width: 100%;">
                             <col width="50%">
                             <col width="50%">
@@ -174,7 +175,7 @@
                 <col width="30%"/>
                 <col width="40%"/>
                 <col width="30%"/>
-                <tr>
+                <tr th:if="${User.getMembership()} == 0">
                     <td class="setting-subtitle">Current Plan</td>
                     <td>
                         <div>Basic</div>
@@ -183,7 +184,7 @@
                         <a href="" class="setting-upgrade-btn">Upgrade</a>
                     </td>
                 </tr>
-                <tr>
+                <tr th:unless="${User.getMembership()} == 0">
                     <td class="setting-subtitle">Current Plan</td>
                     <td>
                         <div>Premium</div>
