@@ -76,7 +76,7 @@
                     <!-- Header -->
                     <tr>
                         <td class="post-avatar">
-                            <a href="">
+                            <a th:href="'view_profile?user=' + ${post.getUser().getUsername()}">
                             <image th:src="'data:image/png;base64,'+${post.getUser().getAvatar()}" class="post-avatar-image"></image>
                             </a>
                         </td>
@@ -122,7 +122,7 @@
                                     <!-- Header -->
                                     <tr>
                                         <td class="post-avatar">
-                                            <a href="">
+                                            <a th:href="'view_profile?user=' + ${post.getUser().getUsername()}">
                                                 <image th:src="'data:image/png;base64,'+${post.getUser().getAvatar()}"
                                                        class="post-avatar-image"></image>
                                             </a>
