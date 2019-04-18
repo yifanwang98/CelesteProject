@@ -34,7 +34,7 @@
                         <a href="discover" class="headerUnselected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="search.html" class="headerUnselected">Search</a>
+                        <a href="search" class="headerUnselected">Search</a>
                     </td>
                 </tr>
             </table>
@@ -260,7 +260,7 @@
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a href="profile_star.html">
+                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
                                     <div>
                                         <i class='fas fa-star button-icon'></i><br>Stars
                                     </div>
