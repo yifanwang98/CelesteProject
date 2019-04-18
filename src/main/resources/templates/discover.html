@@ -30,10 +30,10 @@
                         <a href="mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="discover" class="headerUnselected">Discover</a>
+                        <a href="discover" class="headerSelected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="search" class="headerSelected">Search</a>
+                        <a href="search" class="headerUnselected">Search</a>
                     </td>
                 </tr>
             </table>
@@ -339,21 +339,21 @@
                         <col width="33.333333%"/>
                         <tr>
                             <td class="button-link">
-                                <a href="">
+                                <a href="/createPostOption">
                                     <div style="padding: 1em 0;">
                                         <i class='fas fa-pen-nib button-icon'></i><br>Single
                                     </div>
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a href="">
+                                <a href="/createSeries">
                                     <div>
                                         <i class='fas fa-sticky-note button-icon'></i><br>Series
                                     </div>
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a href="">
+                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
                                     <div>
                                         <i class='fas fa-star button-icon'></i><br>Stars
                                     </div>
