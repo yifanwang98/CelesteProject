@@ -41,8 +41,16 @@ public class UploadExistingController {
         return "uploadPost";
     }
 
-
-
-
-
+    @GetMapping("/drawing")
+    public String goToDrawing(ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+        // Find Current User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        model.addAttribute("User", user);
+        return "drawing";
+    }
 }

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<html>
+<body>
+<div id="zwibbler" style="margin-left:auto;margin-right:auto;border:2px solid red;width:1024px;height:768px;"></div>
+<zwibbler>
+    <button id="save-button"> save_button</button>
+    <button id="download-button"> download button</button>
+</zwibbler>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script src="http://zwibbler.com/zwibbler-demo.js"></script>
+<script type="text/javascript">
+    var ctx = Zwibbler.create("zwibbler", {
+        showPropertyPanel: true,
+        showPageSelector: true,
+        showShapeBrushTool: true,
+        defaultBrushWidth: 2
+    });
+    $("#save-button").click(function () {
+        var saved = ctx.save();
+        // send saved document to database.
+    });
+
+    $("#download-button").click(function () {
+        var filename = prompt("Please enter a filename");
+        if (filename) {
+            ctx.download("png", filename + ".png");
+        }
+    });
+
+    function onImage() {
+        var dataUrl = ctx.save("png");
+        window.open(dataUrl, "other");
+        ctx.newDocument();
+        ctx.useLineTool({
+            arrowStyle: "solid",
+            arrowSize: 20
+        });
+        ctx.useRectangleTool({
+            fillStyle: "transparent"
+        });
+        ctx.useCircleTool({
+            fillStyle: "transparent"
+        });
+        ctx.setZoom(0.6);
+        ctx.useBrushTool({
+            lineWidth: 10,
+            strokeStyle: "erase",
+            // optional: prevents the user from being able to move the erase stroke.
+            layer: "my_eraser_layer"
+        });
+    }
+
+</script>
+</body>
+</html>
