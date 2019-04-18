@@ -28,7 +28,7 @@
                         <div class="logo"></div>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="mainPage" class="headerSelected">Home</a>
+                        <a href="mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="" class="headerUnselected">Discover</a>
@@ -99,25 +99,25 @@
         </span>
         <tr>
             <td class="profile-index-cell-border profile-index-cell-selected">
-                <a href="">Post (2)</a>
+                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (2)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a href="profile_series.html">Series (1)</a>
+                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (1)</a>
             </td>
             <span th:if="${isOthersProfile}">
                 <td class="profile-index-cell-unselected">
-                    <a href="profile_subscription.html">Subscription (1)</a>
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
                 </td>
             </span>
             <span th:unless="${isOthersProfile}">
                 <td class="profile-index-cell-border profile-index-cell-unselected">
-                    <a href="profile_subscription.html">Subscription (1)</a>
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
                 </td>
                 <td class="profile-index-cell-border profile-index-cell-unselected">
-                    <a href="profile_star.html">Stars (1)</a>
+                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (1)</a>
                 </td>
                 <td class="profile-index-cell-unselected">
-                    <a href="profile_analysis.html">Analysis</a>
+                    <a th:href="'profile_analysis?user=' + ${profileOwner.getUsername()}">Analysis</a>
                 </td>
             </span>
         </tr>
