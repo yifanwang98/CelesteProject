@@ -41,38 +41,7 @@ public class UploadExistingController {
         return "uploadPost";
     }
 
-    @ResponseBody
-    @PostMapping("/changeSetting")
-    public String[] changeAvatar(@RequestParam("file") MultipartFile file, ModelMap model, HttpServletRequest request,
-                               RedirectAttributes redirectAttributes) throws Exception{
-        if (!file.isEmpty()) {
-            String type = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));// 取文件格式后缀名
-            type = type.substring(1);
 
-            File convFile = new File(file.getOriginalFilename());
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(file.getBytes());
-            fos.close();
-
-            BufferedImage bImage = ImageIO.read(convFile);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bImage, type, bos );
-            byte [] data = bos.toByteArray();
-            String base64 = Base64.getEncoder().encodeToString(data);
-//            System.out.println(type);
-            String username = (String) (request.getSession().getAttribute("username"));
-            System.out.println(userRepository.findById(username).get().getAvatar()==base64);
-            userRepository.findById(username).get().setAvatar(base64);
-            userRepository.save(userRepository.findById(username).get());
-            String[] x = {"Upload Success!",base64};
-            return x;
-
-        }
-        String[] x = {"Failed","123"};
-//        System.out.println("123");
-        return x;
-    }
 
 
 
