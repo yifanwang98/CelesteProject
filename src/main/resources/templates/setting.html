@@ -13,6 +13,42 @@
     <link href="../static/stylesheet/setting.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function(){
+            $('#profile-form').submit(function(event) {
+                event.preventDefault();
+                var form = new FormData(document.getElementById("profile-form"));
+                $.ajax({
+                    type : "POST",
+                    url : 'changeSetting',
+                    data:form,
+                    // dataType : "image/jpg",
+                    contentType: false,
+                    processData: false,
+                    cache : false,
+                    success : function(data) {
+                        if(data[0] == "Upload Success!"){
+                            alert("Upload Success!")
+                            var newsrc = 'data:image/png;base64,'+data[1]
+                            alert(newsrc)
+                            $('#useravatar').attr("src", newsrc)
+                            // alert( $('#useravatar').attr("src"))
+
+                        }
+                        else {
+                            alert("Failed!")
+                        }
+                    },
+                    error: function(){
+                        alert(arguments[1]);
+                    }
+                });
+            })
+        });
+    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -63,7 +99,7 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <div style="padding: 3em 30%;" class="webfont">
-    <form id="profile-form"></form>
+    <form id="profile-form" method="POST" action="/changeAvatar" enctype="multipart/form-data"></form>
     <div class="setting-outer-container">
         <!-- Title -->
         <div class="setting-title semibold">Profile</div>
@@ -78,14 +114,15 @@
                         Avatar
                     </td>
                     <td style="text-align: center;">
-                        <image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="setting-avatar"></image>
+                        <image id="useravatar"th:src="'data:image/png;base64,'+${User.getAvatar()}" class="setting-avatar"></image>
                     </td>
                     <td style="text-align: right">
-                        <input type="file" accept="image/*" style="display: none;" id="new-avatar">
+                        <input type="file" accept=".jpg,.png" style="display: none;" id="new-avatar" form="profile-form" name = "file">
                         <span class="add-img-button-container">
                             <input type="button" value="Change" class="setting-save-btn" form="profile-form"
                                    onclick="document.getElementById('new-avatar').click();"/>
                         </span>
+
                     </td>
                 </tr>
             </table>
@@ -155,7 +192,7 @@
                 <tr>
                     <td><a href="" class="setting-cancel-btn">Cancel</a></td>
                     <td>
-                        <input type="submit" class="setting-save-btn" form="profile-form" value="Save">
+                        <input type="submit" id = "changeSetting" class="setting-save-btn" form="profile-form" value="Save">
                     </td>
                 </tr>
             </table>
