@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Discover - Celeste</title>
     <!-- Metadata -->
@@ -26,13 +27,13 @@
                         <div class="logo"></div>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="home.html" class="headerUnselected">Home</a>
+                        <a href="mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerSelected">Discover</a>
+                        <a href="discover" class="headerUnselected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="search.html" class="headerUnselected">Search</a>
+                        <a href="search" class="headerSelected">Search</a>
                     </td>
                 </tr>
             </table>
@@ -45,10 +46,13 @@
                         <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-user-circle headerIcon'></i></a>
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
                     </td>
                     <td class="headerCellPadding"></td>
                 </tr>

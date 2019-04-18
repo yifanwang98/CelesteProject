@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>My Subscription</title>
     <!-- Metadata -->
@@ -27,13 +28,13 @@
                         <div class="logo"></div>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerSelected">Home</a>
+                        <a href="mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="" class="headerUnselected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected">Search</a>
+                        <a href="search" class="headerUnselected">Search</a>
                     </td>
                 </tr>
             </table>
@@ -46,11 +47,13 @@
                         <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><img src="../static/images/avatar1.jpg"
-                                                                 class="header-avatar-image"></a>
+                        <a href="" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
                     </td>
                     <td class="headerCellPadding"></td>
                 </tr>
@@ -65,21 +68,22 @@
 
 <div class="profile-section webfont">
     <div style="text-align: center">
-        <img src="../static/images/avatar1.jpg" class="avatar-image">
+        <image th:src="'data:image/png;base64,'+${profileOwner.getAvatar()}" class="avatar-image"></image>
     </div>
-    <div class="profile-name">
-        Abracadabra
+    <div class="profile-name" th:text="${profileOwner.getUsername()}">
+
     </div>
     <div class="profile-follow-info">
         <table width="100%">
             <col width="50%"/>
             <col width="50%"/>
             <tr style="">
-                <td style="text-align: right; border-right: #b6b6b6 1px solid; color: #666666;">
-                    Following: 123&nbsp;
+                <td style="text-align: right; border-right: #b6b6b6 1px solid; color: #666666;"
+                    th:text="'Following: '+ ${following} + '&nbsp'">
+
                 </td>
-                <td style="text-align: left;color: #666666;">
-                    &nbsp;Follower: 321
+                <td style="text-align: left;color: #666666;" th:text="'&nbspFollower: '+ ${followers}">
+
                 </td>
             </tr>
         </table>
@@ -89,27 +93,35 @@
 <!---------------------------------------->
 <div class="profile-index-section webfont">
     <table width="100%">
-        <col width="20%"/>
-        <col width="20%"/>
-        <col width="20%"/>
-        <col width="20%"/>
-        <col width="20%"/>
+        <span th:if="${isOthersProfile}">
+            <col width="33.3%"/><col width="33.4%"/><col width="33.3%"/>
+        </span>
+        <span th:unless="${isOthersProfile}">
+            <col width="20%"/><col width="20%"/><col width="20%"/><col width="20%"/><col width="20%"/>
+        </span>
         <tr>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a href="profile_post.html">Post (2)</a>
+                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (2)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a href="profile_series.html">Series (1)</a>
+                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (1)</a>
             </td>
-            <td class="profile-index-cell-border profile-index-cell-selected">
-                <a href="">Subscription (1)</a>
-            </td>
-            <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a href="profile_star.html">Stars (1)</a>
-            </td>
-            <td class="profile-index-cell-unselected">
-                <a href="profile_analysis.html">Analysis</a>
-            </td>
+            <span th:if="${isOthersProfile}">
+                <td class="profile-index-cell-selected">
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                </td>
+            </span>
+            <span th:unless="${isOthersProfile}">
+                <td class="profile-index-cell-border profile-index-cell-selected">
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                </td>
+                <td class="profile-index-cell-border profile-index-cell-unselected">
+                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (1)</a>
+                </td>
+                <td class="profile-index-cell-unselected">
+                    <a th:href="'profile_analysis'">Analysis</a>
+                </td>
+            </span>
         </tr>
     </table>
 </div>

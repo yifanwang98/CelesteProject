@@ -28,13 +28,13 @@
                         <div class="logo"></div>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerSelected">Home</a>
+                        <a href="mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="" class="headerUnselected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected">Search</a>
+                        <a href="search" class="headerUnselected">Search</a>
                     </td>
                 </tr>
             </table>
@@ -47,7 +47,7 @@
                         <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="" class="headerUnselected"><image th:src="'data:image/png;base64,'+${User.getAvatar()}"
@@ -66,9 +66,9 @@
 
 <div class="profile-section webfont">
     <div style="text-align: center">
-        <image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="avatar-image"></image>
+        <image th:src="'data:image/png;base64,'+${profileOwner.getAvatar()}" class="avatar-image"></image>
     </div>
-    <div class="profile-name" th:text="${User.getUsername()}">
+    <div class="profile-name" th:text="${profileOwner.getUsername()}">
 
     </div>
     <div class="profile-follow-info">
@@ -76,10 +76,11 @@
             <col width="50%"/>
             <col width="50%"/>
             <tr style="">
-                <td style="text-align: right; border-right: #b6b6b6 1px solid; color: #666666;" th:text="'Following: '+ ${following}">
+                <td style="text-align: right; border-right: #b6b6b6 1px solid; color: #666666;"
+                    th:text="'Following: '+ ${following} + '&nbsp'">
 
                 </td>
-                <td style="text-align: left;color: #666666;" th:text="'Follower: '+ ${followers}">
+                <td style="text-align: left;color: #666666;" th:text="'&nbspFollower: '+ ${followers}">
 
                 </td>
             </tr>
@@ -90,27 +91,35 @@
 <!---------------------------------------->
 <div class="profile-index-section webfont">
     <table width="100%">
-        <col width="20%"/>
-        <col width="20%"/>
-        <col width="20%"/>
-        <col width="20%"/>
-        <col width="20%"/>
+        <span th:if="${isOthersProfile}">
+            <col width="33.3%"/><col width="33.4%"/><col width="33.3%"/>
+        </span>
+        <span th:unless="${isOthersProfile}">
+            <col width="20%"/><col width="20%"/><col width="20%"/><col width="20%"/><col width="20%"/>
+        </span>
         <tr>
             <td class="profile-index-cell-border profile-index-cell-selected">
-                <a href="">Post (2)</a>
+                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (2)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a href="profile_series.html">Series (1)</a>
+                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (1)</a>
             </td>
-            <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a href="profile_subscription.html">Subscription (1)</a>
-            </td>
-            <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a href="profile_star.html">Stars (1)</a>
-            </td>
-            <td class="profile-index-cell-unselected">
-                <a href="profile_analysis.html">Analysis</a>
-            </td>
+            <span th:if="${isOthersProfile}">
+                <td class="profile-index-cell-unselected">
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                </td>
+            </span>
+            <span th:unless="${isOthersProfile}">
+                <td class="profile-index-cell-border profile-index-cell-unselected">
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                </td>
+                <td class="profile-index-cell-border profile-index-cell-unselected">
+                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (1)</a>
+                </td>
+                <td class="profile-index-cell-unselected">
+                    <a th:href="'profile_analysis'">Analysis</a>
+                </td>
+            </span>
         </tr>
     </table>
 </div>
@@ -181,77 +190,6 @@
             </tr>
         </table>
     </div>
-
-
-
-
-
-
-
-    <!--<div class="home-posts-card">-->
-        <!--<table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">-->
-            <!--&lt;!&ndash; Header &ndash;&gt;-->
-            <!--<tr>-->
-                <!--<td class="post-avatar">-->
-                    <!--<a href="">-->
-                        <!--<image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="post-avatar-image"></image>-->
-                    <!--</a>-->
-                <!--</td>-->
-                <!--<td>-->
-                    <!--<table width="100%">-->
-                        <!--<tr>-->
-                            <!--<td>-->
-                                <!--<span class="post-author"th:text="${User.getUsername()}"></span><br>-->
-                                <!--<span class="post-time">14:37 Mar 29, 2019</span>-->
-                            <!--</td>-->
-                            <!--<td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">-->
-                                <!--<a href="" class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
-                            <!--</td>-->
-                        <!--</tr>-->
-                    <!--</table>-->
-                <!--</td>-->
-            <!--</tr>-->
-            <!--&lt;!&ndash; Text &ndash;&gt;-->
-            <!--<tr>-->
-                <!--<td></td>-->
-                <!--<td>-->
-                    <!--<div class="post-text">School life</div>-->
-                <!--</td>-->
-            <!--</tr>-->
-            <!--&lt;!&ndash; Images &ndash;&gt;-->
-            <!--<tr>-->
-                <!--<td></td>-->
-                <!--<td>-->
-                    <!--<div>-->
-                        <!--<img src="../static/images/samplePost/S-1-1.jpg" class="post-image-multiple">-->
-                        <!--<img src="../static/images/samplePost/S-1-2.jpg" class="post-image-multiple">-->
-                        <!--<img src="../static/images/samplePost/S-1-3.jpg" class="post-image-multiple">-->
-                    <!--</div>-->
-                <!--</td>-->
-            <!--</tr>-->
-        <!--</table>-->
-        <!--&lt;!&ndash; 转赞评 &ndash;&gt;-->
-        <!--<table width="100%" class="post-action">-->
-            <!--<col width="25%"/>-->
-            <!--<col width="25%"/>-->
-            <!--<col width="25%"/>-->
-            <!--<col width="25%"/>-->
-            <!--<tr>-->
-                <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-                    <!--<a href=""><i class='fas fa-share-square'></i> Share (1w+)</a>-->
-                <!--</td>-->
-                <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-                    <!--<a href=""><i class='far fa-comment-dots'></i> Comment (1k+)</a>-->
-                <!--</td>-->
-                <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-                    <!--<a href=""><i class='fas fa-star'></i> Star (128)</a>-->
-                <!--</td>-->
-                <!--<td class="post-action-cell">-->
-                    <!--<a href=""><i class='far fa-thumbs-up'></i> Like (10w+)</a>-->
-                <!--</td>-->
-            <!--</tr>-->
-        <!--</table>-->
-    <!--</div>-->
 </div>
 <!---------------------------------------->
 <!---------------------------------------->

@@ -1,26 +1,25 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.model.*;
-import celeste.comic_community_4_1.model.EmbeddedClasses.FollowIndentity;
+import celeste.comic_community_4_1.model.Follow;
+import celeste.comic_community_4_1.model.Post;
+import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
-import com.mysql.cj.jdbc.Blob;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
-public class indexController{
+public class IndexController {
 
 
     @Autowired

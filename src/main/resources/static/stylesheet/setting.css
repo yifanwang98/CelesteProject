@@ -1,0 +1,155 @@
+@charset "UTF-8";
+
+.setting-outer-container {
+    padding: 1.5em 2em;
+    background: white;
+    border-radius: 5px;
+}
+
+.setting-inner-container {
+    margin: 1em 0;
+}
+
+.setting-title {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.setting-subtitle {
+    font-size: 1.05em;
+    font-weight: 500;
+    padding: 0.25em 0;
+}
+
+.setting-avatar {
+    width: 3em;
+    border-radius: 3em;
+    border: 1px solid #666666;
+}
+
+.setting-edit-btn {
+    padding: 0.25em 0;
+    font-size: 0.95em;
+    border: #218787 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    display: block;
+    background: none;
+    width: 100%;
+    color: #218787;
+}
+
+.setting-edit-btn:hover {
+    border: #218787 1.5px solid;
+}
+
+.setting-edit-btn:link, .setting-edit-btn:visited {
+    text-decoration: none;
+    color: #218787;
+}
+
+.setting-cancel-btn {
+    padding: 0.25em 0em;
+    font-size: 0.95em;
+    border: #9a9a9a 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+.setting-cancel-btn:hover {
+    border: #9a9a9a 1.5px solid;
+    font-weight: 500;
+}
+
+.setting-cancel-btn:link, .setting-cancel-btn:visited {
+    text-decoration: none;
+    color: #9a9a9a;
+}
+
+.setting-textfield {
+    width: 100%;
+    font-size: 1em;
+}
+
+.setting-upgrade-btn {
+    padding: 0.25em 0em;
+    font-size: 0.95em;
+    border: goldenrod 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+.setting-upgrade-btn:hover {
+    border: goldenrod 1.5px solid;
+    font-weight: 500;
+}
+
+.setting-upgrade-btn:link, .setting-upgrade-btn:visited {
+    text-decoration: none;
+    color: goldenrod;
+}
+
+.setting-close-account-btn {
+    padding: 0.5em 0em;
+    font-size: 0.96em;
+    border: #ba0000 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+.setting-close-account-btn:hover {
+    border: #ba0000 1.5px solid;
+    font-weight: 500;
+}
+
+.setting-close-account-btn:link, .setting-close-account-btn:visited {
+    text-decoration: none;
+    color: #ba0000;
+}
+
+.setting-reset-account-btn {
+    padding: 0.5em 0em;
+    font-size: 0.96em;
+    border: #007174 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+.setting-reset-account-btn:hover {
+    border: #007174 1.5px solid;
+    font-weight: 500;
+}
+
+.setting-reset-account-btn:link, .setting-reset-account-btn:visited {
+    text-decoration: none;
+    color: #007174;
+}
+
+.setting-save-btn {
+    padding: 0.3em 0;
+    font-size: 0.95em;
+    border: #218787 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    display: block;
+    background: none;
+    width: 100%;
+    color: #218787;
+    font-weight: normal;
+}
+
+.setting-save-btn:hover {
+    background: #218787;
+    color: white;
+    cursor: pointer;
+}

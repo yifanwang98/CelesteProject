@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Setting</title>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Style Sheet -->
+    <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/setting.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+</head>
+<body>
+<!-- Header Banner -->
+<table class="header webfont semibold">
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/mainPage" class="headerUnselected">Home</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="discover.html" class="headerUnselected">Discover</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="search.html" class="headerUnselected">Search</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- Right Part -->
+        <td style="width: 5em;">
+            <table style="padding: 0; margin: 0; align: right;">
+                <tr style="align: right;">
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/setting" class="headerSelected"><i class='fas fa-cog headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="profile_post.html" class="headerUnselected"><i
+                                class='fas fa-user-circle headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div style="height: 2.75em;"></div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 3em 30%;" class="webfont">
+    <form id="profile-form"></form>
+    <div class="setting-outer-container">
+        <!-- Title -->
+        <div class="setting-title semibold">Profile</div>
+        <!-- Avatar-->
+        <div class="setting-inner-container">
+            <table style="border-spacing: 0; width: 100%;">
+                <col width="25%"/>
+                <col width="50%"/>
+                <col width="25%"/>
+                <tr>
+                    <td class="setting-subtitle">
+                        Avatar
+                    </td>
+                    <td style="text-align: center;">
+                        <image th:src="'data:image/png;base64,'+${User.getAvatar()}" class="setting-avatar"></image>
+                    </td>
+                    <td style="text-align: right">
+                        <input type="file" accept="image/*" style="display: none;" id="new-avatar">
+                        <span class="add-img-button-container">
+                            <input type="button" value="Change" class="setting-save-btn" form="profile-form"
+                                   onclick="document.getElementById('new-avatar').click();"/>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- Content -->
+        <div class="setting-inner-container">
+            <table style="border-spacing: 0; width: 100%;">
+                <col width="25%"/>
+                <col width="75%"/>
+                <tr>
+                    <td class="setting-subtitle">Username</td>
+                    <td>
+                        <div th:text="${User.getUsername()}"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="setting-subtitle">Password</td>
+                    <td>
+                        <div>********</div>
+                        <input type="password" form="profile-form" name="new-password" class="setting-textfield">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="setting-subtitle">Confirm Password</td>
+                    <td>
+                        <input type="password" form="profile-form" name="confirm-new-password"
+                               class="setting-textfield">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="setting-subtitle">Email</td>
+                    <td>
+                        <div th:text="${User.getEmail()}"></div>
+                        <input type="email" form="profile-form" name="new-email" class="setting-textfield">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="setting-subtitle">Gender</td>
+                    <td>
+                        <div th:text="${User.getGender() == 0 ? 'Male' : 'Female'}"></div>
+                        <table style="border-spacing: 0; width: 100%;">
+                            <col width="50%">
+                            <col width="50%">
+                            <tr>
+                                <td>
+                                    <input type="radio" value="male" name="new-gender" form="profile-form"
+                                           checked="checked"> Male
+                                </td>
+                                <td>
+                                    <input type="radio" value="female" name="new-gender" form="profile-form"> Female
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr style="height: 0.5em">
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>
+                        <a href="" class="setting-edit-btn"><i class='far fa-edit'></i> Edit</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="" class="setting-cancel-btn">Cancel</a></td>
+                    <td>
+                        <input type="submit" class="setting-save-btn" form="profile-form" value="Save">
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 0em 30%;" class="webfont">
+    <div class="setting-outer-container">
+        <!-- Title -->
+        <div class="setting-title semibold">Account</div>
+        <!-- Plan -->
+        <div class="setting-inner-container">
+            <table style="border-spacing: 0; width: 100%;">
+                <col width="30%"/>
+                <col width="40%"/>
+                <col width="30%"/>
+                <tr th:if="${User.getMembership()} == 0">
+                    <td class="setting-subtitle">Current Plan</td>
+                    <td>
+                        <div>Basic</div>
+                    </td>
+                    <td>
+                        <a href="" class="setting-upgrade-btn">Upgrade</a>
+                    </td>
+                </tr>
+                <tr th:unless="${User.getMembership()} == 0">
+                    <td class="setting-subtitle">Current Plan</td>
+                    <td>
+                        <div>Premium</div>
+                    </td>
+                    <td>
+                        <a href="" class="setting-cancel-btn">Downgrade</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="setting-inner-container">
+            <a href="" class="setting-reset-account-btn">Reset Account</a>
+        </div>
+        <div class="setting-inner-container">
+            <a href="" class="setting-close-account-btn">Close Account</a>
+        </div>
+    </div>
+</div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 5em"></div>
+</body>
+</html>
