@@ -18,6 +18,42 @@
 
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function(){
+            $('#Reset_Account').click(function () {
+                var answer = confirm("Do you really want to reset your account? All of your posts, works and series will be deleted.")
+                if(answer==true){
+                    var answer2 = prompt("Please enter \"Confirm Reset\"");
+                    if (answer2=="Confirm Reset") {
+                        window.location.href = "resetAccount";
+                    }
+                    else {
+
+                    }
+
+                    // $.ajax({
+                    //     type : "GET",
+                    //     url : 'upgrade_downgrade',
+                    //     data:{userstatus: [[${User.getMembership()}]]},
+                    //     // dataType : "json",
+                    //     cache : false,
+                    //     success : function(data) {
+                    //         if(data != null){
+                    //             alert(data)
+                    //             location.reload()
+                    //         }
+                    //         else {
+                    //             alert("777777")
+                    //         }
+                    //     },
+                    //     error: function(){
+                    //         alert(arguments[1]);
+                    //     }
+                    // });
+                }
+
+
+
+            })
+
             $('input[name=confirm-new-password],input[name=new-password]').on("input propertychange",function() {
                 var pwd = $('input[name=new-password]').val();
                 var pwd1 = $('input[name=confirm-new-password]').val();
@@ -55,8 +91,6 @@
 
             })
 
-
-
             $('#profile-form').submit(function(event) {
                 event.preventDefault();
                 var form = new FormData(document.getElementById("profile-form"));
@@ -71,20 +105,7 @@
                     success : function(data) {
                         if(data == "Updated Success!"){
                             alert(data)
-                            // var newsrc = 'data:image/png;base64,'+data[1]
                             location.reload();
-                            // var User =/*[[${message}]]*/ 'default';
-                            // alert(User.getUsername())
-                            // $('#useravatar').attr("src", newsrc)
-                            //
-                            //
-                            // $('input[name=new-password]').val(data[2])
-                            // $('input[name=confirm-new-password]').val(data[2])
-                            // $('#useravatar').attr("src", newsrc)
-                            // $('#useravatar').attr("src", newsrc)
-                            // $('#useravatar').attr("src", newsrc)
-                            // alert( $('#useravatar').attr("src"))
-
                         }
                         else {
                             alert(data)
@@ -280,10 +301,10 @@
             </table>
         </div>
         <div class="setting-inner-container">
-            <a href="" class="setting-reset-account-btn">Reset Account</a>
+            <a id = "Reset_Account"class="setting-reset-account-btn" style="cursor: pointer;">Reset Account</a>
         </div>
         <div class="setting-inner-container">
-            <a href="closeAccount" class="setting-close-account-btn">Close Account</a>
+            <a id = "Close_Account" class="setting-close-account-btn" style="cursor: pointer;">Close Account</a>
         </div>
     </div>
 </div>

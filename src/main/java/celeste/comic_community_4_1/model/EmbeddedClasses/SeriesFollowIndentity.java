@@ -2,6 +2,8 @@ package celeste.comic_community_4_1.model.EmbeddedClasses;
 
 import celeste.comic_community_4_1.model.Series;
 import celeste.comic_community_4_1.model.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -14,10 +16,12 @@ import java.util.Objects;
 public class SeriesFollowIndentity implements Serializable {
 
     @ManyToOne //(cascade= CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "username")
     private User user;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "seriesID")
     private Series series;
 

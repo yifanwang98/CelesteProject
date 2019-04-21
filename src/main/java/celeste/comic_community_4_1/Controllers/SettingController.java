@@ -1,6 +1,8 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.model.Post;
+import celeste.comic_community_4_1.model.Series;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class SettingController {
 
     @Autowired
     StarRepository starRepository;
+
+    @Autowired
+    SeriesRepository seriesRepository;
 
     @GetMapping("/setting")
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
@@ -110,7 +115,7 @@ public class SettingController {
     @ResponseBody
     @GetMapping("/upgrade_downgrade")
     public String upgrade(@RequestParam(value = "userstatus" ) String userstatus, ModelMap model, HttpServletRequest request) throws Exception{
-        System.out.println(userstatus);
+
 
 
         // Session User
@@ -132,6 +137,23 @@ public class SettingController {
     }
 
 
+
+    @GetMapping("/resetAccount")
+    public String resetAccount(ModelMap model, HttpServletRequest request) throws Exception{
+
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        for(Post i : postRepository.findByUser(user)){
+            postRepository.delete(i);
+        }
+        for(Series i : seriesRepository.findByUser(user)){
+            seriesRepository.delete(i);
+        }
+        model.addAttribute("User",user);
+        return "home";
+    }
 
     @GetMapping("/closeAccount")
     public String closeAccount(ModelMap model, HttpServletRequest request) throws Exception{
