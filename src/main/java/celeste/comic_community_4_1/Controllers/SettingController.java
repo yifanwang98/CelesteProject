@@ -157,18 +157,12 @@ public class SettingController {
 
     @GetMapping("/closeAccount")
     public String closeAccount(ModelMap model, HttpServletRequest request) throws Exception{
-        if (request.getSession().getAttribute("username") == null) {
-            return "failed";
-        }
-
-        // Session User
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
         userRepository.delete(user);
-        request.getSession().setAttribute("username",null);
-        return "success";
+        return "index";
     }
 
 }
