@@ -214,7 +214,7 @@
                         <col width="33.333333%"/>
                         <tr>
                             <td class="button-link">
-                                <a href="">
+                                <a th:href="'/following?user=' + ${User.getUsername()}">
                                     <div style="padding: 1em 0;">
                                         <span class="semibold" style="font-size: 1.05em;">Following</span><br><span th:text="${following}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
