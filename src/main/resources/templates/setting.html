@@ -32,16 +32,17 @@
                 }
             });
 
-            $('#upgrade').click(function () {
+            $('#upgrade,#downgrade').click(function () {
                 $.ajax({
-                    type : "POST",
-                    url : 'upgrade',
-                    // data:{ username: $('input[name=username]').val()},
+                    type : "GET",
+                    url : 'upgrade_downgrade',
+                    data:{userstatus: [[${User.getMembership()}]]},
                     // dataType : "json",
                     cache : false,
                     success : function(data) {
-                        if(data == "success"){
-                            alert("55555")
+                        if(data != null){
+                            alert(data)
+                            location.reload()
                         }
                         else {
                             alert("777777")
@@ -53,27 +54,7 @@
                 });
 
             })
-            $('#downgrade').click(function () {
-                $.ajax({
-                    type : "POST",
-                    url : 'upgrade',
-                    // data:{ username: $('input[name=username]').val()},
-                    // dataType : "json",
-                    cache : false,
-                    success : function(data) {
-                        if(data == "success"){
-                            alert("55555")
-                        }
-                        else {
-                            alert("777777")
-                        }
-                    },
-                    error: function(){
-                        alert(arguments[1]);
-                    }
-                });
 
-            })
 
 
             $('#profile-form').submit(function(event) {
@@ -278,22 +259,22 @@
                 <col width="30%"/>
                 <col width="40%"/>
                 <col width="30%"/>
-                <tr th:if="${User.getMembership()} == '0'">
+                <tr th:if="${User.getMembership()} == 'none'">
                     <td class="setting-subtitle">Current Plan</td>
                     <td>
                         <div>Basic</div>
                     </td>
                     <td>
-                        <a href="" id = "upgrade"class="setting-upgrade-btn">Upgrade</a>
+                        <a id = "upgrade"class="setting-upgrade-btn" style="cursor: pointer;">Upgrade</a>
                     </td>
                 </tr>
-                <tr th:unless="${User.getMembership()} == '0'">
+                <tr th:unless="${User.getMembership()} == 'none'">
                     <td class="setting-subtitle">Current Plan</td>
                     <td>
                         <div>Premium</div>
                     </td>
                     <td>
-                        <a href="" id = "downgrade" class="setting-cancel-btn">Downgrade</a>
+                        <a id = "downgrade"class="setting-upgrade-btn" style="cursor: pointer;">DownGrade</a>
                     </td>
                 </tr>
             </table>

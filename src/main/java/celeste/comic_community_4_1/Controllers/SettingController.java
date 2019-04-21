@@ -106,38 +106,31 @@ public class SettingController {
 
         return "Updated Success!";
     }
+
     @ResponseBody
-    @GetMapping("/upgrade")
-    public String upgrade(ModelMap model, HttpServletRequest request) throws Exception{
-        if (request.getSession().getAttribute("username") == null) {
-            return "index";
-        }
+    @GetMapping("/upgrade_downgrade")
+    public String upgrade(@RequestParam(value = "userstatus" ) String userstatus, ModelMap model, HttpServletRequest request) throws Exception{
+        System.out.println(userstatus);
+
 
         // Session User
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        user.setMembership("1");
-        userRepository.save(user);
-        model.addAttribute("User", user);
-        return "setting";
-    }
-    @ResponseBody
-    @GetMapping("/downgrade")
-    public String downgrade(ModelMap model, HttpServletRequest request) throws Exception{
-        if (request.getSession().getAttribute("username") == null) {
-            return "failed";
+        String returnstring;
+        if(userstatus.equals("none")){
+            user.setMembership("1");
+            returnstring =  "Upgrade success!";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        user.setMembership("0");
+        else{
+            user.setMembership("none");
+            returnstring =  "Downgrade success!";
+        }
         userRepository.save(user);
         model.addAttribute("User", user);
-        return "success";
+        return returnstring;
     }
+
 
 
     @GetMapping("/closeAccount")
