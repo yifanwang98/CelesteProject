@@ -86,6 +86,7 @@ public class SignUpController {
             }
 
 
+            model.addAttribute("User", newUser);
             model.addAttribute("postlist", postlist);
             model.addAttribute("imgsForeachPost", imgsForeachPost);
 

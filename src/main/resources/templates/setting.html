@@ -18,48 +18,62 @@
 
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function(){
-            // $('#upgrade').click(function () {
-            //     $.ajax({
-            //         type : "POST",
-            //         url : 'upgrade',
-            //         // data:{ username: $('input[name=username]').val()},
-            //         // dataType : "json",
-            //         cache : false,
-            //         success : function(data) {
-            //             if(data == "success"){
-            //                 alert("55555")
-            //             }
-            //             else {
-            //                 alert("777777")
-            //             }
-            //         },
-            //         error: function(){
-            //             alert(arguments[1]);
-            //         }
-            //     });
-            //
-            // })
-            // $('#downgrade').click(function () {
-            //     $.ajax({
-            //         type : "POST",
-            //         url : 'upgrade',
-            //         // data:{ username: $('input[name=username]').val()},
-            //         // dataType : "json",
-            //         cache : false,
-            //         success : function(data) {
-            //             if(data == "success"){
-            //                 alert("55555")
-            //             }
-            //             else {
-            //                 alert("777777")
-            //             }
-            //         },
-            //         error: function(){
-            //             alert(arguments[1]);
-            //         }
-            //     });
-            //
-            // })
+            $('input[name=confirm-new-password],input[name=new-password]').on("input propertychange",function() {
+                var pwd = $('input[name=new-password]').val();
+                var pwd1 = $('input[name=confirm-new-password]').val();
+                if(pwd == pwd1)
+                {
+                    $('#Confirm_Password').css("color","green");
+                    $('input[name=submit]').attr("disabled",false);
+                }
+                else {
+                    $('#Confirm_Password').css("color","red");
+                    $('input[name=submit]').attr("disabled",true);
+                }
+            });
+
+            $('#upgrade').click(function () {
+                $.ajax({
+                    type : "POST",
+                    url : 'upgrade',
+                    // data:{ username: $('input[name=username]').val()},
+                    // dataType : "json",
+                    cache : false,
+                    success : function(data) {
+                        if(data == "success"){
+                            alert("55555")
+                        }
+                        else {
+                            alert("777777")
+                        }
+                    },
+                    error: function(){
+                        alert(arguments[1]);
+                    }
+                });
+
+            })
+            $('#downgrade').click(function () {
+                $.ajax({
+                    type : "POST",
+                    url : 'upgrade',
+                    // data:{ username: $('input[name=username]').val()},
+                    // dataType : "json",
+                    cache : false,
+                    success : function(data) {
+                        if(data == "success"){
+                            alert("55555")
+                        }
+                        else {
+                            alert("777777")
+                        }
+                    },
+                    error: function(){
+                        alert(arguments[1]);
+                    }
+                });
+
+            })
 
 
             $('#profile-form').submit(function(event) {
@@ -74,16 +88,25 @@
                     processData: false,
                     cache : false,
                     success : function(data) {
-                        if(data[0] == "Upload Success!"){
-                            alert("Upload Success!")
-                            var newsrc = 'data:image/png;base64,'+data[1]
-                            alert(newsrc)
-                            $('#useravatar').attr("src", newsrc)
+                        if(data == "Updated Success!"){
+                            alert(data)
+                            // var newsrc = 'data:image/png;base64,'+data[1]
+                            location.reload();
+                            // var User =/*[[${message}]]*/ 'default';
+                            // alert(User.getUsername())
+                            // $('#useravatar').attr("src", newsrc)
+                            //
+                            //
+                            // $('input[name=new-password]').val(data[2])
+                            // $('input[name=confirm-new-password]').val(data[2])
+                            // $('#useravatar').attr("src", newsrc)
+                            // $('#useravatar').attr("src", newsrc)
+                            // $('#useravatar').attr("src", newsrc)
                             // alert( $('#useravatar').attr("src"))
 
                         }
                         else {
-                            alert("Failed!")
+                            alert(data)
                         }
                     },
                     error: function(){
@@ -143,7 +166,7 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <div style="padding: 3em 30%;" class="webfont">
-    <form id="profile-form" method="POST" action="/changeAvatar" enctype="multipart/form-data"></form>
+    <form id="profile-form" method="POST" action="/changeAvatar" enctype="multipart/form-data">
     <div class="setting-outer-container">
         <!-- Title -->
         <div class="setting-title semibold">Profile</div>
@@ -161,9 +184,9 @@
                         <image id="useravatar"th:src="'data:image/png;base64,'+${User.getAvatar()}" class="setting-avatar"></image>
                     </td>
                     <td style="text-align: right">
-                        <input type="file" accept=".jpg,.png" style="display: none;" id="new-avatar" form="profile-form" name = "file">
+                        <input type="file" accept=".jpg,.png" style="display: none;" id="new-avatar"  name = "file">
                         <span class="add-img-button-container">
-                            <input type="button" value="Change" class="setting-save-btn" form="profile-form"
+                            <input type="button" value="Change" class="setting-save-btn"
                                    onclick="document.getElementById('new-avatar').click();"/>
                         </span>
 
@@ -185,38 +208,36 @@
                 <tr>
                     <td class="setting-subtitle">Password</td>
                     <td>
-                        <div>********</div>
-                        <input type="password" form="profile-form" name="new-password" class="setting-textfield">
+                        <input type="password"  name="new-password" class="setting-textfield"  th:value="${User.getPassword()}">
                     </td>
                 </tr>
                 <tr>
-                    <td class="setting-subtitle">Confirm Password</td>
+                    <td class="setting-subtitle" id = "Confirm_Password">Confirm Password</td>
                     <td>
-                        <input type="password" form="profile-form" name="confirm-new-password"
-                               class="setting-textfield">
+                        <input type="password"  name="confirm-new-password"
+                               class="setting-textfield" th:value="${User.getPassword()}">
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle">Email</td>
                     <td>
-                        <div th:text="${User.getEmail()}"></div>
-                        <input type="email" form="profile-form" name="new-email" class="setting-textfield">
+                        <input type="email" id = "email"  name="new-email" class="setting-textfield" th:value="${User.getEmail()}">
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle">Gender</td>
                     <td>
-                        <div th:text="${User.getGender() == 0 ? 'Male' : 'Female'}"></div>
                         <table style="border-spacing: 0; width: 100%;">
                             <col width="50%">
                             <col width="50%">
                             <tr>
                                 <td>
-                                    <input type="radio" value="male" name="new-gender" form="profile-form"
-                                           checked="checked"> Male
+                                    <input type="radio" value="male" name="new-gender"
+                                           th:checked="${User.getGender() == 'male'}"> Male
                                 </td>
                                 <td>
-                                    <input type="radio" value="female" name="new-gender" form="profile-form"> Female
+                                    <input type="radio" value="female" name="new-gender"
+                                           th:checked="${User.getGender() == 'female'}"> Female
                                 </td>
                             </tr>
                         </table>
@@ -236,13 +257,14 @@
                 <tr>
                     <td><a href="" class="setting-cancel-btn">Cancel</a></td>
                     <td>
-                        <input type="submit" id = "changeSetting" class="setting-save-btn" form="profile-form" value="Save">
+                        <input type="submit" id = "changeSetting" class="setting-save-btn" value="Save" name="submit">
                     </td>
                 </tr>
             </table>
         </div>
 
     </div>
+    </form>
 </div>
 <!---------------------------------------->
 <!---------------------------------------->
@@ -262,7 +284,7 @@
                         <div>Basic</div>
                     </td>
                     <td>
-                        <a href="upgrade" id = "upgrade"class="setting-upgrade-btn">Upgrade</a>
+                        <a href="" id = "upgrade"class="setting-upgrade-btn">Upgrade</a>
                     </td>
                 </tr>
                 <tr th:unless="${User.getMembership()} == '0'">
@@ -271,7 +293,7 @@
                         <div>Premium</div>
                     </td>
                     <td>
-                        <a href="downgrade" id = "downgrade" class="setting-cancel-btn">Downgrade</a>
+                        <a href="" id = "downgrade" class="setting-cancel-btn">Downgrade</a>
                     </td>
                 </tr>
             </table>

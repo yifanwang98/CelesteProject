@@ -14,7 +14,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
-            alert(123)
             $('input[name=passwordConfirm],input[name=password]').on("input propertychange",function() {
                 var pwd = $('input[name=password]').val();
                 var pwd1 = $('input[name=passwordConfirm]').val();
@@ -120,7 +119,7 @@
             Email Address: <br>
         </div>
 
-        <input type="email" name="email" value="" class="loginTextfield webfont" required><br>
+        <input type="email" name="email" value="" class="loginTextfield webfont" ><br>
 
 
 
