@@ -221,7 +221,7 @@
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a href="">
+                                <a th:href="'/follower?user=' + ${User.getUsername()}">
                                     <div>
                                         <span class="semibold" style="font-size: 1.05em;">Follower</span><br><span th:text="${followers}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>

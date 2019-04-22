@@ -134,40 +134,40 @@
 <div class="webfont" style="margin: 1em 12.5%;">
     <div class="series-subscription-card">
         <div style="font-size: 1.1em; padding: 0.5em 0;" class="semibold">
-            Following (<span th:text="${followingList.size()}"></span>)
+            Follower (<span th:text="${followerList.size()}"></span>)
         </div>
         <table cellpadding="0.5em" cellspacing="0" width="100%">
             <col width="15%">
             <col width="70%">
             <col width="15%">
-            <span th:each="follow,iter: ${followingList}">
+            <span th:each="follow,iter: ${followerList}">
                 <tr>
                     <td style="text-align: center;">
-                        <a th:href="'view_profile?user=' + ${follow.getFollowIndentity().getUser2().getUsername()}">
-                            <image th:src="'data:image/png;base64,'+${follow.getFollowIndentity().getUser2().getAvatar()}"
+                        <a th:href="'view_profile?user=' + ${follow.getFollowIndentity().getUser1().getUsername()}">
+                            <image th:src="'data:image/png;base64,'+${follow.getFollowIndentity().getUser1().getAvatar()}"
                                    class="follow-avatar-image"></image>
                         </a>
                     </td>
                     <td>
                         <a class="follow-username"
-                           th:href="'view_profile?user=' + ${follow.getFollowIndentity().getUser2().getUsername()}"
-                           th:text="${follow.getFollowIndentity().getUser2().getUsername()}"></a>
-                        <span th:if="${follow.getFollowIndentity().getUser2().getGender() == 'male'}"
+                           th:href="'view_profile?user=' + ${follow.getFollowIndentity().getUser1().getUsername()}"
+                           th:text="${follow.getFollowIndentity().getUser1().getUsername()}"></a>
+                        <span th:if="${follow.getFollowIndentity().getUser1().getGender() == 'male'}"
                               class="follow-male"><i class='fas fa-mars'></i></span>
-                        <span th:unless="${follow.getFollowIndentity().getUser2().getGender() == 'male'}"
+                        <span th:unless="${follow.getFollowIndentity().getUser1().getGender() == 'male'}"
                               class="follow-female"><i class='fas fa-venus'></i></span>
                     </td>
                     <td>
                         <span th:if="${isOthersProfile}">
                             <span th:if="${crossCheckedFollowList.get(iter.index) == false}">
-                                <span th:if="${!follow.getFollowIndentity().getUser2().getUsername().equals(User.getUsername())}">
+                                <span th:if="${!follow.getFollowIndentity().getUser1().getUsername().equals(User.getUsername())}">
                                     <div class="subscription-series-unsubscribe">
                                         <a href=""><i class='fas fa-plus'></i> Follow</a>
                                     </div>
                                 </span>
                             </span>
                             <span th:unless="${crossCheckedFollowList.get(iter.index) == false}">
-                                <span th:if="${!follow.getFollowIndentity().getUser2().getUsername().equals(User.getUsername())}">
+                                <span th:if="${!follow.getFollowIndentity().getUser1().getUsername().equals(User.getUsername())}">
                                     <div class="follow-following">
                                         Following
                                     </div>
@@ -176,7 +176,7 @@
                         </span>
                         <span th:unless="${isOthersProfile}">
                             <div class="subscription-series-unsubscribe">
-                                <a th:href="'/unfollow?value=' + ${follow.getFollowIndentity().getUser2().getUsername()}"><i
+                                <a th:href="'/unfollow?value=' + ${follow.getFollowIndentity().getUser1().getUsername()}"><i
                                         class='fas fa-minus'></i> Unfollow</a>
                             </div>
                         </span>

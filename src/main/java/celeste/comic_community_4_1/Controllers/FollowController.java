@@ -69,6 +69,42 @@ public class FollowController {
         return "profile_following";
     }
 
+    @GetMapping("/follower")
+    public String viewFollowers(@RequestParam(value = "user") String linkedUsername,
+                                ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        model.addAttribute("User", user);
+
+        // Is the same user
+        model.addAttribute("isOthersProfile", !username.equals(linkedUsername));
+        User linkedUser = userRepository.findById(linkedUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
+        model.addAttribute("profileOwner", linkedUser);
+        model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
+
+        // Get Following
+        List<Follow> following = followRepository.findByFollowIndentityUserone(linkedUser);
+        model.addAttribute("following", following.size());
+        //Get Followers
+        List<Follow> follower = followRepository.findByFollowIndentityUsertwo(linkedUser);
+        model.addAttribute("followerList", follower);
+        model.addAttribute("followers", follower.size());
+
+        if (!linkedUsername.equals(username)) {
+            model.addAttribute("crossCheckedFollowList", crossCheckFollowing(user, follower));
+            model.addAttribute("isSubscribing", isSubscribing(user, linkedUser));
+        }
+        return "profile_follower";
+    }
+
     @GetMapping("/unfollow")
     public String unfollow(@RequestParam(value = "value") String toBeUnfollow,
                            ModelMap model, HttpServletRequest request) throws Exception {
