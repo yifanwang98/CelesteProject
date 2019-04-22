@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -51,6 +52,7 @@ public class FollowController {
         User linkedUser = userRepository.findById(linkedUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
         model.addAttribute("profileOwner", linkedUser);
+        model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
 
         // Get Following
         List<Follow> following = followRepository.findByFollowIndentityUserone(linkedUser);
@@ -60,6 +62,10 @@ public class FollowController {
         List<Follow> d = followRepository.findByFollowIndentityUsertwo(linkedUser);
         model.addAttribute("followers", d.size());
 
+        if (!linkedUsername.equals(username)) {
+            model.addAttribute("crossCheckedFollowList", crossCheckFollowing(user, following));
+            model.addAttribute("isSubscribing", isSubscribing(user, linkedUser));
+        }
         return "profile_following";
     }
 
@@ -77,10 +83,8 @@ public class FollowController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         model.addAttribute("User", user);
         model.addAttribute("profileOwner", user);
+        model.addAttribute("isOthersProfile", false);
 
-        // Is the same user
-        User linkedUser = userRepository.findById(toBeUnfollow)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", toBeUnfollow));
 
         List<Follow> following = followRepository.findByFollowIndentityUserone(user);
         for (Follow f : following) {
@@ -98,6 +102,36 @@ public class FollowController {
         List<Follow> d = followRepository.findByFollowIndentityUsertwo(user);
         model.addAttribute("followers", d.size());
         return "profile_following";
+    }
+
+    private List<Boolean> crossCheckFollowing(User me, List<Follow> othersFollowing) {
+        List<Boolean> result = new ArrayList<>();
+        List<Follow> myFollowing = followRepository.findByFollowIndentityUserone(me);
+        boolean found;
+        for (Follow f : othersFollowing) {
+            found = false;
+            for (Follow myF : myFollowing) {
+                if (myF.getFollowIndentity().getUser2().getUsername().equals(f.getFollowIndentity().getUser2().getUsername())) {
+                    result.add(true);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                result.add(false);
+            }
+        }
+        return result;
+    }
+
+    private boolean isSubscribing(User me, User others) {
+        List<Follow> myFollowing = followRepository.findByFollowIndentityUserone(me);
+        for (Follow f : myFollowing) {
+            if (f.getFollowIndentity().getUser2().getUsername().equals(others.getUsername())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

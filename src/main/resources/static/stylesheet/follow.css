@@ -29,3 +29,14 @@
 .follow-female {
     color: #ef8898;
 }
+
+.follow-following {
+    margin-right: 0.75em;
+    padding: 0.25em 0.5em;
+    font-size: 0.95em;
+    border: #9a9a9a 1px solid;
+    color: #9a9a9a;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}

@@ -25,6 +25,16 @@
     color: #666666;
 }
 
+.profile-follow-content:link, profile-follow-content:visited {
+    color: #666666;
+    text-decoration: none;
+}
+
+.profile-follow-content:hover {
+    color: #218787;
+}
+
+
 .profile-button-table {
     padding: 0.5em 12.5%;
     width: 100%;
