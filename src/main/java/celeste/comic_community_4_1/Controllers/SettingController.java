@@ -70,11 +70,11 @@ public class SettingController {
     @ResponseBody
     @PostMapping("/changeSetting")
     public String changeAvatar(@RequestParam("file") MultipartFile file,
-                                 @RequestParam("new-password") String newpassword,
-                                 @RequestParam("new-email") String newemail,
-                                 @RequestParam("new-gender") String newgender,
-                                 ModelMap model, HttpServletRequest request,
-                                 RedirectAttributes redirectAttributes) throws Exception{
+                               @RequestParam("new-password") String newpassword,
+                               @RequestParam("new-email") String newemail,
+                               @RequestParam("new-gender") String newgender,
+                               ModelMap model, HttpServletRequest request,
+                               RedirectAttributes redirectAttributes) throws Exception{
 
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setPassword(newpassword);
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setEmail(newemail);
@@ -104,12 +104,47 @@ public class SettingController {
             userRepository.findById(username).get().setAvatar(base64);
             userRepository.save(userRepository.findById(username).get());
             String x = "Updated Success!";
-            model.addAttribute("User",userRepository.findById(username).get());
+//            model.addAttribute("User",userRepository.findById(username).get());
             return x;
 
         }
 
         return "Updated Success!";
+    }
+
+
+    @ResponseBody
+    @PostMapping("/tmpchangeAvatar")
+    public String tmpchangeAvatar(@RequestParam("file") MultipartFile file,
+                               ModelMap model, HttpServletRequest request,
+                               RedirectAttributes redirectAttributes) throws Exception{
+
+        if (!file.isEmpty()) {
+            String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));// 取文件格式后缀名
+            type = type.substring(1);
+            if(!type.equals("jpg") && !type.equals("png")){
+                return "Only .png or .jpg is accepted!";
+            }
+
+            File convFile = new File(file.getOriginalFilename());
+            convFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(file.getBytes());
+            fos.close();
+
+            BufferedImage bImage = ImageIO.read(convFile);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(bImage, type, bos );
+            byte [] data = bos.toByteArray();
+            String base64 = Base64.getEncoder().encodeToString(data);
+//            System.out.println(type);
+            String username = (String) (request.getSession().getAttribute("username"));
+//            System.out.println(userRepository.findById(username).get().getAvatar()==base64);
+            return base64;
+
+        }
+
+        return "Error";
     }
 
     @ResponseBody
@@ -132,7 +167,7 @@ public class SettingController {
             returnstring =  "Downgrade success!";
         }
         userRepository.save(user);
-        model.addAttribute("User", user);
+//        model.addAttribute("User", user);
         return returnstring;
     }
 
@@ -151,7 +186,7 @@ public class SettingController {
         for(Series i : seriesRepository.findByUser(user)){
             seriesRepository.delete(i);
         }
-        model.addAttribute("User",user);
+//        model.addAttribute("User",user);
         return "home";
     }
 

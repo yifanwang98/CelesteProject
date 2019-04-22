@@ -29,10 +29,10 @@ public class Work implements Serializable {
     private User user;
 
     @NotBlank
-    private String name;
+    private String name="default";
 
     @NotBlank
-    private String genre;
+    private String genre="default";
 
     @Lob
     @NotBlank

@@ -69,10 +69,11 @@
                     success : function(data) {
                         if(data != null){
                             alert(data)
+                            // alert([[${User.getMembership()}]])
                             location.reload()
                         }
                         else {
-                            alert("777777")
+                            alert(data)
                         }
                     },
                     error: function(){
@@ -96,7 +97,7 @@
                     success : function(data) {
                         if(data == "Updated Success!"){
                             alert(data)
-                            location.reload();
+                            // location.reload();
                         }
                         else {
                             alert(data)
@@ -107,6 +108,33 @@
                     }
                 });
             })
+            $('#new-avatar').change(function() {
+                var form = new FormData(document.getElementById("profile-form"));
+                $.ajax({
+                    type : "POST",
+                    url : 'tmpchangeAvatar',
+                    data:form,
+                    // dataType : "image/jpg",
+                    contentType: false,
+                    processData: false,
+                    cache : false,
+                    success : function(data) {
+                        if(data!="Error" && data!="Only .png or .jpg is accepted!"){
+                            // alert(data)
+                            $('#useravatar').attr("src","data:image/png;base64,"+data.toString());
+
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+                    error: function(){
+                        alert(arguments[1]);
+                    }
+                });
+            });
+
+
         });
     </script>
 </head>
@@ -244,7 +272,7 @@
                 <tr>
                     <td></td>
                     <td>
-                        <a href="" class="setting-edit-btn"><i class='far fa-edit'></i> Edit</a>
+                        <!--<a href="" class="setting-edit-btn"><i class='far fa-edit'></i></a>-->
                     </td>
                 </tr>
                 <tr>

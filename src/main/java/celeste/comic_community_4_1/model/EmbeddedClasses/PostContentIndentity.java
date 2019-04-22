@@ -24,6 +24,8 @@ public class PostContentIndentity implements Serializable {
     @JoinColumn(name = "workID")
     private Work work;
 
+
+
     public Post getPost() {
         return post;
     }

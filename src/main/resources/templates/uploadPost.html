@@ -13,6 +13,74 @@
     <link href="../static/stylesheet/createPost.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function(){
+            $('#upload-post').submit(function(event) {
+                event.preventDefault();
+                var form = new FormData(document.getElementById("upload-post"));
+                $.ajax({
+                    type : "POST",
+                    url : 'createpost',
+                    data:form,
+                    // dataType : "image/jpg",
+                    contentType: false,
+                    processData: false,
+                    cache : false,
+                    success : function(data) {
+                        if(data == "Upload Success!"){
+                            alert(data)
+                             window.location.href = "/home";
+
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+                    error: function(){
+                        alert(arguments[1]);
+                    }
+                });
+            })
+            $('#selectedImg').change(function() {
+                // alert("123")
+                var form = new FormData(document.getElementById("upload-post"));
+
+
+                // for(var pair of form.entries()) {
+                //     alert((pair[0]+ ', '+ pair[1]));
+                // }
+
+                $.ajax({
+                    type : "POST",
+                    url : 'changeuploadimgs',
+                    data:form,
+                    // dataType : "image/jpg",
+                    contentType: false,
+                    processData: false,
+                    cache : false,
+                    success : function(data) {
+                        if(data[0] == "Images added!"){
+                            imgs = document.getElementsByName("imgs")
+                            for(i=0;i<data.length-1;i++){
+                                imgs[i].src = "data:image/png;base64,"+data[i+1].toString();
+                            }
+                        }
+                        else {
+                            alert(data[0])
+                        }
+                    },
+                    error: function(){
+                        alert(arguments[1]);
+                    }
+                });
+            })
+        })
+
+
+
+
+    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -75,7 +143,7 @@
         <!-- Description -->
         <tr>
             <td>
-                <textarea class="content-textarea webfont" placeholder="Enter Optional Text Here" maxlength="140"></textarea>
+                <textarea class="content-textarea webfont" placeholder="Enter Optional Text Here" maxlength="140" name="Comment"></textarea>
             </td>
         </tr>
         <tr>
@@ -86,15 +154,45 @@
         <!-- Images -->
         <tr>
             <td>
-                <div>
-                    <img src="../static/images/samplePost/S-1-1.jpg" class="uploaded-image">
-                    <input type="file" accept=".jpg,.png" style="display: none;" id="selectedImg" form="upload-post">
 
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
                 </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+                <div>
+                    <img src="../static/images/samplePost/default-upload.png" class="uploaded-image" name = "imgs">
+                </div>
+
+
+                    <input type="file" accept=".jpg,.png" style="display: none;" id="selectedImg" name = "file" multiple>
                 <div style="text-align: right; margin-top: 1em">
                     <span class="add-img-button-container">
-                    <input type="button" value="Add Image" class="add-img-button" form="upload-post"
+                    <input type="button" value="Add Image" class="add-img-button"
                            onclick="document.getElementById('selectedImg').click();"/>
+                    <input type="submit" value="Submit" class="add-img-button"/>
                     </span>
                 </div>
             </td>
@@ -104,24 +202,24 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <!-- Footer Banner -->
-<table class="footer webfont semibold">
-    <tbody style="padding: 0; margin: 0;">
-    <tr>
-        <td></td>
-        <!-- Right Part -->
-        <td style="width: 6em;">
-            <a>
-                Save
-            </a>
-        </td>
-        <td style="width: 6em;">
-            <a>
-                Upload
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<!--<table class="footer webfont semibold">-->
+    <!--<tbody style="padding: 0; margin: 0;">-->
+    <!--<tr>-->
+        <!--<td></td>-->
+        <!--&lt;!&ndash; Right Part &ndash;&gt;-->
+        <!--<td style="width: 6em;">-->
+            <!--<a>-->
+                <!--Save-->
+            <!--</a>-->
+        <!--</td>-->
+        <!--<td style="width: 6em;">-->
+            <!--<a>-->
+                <!--Upload-->
+            <!--</a>-->
+        <!--</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+<!--</table>-->
 <!---------------------------------------->
 <!---------------------------------------->
 
