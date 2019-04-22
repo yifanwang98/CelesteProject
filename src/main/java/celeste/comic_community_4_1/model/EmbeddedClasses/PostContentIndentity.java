@@ -2,6 +2,8 @@ package celeste.comic_community_4_1.model.EmbeddedClasses;
 
 import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.Work;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -13,12 +15,16 @@ import java.util.Objects;
 public class PostContentIndentity implements Serializable {
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "postID")
     private Post post;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "workID")
     private Work work;
+
+
 
     public Post getPost() {
         return post;
