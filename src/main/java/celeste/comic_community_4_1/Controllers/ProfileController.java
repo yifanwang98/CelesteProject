@@ -140,36 +140,5 @@ public class ProfileController {
         return "profile_subscription";
     }
 
-    @GetMapping("/view_profile_star")
-    public String viewProfileStar(@RequestParam(value = "user") String linkedUsername,
-                                  ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
-            return "index";
-        }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-
-        User founduser = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        model.addAttribute("User", founduser);
-
-        // Is the same user
-        model.addAttribute("isOthersProfile", !username.equals(linkedUsername));
-        User linkedUser = userRepository.findById(linkedUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
-        model.addAttribute("profileOwner", linkedUser);
-
-        //All the series by this user
-
-        //Get Follows
-        List<Follow> c = followRepository.findByFollowIndentityUserone(linkedUser);
-        model.addAttribute("following", c.size());
-        //Get Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(linkedUser);
-        model.addAttribute("followers", d.size());
-        return "profile_star";
-    }
-
 }
 
