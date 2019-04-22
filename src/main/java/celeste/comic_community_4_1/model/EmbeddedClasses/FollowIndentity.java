@@ -1,6 +1,8 @@
 package celeste.comic_community_4_1.model.EmbeddedClasses;
 
 import celeste.comic_community_4_1.model.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -12,10 +14,12 @@ import java.util.Objects;
 public class FollowIndentity implements Serializable {
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "username1")
     private User userone;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "username2")
     private User usertwo;
 

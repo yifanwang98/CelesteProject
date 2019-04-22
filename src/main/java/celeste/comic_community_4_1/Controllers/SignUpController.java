@@ -50,7 +50,7 @@ public class SignUpController {
                                @RequestParam(value = "email" ) String email,
                                @RequestParam(value = "gender" ) String gender,
                                ModelMap model, HttpServletRequest request) throws Exception{
-        System.out.println(gender);
+//        System.out.println(gender);
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setCreatedAt(new Date());
@@ -86,6 +86,7 @@ public class SignUpController {
             }
 
 
+            model.addAttribute("User", newUser);
             model.addAttribute("postlist", postlist);
             model.addAttribute("imgsForeachPost", imgsForeachPost);
 
