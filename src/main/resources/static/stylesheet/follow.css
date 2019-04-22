@@ -1,0 +1,42 @@
+
+.follow-avatar {
+    font-size: 1.7em;
+    padding: 0em 1em;
+    width: 1.7em;
+}
+
+.follow-avatar-image {
+    width: 2.5em;
+    border-radius: 50%;
+}
+
+.follow-username:link, .follow-username:visited {
+    font-size: 1em;
+    color: #218787;
+    text-decoration: none;
+}
+
+.follow-username:hover {
+    color: #9a9a9a;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.follow-male {
+    color: #3973a0;
+}
+
+.follow-female {
+    color: #ef8898;
+}
+
+.follow-following {
+    margin-right: 0.75em;
+    padding: 0.25em 0.5em;
+    font-size: 0.95em;
+    border: #9a9a9a 1px solid;
+    color: #9a9a9a;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
