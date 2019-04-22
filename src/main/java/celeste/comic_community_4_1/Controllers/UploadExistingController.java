@@ -130,7 +130,7 @@ public class UploadExistingController {
                                      RedirectAttributes redirectAttributes) throws Exception{
 
 
-        System.out.println(file.length+"32132131321231");
+//        System.out.println(file.length+"32132131321231");
         if (file.length==1 && file[0].getOriginalFilename().equals("")){
             return ("No images selected!");
         }
