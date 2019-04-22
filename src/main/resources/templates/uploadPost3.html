@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upload - Celeste</title>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Style Sheet -->
+    <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/createPost.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+</head>
+<body>
+<!-- Header Banner -->
+<table class="header webfont semibold">
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/mainPage" class="headerUnselected">Home</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="discover.html" class="headerUnselected">Discover</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="search.html" class="headerUnselected">Search</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- Right Part -->
+        <td style="width: 5em;">
+            <table style="padding: 0; margin: 0; align: right;">
+                <tr style="align: right;">
+                    <td class="headerCellPadding">
+                        <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
+                    </td>
+                    <td class="headerCellPadding"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div style="height: 2.75em;"></div>
+<!---------------------------------------->
+<!---------------------------------------->
+<form id="uploadExisting"></form>
+<table style="width: 100%; padding: 2em 25%;" class="webfont">
+    <!-- Title -->
+    <tr>
+        <td>
+            <div class="semibold create-post-title">Create Post</div>
+        </td>
+    </tr>
+    <!-- Title -->
+    <tr>
+        <td style="font-size: 1.25em">
+            <span class="pending-steps">
+                Choose Image
+                <i class='fas fa-chevron-right'></i><i class='fas fa-chevron-right'></i><i
+                    class='fas fa-chevron-right'></i>
+            </span>
+            <span class="semibold current-step">Add Information </span>
+            <span class="pending-steps">
+                <i class='fas fa-chevron-right'></i><i class='fas fa-chevron-right'></i><i
+                    class='fas fa-chevron-right'></i>
+                Upload
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div style="padding: 0.25em;"></div>
+        </td>
+    </tr>
+    <!-- Description -->
+    <tr>
+        <td class="semibold upload-post-subtitle">Description</td>
+    </tr>
+    <tr>
+        <td>
+            <textarea class="content-textarea webfont" placeholder="Enter Optional Text Here" maxlength="140"
+                      name="description"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div style="padding: 0.25em;"></div>
+        </td>
+    </tr>
+    <!-- Genre -->
+    <tr>
+        <td class="semibold upload-post-subtitle">Genre</td>
+    </tr>
+    <tr>
+        <td>
+            <table width="100%" style="font-size: 1.05em;">
+                <col width="10%"/>
+                <col width="45%"/>
+                <col width="45%"/>
+                <tr>
+                    <td></td>
+                    <td>
+                        <span class="semibold">Primary Genre: </span>
+                        <select style="font-size: 1.05em;" name="primaryGenre">
+                            <span th:each="genre: ${genreList}">
+                                <option th:value="${genre}" th:text="${genre}"></option>
+                            </span>
+                        </select>
+                    </td>
+                    <td>
+                        <span class="semibold">Secondary Genre: </span>
+                        <select style="font-size: 1.05em;" name="secondaryGenre">
+                            <span th:each="genre: ${genreList}">
+                                <option th:value="${genre}" th:text="${genre}"></option>
+                            </span>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- Images -->
+    <tr>
+        <td>
+            <div>
+                <span th:each="draft, iter: ${postDraft.getImageString()}">
+                    <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                        <image th:src="'data:image/png;base64,'+${draft.toString()}" class="uploaded-image"/>
+                    </span>
+                </span>
+            </div>
+        </td>
+    </tr>
+</table>
+<div style="padding: 5em;"></div>
+<!-- Footer Banner -->
+<table class="footer webfont semibold">
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <td style="width: 6em;">
+            <form method="get" action="/uploadPost2">
+                <input type="submit" value="Prev" class="add-img-button"/>
+            </form>
+        </td>
+        <td></td>
+        <!-- Right Part -->
+        <td style="width: 6em;">
+        </td>
+        <td style="width: 6em;">
+            <span th:if="${postDraft.isValid()}">
+                <form method="post" action="/uploadPost4">
+                    <input type="submit" value="Next" class="add-img-button"/>
+                </form>
+            </span>
+            <span th:unless="${postDraft.isValid()}">
+                <input type="submit" value="Next" class="add-img-button" disabled style="color: #949494"/>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -30,7 +30,7 @@
 
 
 .create-post-title {
-    font-size: 1.5em;
+    font-size: 1.75em;
     padding: 0.5em 0;
 }
 
@@ -58,7 +58,7 @@
     color: #269b9b;
     background: none;
     border: none;
-    font-size: 1em;
+    font-size: 1.25em;
     font-weight: 500;
     cursor: pointer;
 }
@@ -68,6 +68,44 @@
     height: 10em;
     border: #ccc 1px solid;
     border-radius: 3px;
-    margin-right: 1em;
     object-fit: cover;
+}
+
+.remove-image-icon {
+    margin-left: -0.9em;
+    margin-right: 0.5em;
+    background: white;
+    border-radius: 100%;
+}
+
+.remove-image-icon a:link, .remove-image-icon a:visited {
+    color: #9a9a9a;
+}
+
+.remove-image-icon a:hover {
+    color: #c50000;
+}
+
+.add-img-icon {
+    background: rgba(255, 255, 255, 0.75);
+    width: 10em;
+    height: 10em;
+    border-radius: 3px;
+    object-fit: cover;
+}
+
+.add-img-icon:hover {
+    background: #e7e7e7;;
+}
+
+.pending-steps {
+    color: #9a9a9a;
+}
+
+.current-step {
+    color: #218787;
+}
+
+.upload-post-subtitle {
+    font-size: 1.25em;
 }
