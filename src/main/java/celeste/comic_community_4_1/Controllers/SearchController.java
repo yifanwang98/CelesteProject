@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.ComicGenre;
 import celeste.comic_community_4_1.model.Follow;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -38,7 +40,7 @@ public class SearchController {
     StarRepository starRepository;
 
     @GetMapping("/search")
-    public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
+    public String goToSearch(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -61,8 +63,13 @@ public class SearchController {
 
 
         request.getSession().setAttribute("username", username);
+        model.addAttribute("genreList", ComicGenre.GENRE);
         return "search";
+    }
 
+    @PostMapping("/searchForm")
+    public String search(ModelMap model, HttpServletRequest request) throws Exception {
+        return "search";
     }
 
 }

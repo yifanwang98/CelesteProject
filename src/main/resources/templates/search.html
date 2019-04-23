@@ -13,6 +13,31 @@
     <link href="../static/stylesheet/search.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script>
+        function hideAndShow() {
+            var x = document.getElementById("searchFilter");
+            var y = document.getElementById("advanceToHide");
+            var z = document.getElementById("advanceToShow");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+                y.style.display = "block";
+                z.style.display = "none";
+                var i = 0;
+                while (i < 20) {
+                    document.getElementById("genre_" + i).checked = false;
+                    i = i + 1;
+                }
+                document.getElementById("searchIn1").checked = false;
+                document.getElementById("searchIn2").checked = false;
+                document.getElementById("searchIn3").checked = false;
+                document.getElementById("searchIn4").checked = false;
+            } else {
+                x.style.display = "none";
+                y.style.display = "none";
+                z.style.display = "block";
+            }
+        }
+    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -73,10 +98,51 @@
         <!---------------------------------------->
         <!-- Left Part -->
         <td style="vertical-align: top;">
-            <form style="width: 100%;">
-                <input type="text" placeholder="Boom" name="searchContent" class="searchTextfield" required>
-                <input type="submit" value="Search" class="button">
-            </form>
+            <form id="searchForm" method="post" action=""></form>
+            <div style="width: 100%;">
+                <input type="text" placeholder="Boom" name="searchContent" class="searchTextfield" form="searchForm"
+                       required>
+                <input type="submit" value="Search" class="button" form="searchForm">
+
+                <div style="margin-top: -0.75em;" id="advanceToShow">
+                    <a class="advance-search-title" href="#" onclick="hideAndShow()">Advance Search <i
+                            class='fas fa-caret-down' style="text-decoration: underline;"></i></a>
+                </div>
+                <div style="margin-top: -0.75em; display: none;" id="advanceToHide">
+                    <a class="advance-search-title-hide" href="#" onclick="hideAndShow()">Advance Search <i
+                            class='fas fa-caret-up' style="text-decoration: underline;"></i></a>
+                </div>
+                <div id="searchFilter" style="margin-left: 1em; display: none; font-size: 1em; color: #242424;">
+                    <div>
+                        <span class="semibold">Genre: </span>
+                        <span th:each="genre, iter: ${genreList}">
+                            <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                                <input type="checkbox" name="genre" th:value="${genre}" form="searchForm"
+                                       th:id="'genre_' + ${iter.index}"><span th:text="' ' + ${genre}"></span>
+                            </span>
+                        </span>
+                    </div>
+                    <div>
+                        <span class="semibold">Search Only In: </span>
+                        <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                            <input type="checkbox" name="filter" value="search_author" form="searchForm" id="searchIn1"
+                                   selected> Author
+                        </span>
+                        <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                            <input type="checkbox" name="filter" value="search_post" form="searchForm" id="searchIn2"
+                                   selected> Post
+                        </span>
+                        <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                            <input type="checkbox" name="filter" value="search_series" form="searchForm" id="searchIn3"
+                                   selected> Series
+                        </span>
+                        <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                            <input type="checkbox" name="filter" value="search_hashtag" form="searchForm" id="searchIn4"
+                                   selected> Hashtag
+                        </span>
+                    </div>
+                </div>
+            </div>
         </td>
         <!---------------------------------------->
         <!---------------------------------------->

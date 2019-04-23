@@ -28,3 +28,29 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.advance-search-title {
+    font-size: 0.9em;
+}
+
+.advance-search-title:link, .advance-search-title:visited {
+    color: #9a9a9a;
+}
+
+.advance-search-title:hover {
+    color: #218787;
+    cursor: pointer;
+}
+
+.advance-search-title-hide {
+    font-size: 0.9em;
+}
+
+.advance-search-title-hide:link, .advance-search-title-hide:visited {
+    color: #218787;
+}
+
+.advance-search-title-hide:hover {
+    color: #9a9a9a;
+    cursor: pointer;
+}
