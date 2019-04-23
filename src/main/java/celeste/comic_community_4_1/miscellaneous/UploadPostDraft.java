@@ -32,4 +32,10 @@ public class UploadPostDraft {
     public boolean isValid() {
         return imageString.size() > 0;
     }
+
+    public void remove(int index) {
+        if (imageString.size() <= index || index < 0)
+            return;
+        this.imageString.remove(index);
+    }
 }

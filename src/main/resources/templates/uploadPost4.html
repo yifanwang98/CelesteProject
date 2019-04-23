@@ -64,10 +64,7 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<form id="upload_new_img" method="post" action="upload_new_img" enctype="multipart/form-data">
-    <input type="file" accept=".jpg,.png" style="display: none;" id="selectedImage" name="file" multiple
-           onchange="this.form.submit()">
-</form>
+<form id="uploadPostInfo" method="post" action="uploadPostInfo"></form>
 <table style="width: 100%; padding: 2em 25%;" class="webfont">
     <!-- Title -->
     <tr>
@@ -78,62 +75,57 @@
     <!-- Title -->
     <tr>
         <td style="font-size: 1.25em">
-            <span class="semibold current-step">Choose Image </span>
             <span class="pending-steps">
+                Choose Image
                 <i class='fas fa-chevron-right'></i><i class='fas fa-chevron-right'></i><i
                     class='fas fa-chevron-right'></i>
                 Add Information
                 <i class='fas fa-chevron-right'></i><i class='fas fa-chevron-right'></i><i
                     class='fas fa-chevron-right'></i>
+            </span>
+            <span class="semibold current-step">
                 Upload
             </span>
         </td>
     </tr>
     <tr>
         <td>
-            <div style="padding: 0.25em;"></div>
+            <div style="padding: 1em;"></div>
         </td>
     </tr>
-    <!-- Images -->
     <tr>
-        <td>
-            <div>
-                <span th:each="draft, iter: ${postDraft.getImageString()}">
-                    <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                        <image th:src="'data:image/png;base64,'+${draft.toString()}" class="uploaded-image"/>
-                        <span class="remove-image-icon"><a th:href="'/deleteImage?index=' + ${iter.index}"><i
-                                class='fas fa-times-circle'></i></a></span>
-                    </span>
-                </span>
-                <span th:if="${postDraft.getImageString().size() < 9}">
-                    <img src="../static/images/addImageIcon.png" class="add-img-icon" style="cursor: pointer;"
-                         onclick="document.getElementById('selectedImage').click();"/>
-                </span>
-            </div>
+        <td style="text-align: center; font-size: 2em; ">
+            Uploading...
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 5em; color:#9a9a9a;">
+            <i class="fa fa-spinner fa-spin"></i>
         </td>
     </tr>
 </table>
+<form id="myForm" action="/mainPage">
+</form>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var auto = setTimeout(function () {
+            autoRefresh();
+        }, 100);
+
+        function submitform() {
+            document.forms["myForm"].submit();
+        }
+
+        function autoRefresh() {
+            clearTimeout(auto);
+            auto = setTimeout(function () {
+                submitform();
+                autoRefresh();
+            }, 1000);
+        }
+    }
+</script>
 <div style="padding: 5em;"></div>
-<!-- Footer Banner -->
-<table class="footer webfont semibold">
-    <tbody style="padding: 0; margin: 0;">
-    <tr>
-        <td></td>
-        <!-- Right Part -->
-        <td style="width: 6em;">
-        </td>
-        <td style="width: 6em;">
-            <span th:if="${postDraft.isValid()}">
-                <form method="post" action="/uploadPost3">
-                    <input type="submit" value="Next" class="add-img-button"/>
-                </form>
-            </span>
-            <span th:unless="${postDraft.isValid()}">
-                <input type="submit" value="Next" class="add-img-button" disabled style="color: #949494"/>
-            </span>
-        </td>
-    </tr>
-    </tbody>
-</table>
 </body>
 </html>

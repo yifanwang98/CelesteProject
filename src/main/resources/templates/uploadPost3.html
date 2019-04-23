@@ -13,6 +13,19 @@
     <link href="../static/stylesheet/createPost.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <!-- Script -->
+    <script src="http://code.jquery.com/jquery-1.5.js"></script>
+    <script>
+        function countChar(val) {
+            var len = val.value.length;
+            var newLines = val.value.match(/(\r\n|\n|\r)/g);
+            var addition = 0;
+            if (newLines != null) {
+                addition = newLines.length;
+            }
+            $('#charCount').text(len + addition);
+        };
+    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -64,7 +77,7 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<form id="uploadExisting"></form>
+<form id="uploadPostInfo" method="post" action="uploadPostInfo"></form>
 <table style="width: 100%; padding: 2em 25%;" class="webfont">
     <!-- Title -->
     <tr>
@@ -93,6 +106,23 @@
             <div style="padding: 0.25em;"></div>
         </td>
     </tr>
+    <!-- Images -->
+    <tr>
+        <td>
+            <div>
+                <span th:each="draft, iter: ${postDraft.getImageString()}">
+                    <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                        <image th:src="'data:image/png;base64,'+${draft.toString()}" class="upload-post-tiny-image"/>
+                    </span>
+                </span>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div style="padding: 0.2em;"></div>
+        </td>
+    </tr>
     <!-- Description -->
     <tr>
         <td class="semibold upload-post-subtitle">Description</td>
@@ -100,7 +130,20 @@
     <tr>
         <td>
             <textarea class="content-textarea webfont" placeholder="Enter Optional Text Here" maxlength="140"
-                      name="description"></textarea>
+                      name="description" form="uploadPostInfo" onkeyup="countChar(this)" id="description_ta"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <div class="char-count">(<span id="charCount">0</span>/140)</div>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>
@@ -122,7 +165,7 @@
                     <td></td>
                     <td>
                         <span class="semibold">Primary Genre: </span>
-                        <select style="font-size: 1.05em;" name="primaryGenre">
+                        <select style="font-size: 1.05em;" name="primaryGenre" form="uploadPostInfo">
                             <span th:each="genre: ${genreList}">
                                 <option th:value="${genre}" th:text="${genre}"></option>
                             </span>
@@ -130,7 +173,7 @@
                     </td>
                     <td>
                         <span class="semibold">Secondary Genre: </span>
-                        <select style="font-size: 1.05em;" name="secondaryGenre">
+                        <select style="font-size: 1.05em;" name="secondaryGenre" form="uploadPostInfo">
                             <span th:each="genre: ${genreList}">
                                 <option th:value="${genre}" th:text="${genre}"></option>
                             </span>
@@ -138,18 +181,6 @@
                     </td>
                 </tr>
             </table>
-        </td>
-    </tr>
-    <!-- Images -->
-    <tr>
-        <td>
-            <div>
-                <span th:each="draft, iter: ${postDraft.getImageString()}">
-                    <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                        <image th:src="'data:image/png;base64,'+${draft.toString()}" class="uploaded-image"/>
-                    </span>
-                </span>
-            </div>
         </td>
     </tr>
 </table>
@@ -169,9 +200,7 @@
         </td>
         <td style="width: 6em;">
             <span th:if="${postDraft.isValid()}">
-                <form method="post" action="/uploadPost4">
-                    <input type="submit" value="Next" class="add-img-button"/>
-                </form>
+                <input type="submit" value="Next" class="add-img-button" form="uploadPostInfo"/>
             </span>
             <span th:unless="${postDraft.isValid()}">
                 <input type="submit" value="Next" class="add-img-button" disabled style="color: #949494"/>
