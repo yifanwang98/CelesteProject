@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.PostComparator;
 import celeste.comic_community_4_1.model.Follow;
 import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.PostContent;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,6 +62,8 @@ public class MainPageController {
         for (int i = 0; i < followlist.size(); i++) {
             postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
         }
+
+        Collections.sort(postlist, new PostComparator());
 
         HashMap<Long, List<String>> imgsForeachPost = new HashMap<Long, List<String>>();
         List<PostContent> temp;
