@@ -169,10 +169,11 @@ public class UploadExistingController2 {
         newpost2.setOriginalPostID(newpost2.getPostID());
         postRepository.save(newpost2);
 
-        for (String base64 : upd.getImageString()) {
+        for (int i = 0; i < upd.getImageString().size(); i++) {
             Work newwork = new Work();
             newwork.setUser(user);
-            newwork.setContent(base64);
+            newwork.setContent(upd.getImageString().get(i));
+            newwork.setThumbnail(upd.getThumbnails().get(i));
             workRepository.save(newwork);
 
             PostContent newpostcontent = new PostContent();
@@ -182,6 +183,8 @@ public class UploadExistingController2 {
             newpostcontent.setPostIndentity(newpostcontentid);
             postContentRepository.save(newpostcontent);
         }
+
+        request.getSession().setAttribute("postDraft", null);
 
         return "uploadPost4";
     }

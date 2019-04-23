@@ -38,6 +38,10 @@ public class Work implements Serializable {
     @NotBlank
     private String content;
 
+    @Lob
+    @NotBlank
+    private String thumbnail;
+
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -104,5 +108,13 @@ public class Work implements Serializable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
