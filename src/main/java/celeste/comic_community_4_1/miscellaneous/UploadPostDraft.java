@@ -7,6 +7,7 @@ public class UploadPostDraft {
 
     private String description = "";
     private List<String> imageString = new ArrayList<>(9);
+    private List<String> thumbnails = new ArrayList<>(9);
 
     public String getDescription() {
         return description;
@@ -21,12 +22,13 @@ public class UploadPostDraft {
             imageString.add(string);
     }
 
-    public List<String> getImageString() {
-        return imageString;
+    public void addThumbnail(String string) {
+        if (thumbnails.size() < 9)
+            thumbnails.add(string);
     }
 
-    public void setImageString(List<String> imageString) {
-        this.imageString = imageString;
+    public List<String> getImageString() {
+        return imageString;
     }
 
     public boolean isValid() {
@@ -37,5 +39,11 @@ public class UploadPostDraft {
         if (imageString.size() <= index || index < 0)
             return;
         this.imageString.remove(index);
+        this.thumbnails.remove(index);
     }
+
+    public List<String> getThumbnails() {
+        return thumbnails;
+    }
+
 }

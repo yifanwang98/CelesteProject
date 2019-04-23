@@ -98,7 +98,7 @@
     <tr>
         <td>
             <div>
-                <span th:each="draft, iter: ${postDraft.getImageString()}">
+                <span th:each="draft, iter: ${postDraft.getThumbnails()}">
                     <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                         <image th:src="'data:image/png;base64,'+${draft.toString()}" class="uploaded-image"/>
                         <span class="remove-image-icon"><a th:href="'/deleteImage?index=' + ${iter.index}"><i

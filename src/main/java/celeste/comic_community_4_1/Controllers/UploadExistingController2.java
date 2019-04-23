@@ -2,6 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.ComicGenre;
+import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.miscellaneous.UploadPostDraft;
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostContentIndentity;
 import celeste.comic_community_4_1.model.Post;
@@ -17,13 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Base64;
 
 @Controller
 public class UploadExistingController2 {
@@ -92,21 +87,9 @@ public class UploadExistingController2 {
         for (MultipartFile f : file) {
             if (f.isEmpty())
                 continue;
-
-            String type = f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".") + 1);
-            File convFile = new File(f.getOriginalFilename());
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(f.getBytes());
-            fos.close();
-
-            BufferedImage bImage = ImageIO.read(convFile);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bImage, type, bos);
-            String base64 = Base64.getEncoder().encodeToString(bos.toByteArray());
-
-            upd.addImage(base64);
-            convFile.delete();
+            String[] result = ThumbnailConverter.toBase64(f);
+            upd.addImage(result[0]);
+            upd.addThumbnail(result[1]);
         }
         request.getSession().setAttribute("postDraft", upd);
         model.addAttribute("postDraft", upd);
