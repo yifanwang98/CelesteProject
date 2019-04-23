@@ -3,8 +3,8 @@ package celeste.comic_community_4_1.Controllers;
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.model.Follow;
 import celeste.comic_community_4_1.model.Post;
+import celeste.comic_community_4_1.model.PostContent;
 import celeste.comic_community_4_1.model.User;
-import celeste.comic_community_4_1.model.Work;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class IndexController {
@@ -123,18 +122,18 @@ public class IndexController {
         for(int i =0; i<followlist.size();i++){
             postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
         }
-//        postContentRepository.findByPostIndentityPost()
+
         HashMap<Long, List<String>> imgsForeachPost = new HashMap<Long, List<String>>();
-        for(int i =0; i<postlist.size();i++){
+        List<PostContent> temp;
+        for (int i = 0; i < postlist.size(); i++) {
             ArrayList<String> list = new ArrayList<String>();
-            for(int j =0; j<postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID()).size();j++){
-                String content = postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID()).get(j).getPostIndentity().getWork().getContent();
-                list.add(content);
+            temp = postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID());
+            for (int j = 0; j < temp.size(); j++) {
+                list.add(temp.get(j).getPostIndentity().getWork().getThumbnail());
             }
-            imgsForeachPost.put(postlist.get(i).getPostID(),list);
+            imgsForeachPost.put(postlist.get(i).getPostID(), list);
         }
 
-        int x = 1;
         model.addAttribute("postlist",postlist);
         model.addAttribute("imgsForeachPost",imgsForeachPost);
 

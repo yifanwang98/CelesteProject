@@ -3,6 +3,7 @@ package celeste.comic_community_4_1.Controllers;
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.model.Follow;
 import celeste.comic_community_4_1.model.Post;
+import celeste.comic_community_4_1.model.PostContent;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,10 +62,12 @@ public class MainPageController {
         }
 
         HashMap<Long, List<String>> imgsForeachPost = new HashMap<Long, List<String>>();
+        List<PostContent> temp;
         for (int i = 0; i < postlist.size(); i++) {
             ArrayList<String> list = new ArrayList<String>();
-            for (int j = 0; j < postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID()).size(); j++) {
-                list.add(postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID()).get(j).getPostIndentity().getWork().getContent());
+            temp = postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID());
+            for (int j = 0; j < temp.size(); j++) {
+                list.add(temp.get(j).getPostIndentity().getWork().getThumbnail());
             }
             imgsForeachPost.put(postlist.get(i).getPostID(), list);
         }
