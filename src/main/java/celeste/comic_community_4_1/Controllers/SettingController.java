@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.Series;
 import celeste.comic_community_4_1.model.User;
@@ -15,13 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Base64;
 
 @Controller
 public class SettingController {
@@ -87,26 +82,11 @@ public class SettingController {
                 return "Only .png or .jpg is accepted!";
             }
 
-            File convFile = new File(file.getOriginalFilename());
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(file.getBytes());
-            fos.close();
-
-            BufferedImage bImage = ImageIO.read(convFile);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bImage, type, bos );
-            byte [] data = bos.toByteArray();
-            String base64 = Base64.getEncoder().encodeToString(data);
-//            System.out.println(type);
+            String base64 = ThumbnailConverter.toBase64(file)[1];
             String username = (String) (request.getSession().getAttribute("username"));
-//            System.out.println(userRepository.findById(username).get().getAvatar()==base64);
             userRepository.findById(username).get().setAvatar(base64);
             userRepository.save(userRepository.findById(username).get());
-            String x = "Updated Success!";
-//            model.addAttribute("User",userRepository.findById(username).get());
-            return x;
-
+            return "Updated Success!";
         }
 
         return "Updated Success!";
@@ -126,20 +106,8 @@ public class SettingController {
                 return "Only .png or .jpg is accepted!";
             }
 
-            File convFile = new File(file.getOriginalFilename());
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(file.getBytes());
-            fos.close();
-
-            BufferedImage bImage = ImageIO.read(convFile);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bImage, type, bos );
-            byte [] data = bos.toByteArray();
-            String base64 = Base64.getEncoder().encodeToString(data);
-//            System.out.println(type);
-            String username = (String) (request.getSession().getAttribute("username"));
-//            System.out.println(userRepository.findById(username).get().getAvatar()==base64);
+            String base64 = ThumbnailConverter.toBase64(file)[1];
+            //String username = (String) (request.getSession().getAttribute("username"));
             return base64;
 
         }
