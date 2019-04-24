@@ -46,60 +46,10 @@ public class IndexController {
     public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
                              @RequestParam(value = "password" ,required = false) String password,
                              ModelMap model, HttpServletRequest request) throws Exception{
-//        System.out.println("123123");
         if(request.getSession().getAttribute("username")!=null){
             request.getSession().removeAttribute("username");
         }
-        //----------------------work---------------
-//        Work newwork = new Work();
-//        newwork.setGenre("genre1");
-//        newwork.setName("work1");
-//        newwork.setUser(userRepository.findById("1").get());
-//        String avatarPath = "src/main/resources/static/images/samplePost/T-2-1.jpg";
-//        File x = new File(avatarPath);
-//        BufferedImage bImage = ImageIO.read(x);
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        ImageIO.write(bImage, "jpg", bos );
-//        byte [] data = bos.toByteArray();
-//        String base64 = Base64.getEncoder().encodeToString(data);
-//        newwork.setContent(base64);
-//        workRepository.save(newwork);
 
-//        Work newwork = new Work();
-//        newwork.setWorkID(222222);
-//        newwork.setGenre("genre2");
-//        newwork.setName("work2");
-//        newwork.setUser(userRepository.findById("2").get());
-//        String avatarPath = "src/main/resources/static/images/samplePost/S-1-2.jpg";
-//        File x = new File(avatarPath);
-//        BufferedImage bImage = ImageIO.read(x);
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        ImageIO.write(bImage, "jpg", bos );
-//        byte [] data = bos.toByteArray();
-//        String base64 = Base64.getEncoder().encodeToString(data);
-//        newwork.setContent(base64);
-//        workRepository.save(newwork);
-        //----------------------work---------------
-        //----------------------post---------------
-//        Post newPost = new Post();
-//        newPost.setUser(userRepository.findById("1").get());
-//        newPost.setRepost(false);
-//        newPost.setOriginalPostID(2);
-//
-//        postRepository.save(newPost);
-        //----------------------post---------------
-        //----------------------avatar---------------
-//       String avatarPath = "src/main/resources/static/images/default-avatar.png";
-//        File x = new File(avatarPath);
-//        BufferedImage bImage = ImageIO.read(x);
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        ImageIO.write(bImage, "png", bos );
-//        byte [] data = bos.toByteArray();
-//        String base64 = Base64.getEncoder().encodeToString(data);
-////        b.setAvatar(base64);
-//        userRepository.findById("2").get().setAvatar(base64);
-//        userRepository.save(userRepository.findById("2").get());
-        //----------------------avatar---------------
         if (!userRepository.existsById(username)) {
             model.addAttribute("errors","This username doesn't exist.");
             return "index";
