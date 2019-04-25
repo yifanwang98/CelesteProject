@@ -69,14 +69,14 @@
     <div class="create-series-inner-container">
         <!-- Header -->
         <div class="create-series-title semibold">Create Series</div>
-        <form>
+        <form action="createSeriesForm"  method="post">
             <!-- Title -->
             <div class="series-title semibold">Title</div>
-            <input type="text" placeholder="Enter Title Here" class="create-series-textfield" maxlength="24" required>
+            <input type="text" name="title" placeholder="Enter Title Here" class="create-series-textfield" maxlength="24" required>
             <div style="padding: 0.5em;"></div>
             <!-- Description -->
             <div class="series-title semibold">Description</div>
-            <textarea type="text" placeholder="Enter Description Here (Optional)" maxlength="100"
+            <textarea type="text" name = "description" placeholder="Enter Description Here (Optional)" maxlength="100"
                       class="create-series-textfield"></textarea>
             <div style="padding: 0.25em;"></div>
             <!-- Genre -->
@@ -94,8 +94,10 @@
                         Primary:
                     </td>
                     <td>
-                        <select name="cars" style="width: 100%; font-size: 1em;">
-                            <option value="" selected disabled></option>
+                        <select name="genre1" style="width: 100%; font-size: 1em;">
+                            <option>Choose a genre</option>
+                            <option  th:each="list:${genreList}" th:value="${list}" th:text="${list}"></option>
+                            <!--<option value="" selected disabled></option>-->
                         </select>
                     </td>
                     <td></td>
@@ -103,8 +105,10 @@
                         Secondary:
                     </td>
                     <td>
-                        <select name="cars" style="width: 100%; font-size: 1em;">
-                            <option value="" selected disabled></option>
+                        <select name="genre2" style="width: 100%; font-size: 1em;">
+                            <option>Choose a genre</option>
+                            <option  th:each="list:${genreList}" th:value="${list}" th:text="${list}"></option>
+                            <!--<option value="" selected disabled></option>-->
                         </select>
                     </td>
                 </tr>

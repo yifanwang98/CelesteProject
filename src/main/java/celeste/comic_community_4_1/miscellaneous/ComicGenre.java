@@ -3,7 +3,6 @@ package celeste.comic_community_4_1.miscellaneous;
 public class ComicGenre {
 
     public static final String[] GENRE = new String[]{
-            "None",
             "Abstract",
             "Adult",
             "Alternative",
