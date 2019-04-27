@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface SeriesRepository extends JpaRepository<Series, Long> {
-    public List<Series> findByUser(User user);
+    List<Series> findByUser(User user);
 }

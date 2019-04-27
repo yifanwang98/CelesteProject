@@ -1,0 +1,35 @@
+
+.notification-container {
+    padding: 0.5em 1em;
+}
+
+.notification-title {
+    font-size: 1.75em;
+    color: #218787;
+    padding: 0.75em 2em;
+}
+
+.notification-type-icon {
+    font-size: 1.2em;
+    text-align: center;
+    color: #cccccc;
+}
+
+.notification-time {
+    color: #9a9a9a;
+    font-size: 0.95em;
+}
+
+.notification-separator {
+    border-top: 1px solid #cccccc;
+}
+
+.notification-link:link, .notification-link:visited {
+    color: #218787;
+    text-decoration: none;
+}
+
+.notification-link:hover {
+    color: #666666;
+    font-weight: 500;
+}
