@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "work")
@@ -116,5 +117,25 @@ public class Work implements Serializable {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Work)) return false;
+        Work work = (Work) o;
+        return getWorkID() == work.getWorkID() &&
+                Objects.equals(getUser(), work.getUser()) &&
+                Objects.equals(getName(), work.getName()) &&
+                Objects.equals(getGenre(), work.getGenre()) &&
+                Objects.equals(getContent(), work.getContent()) &&
+                Objects.equals(getThumbnail(), work.getThumbnail()) &&
+                Objects.equals(getCreatedAt(), work.getCreatedAt()) &&
+                Objects.equals(getUpdatedAt(), work.getUpdatedAt());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getWorkID(), getUser(), getName(), getGenre(), getContent(), getThumbnail(), getCreatedAt(), getUpdatedAt());
     }
 }

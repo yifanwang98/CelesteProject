@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,13 +19,20 @@ import java.util.Date;
         allowGetters = true)
 public class Series implements Serializable {
     @Id
-    @NotBlank
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seriesID;
 
     @NotBlank
     private String seriesName="newSeries";
 
+
+    private String description="some content";
+
     @NotBlank
+    private String genre="genre";
+
+
+    @NotNull
     private boolean isPublicEditing=false;
 
     @Column(nullable = false, updatable = false)
@@ -32,11 +40,27 @@ public class Series implements Serializable {
     @CreatedDate
     private Date createdAt=new Date();
 
-    @NotBlank
+    @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "createdBy")
     private User user;
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public long getSeriesID() {
         return seriesID;
