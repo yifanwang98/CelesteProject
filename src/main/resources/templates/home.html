@@ -89,11 +89,9 @@
                                         <span class="post-author" th:text="${post.getUser().getUsername()}"></span><br>
                                         <span class="post-time" th:text="${post.getCreatedAt()}"></span>
                                     </td>
-                                    <!--<td th:switch="${User.getUsername()}" width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">-->
                                     <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
                                         <a href="" th:if="${User.getUsername() == post.getUser().getUsername()}"
                                            class="post-action-more"><i class='far fa-trash-alt'></i></a>
-                                        <!--<a href="" th:unless="${User.getUsername() == post.getUser().getUsername()}" class="post-action-more"><i class='fas fa-ellipsis-v'></i></a>-->
                                         <div class="dropdown"
                                              th:unless="${User.getUsername() == post.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
@@ -185,7 +183,8 @@
                                     th:text="'Share ('+${repostsForeachPost.get(post.getPostID())}+')'"></span></a>
                         </td>
                         <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                            <a href=""><i class='far fa-comment-dots'></i> Comment (1k+)</a>
+                            <a th:href="'singlePost?id=' + ${post.getPostID()}"><i class='far fa-comment-dots'></i>
+                                Comment (1k+)</a>
                         </td>
                         <td class="post-action-cell" style="border-right: #ccc 1px solid">
                             <a href=""><i class='fas fa-star'></i> <span

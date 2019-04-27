@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .single-container {
-    margin: 2em 19.09854851%;
+    margin: 2em 19.09854851% 0 19.09854851%;
     background: rgba(255, 255, 255, 0.85);
     border-radius: 8px;
 }
@@ -14,4 +14,82 @@
     font-size: 1.5em;
     color: #218787;
     padding: 1em;
+}
+
+.single-comment-container {
+    margin: 0.25em 19.09854851% 0 19.09854851%;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+}
+
+.single-comment-inner-container {
+    padding: 0.5em 0.5em 0.25em 0.5em;
+}
+
+.single-comment-textarea {
+    width: 98%;
+    height: 4em;
+    resize: none;
+    font-size: 1em;
+    padding: 0.25em 1%;
+    border: #b6b6b6 1px solid;
+    border-radius: 5px;
+}
+
+.single-comment-submit {
+    border: none;
+    border-radius: 5px;
+    background: #218787;
+    color: white;
+    margin-top: -0.4em;
+    font-size: 0.92em;
+}
+
+.single-comment-submit:hover {
+    background: #269b9b;
+    color: white;
+    cursor: pointer;
+}
+
+.char-count {
+    text-align: left;
+    margin-top: -0.25em;
+}
+
+.single-all-comment-container {
+    margin: 0.5em 19.09854851% 0 19.09854851%;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+}
+
+.single-comment-avatar {
+    font-size: 1em;
+    padding: 0em 1em;
+    width: 1.6em;
+}
+
+.single-comment-username:link, .single-comment-username:visited {
+    font-size: 1em;
+    color: #218787;
+    text-decoration: none;
+}
+
+.single-comment-username:hover {
+    color: #9a9a9a;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.follow-male {
+    color: #3973a0;
+}
+
+.follow-female {
+    color: #ef8898;
+}
+
+.single-comment-title {
+    color: #218787;
+    font-size: 1.25em;
+    padding: 0.25em 0.75em;
 }

@@ -98,10 +98,41 @@
 
 .post-action-cell a:link, .post-action-cell a:visited {
     text-decoration: none;
+    color: #9a9a9a;
 }
 
 .post-action-cell a:hover {
     color: #218787;
+    text-decoration: none;
+}
+
+.post-action-liked {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-action-liked a:link, .post-action-liked a:visited {
+    text-decoration: none;
+    color: #3973a0;
+}
+
+.post-action-liked a:hover {
+    color: #9a9a9a;
+    text-decoration: none;
+}
+
+.post-action-stared {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-action-stared a:link, .post-action-stared a:visited {
+    text-decoration: none;
+    color: goldenrod;
+}
+
+.post-action-stared a:hover {
+    color: #9a9a9a;
     text-decoration: none;
 }
 

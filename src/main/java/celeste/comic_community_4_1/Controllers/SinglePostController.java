@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.model.Comment;
 import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.PostContent;
 import celeste.comic_community_4_1.model.User;
@@ -34,6 +35,16 @@ public class SinglePostController {
     @Autowired
     PostContentRepository postContentRepository;
 
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
+
+    @Autowired
+    StarRepository starRepository;
+
+
     @GetMapping("/singlePost")
     public String userprofile(@RequestParam(value = "id") long postId,
                               ModelMap model, HttpServletRequest request) throws Exception {
@@ -51,6 +62,7 @@ public class SinglePostController {
         List<Post> postList = postRepository.findByPostID(postId);
         if (postList.isEmpty()) {
             model.addAttribute("error", "The post you are trying to view may have been removed.");
+            model.addAttribute("hasError", true);
             return "singlePost";
         }
         Post postToDisplay = postList.get(0);
@@ -68,6 +80,18 @@ public class SinglePostController {
         }
         model.addAttribute("postImages", postImages);
         model.addAttribute("hasError", false);
+
+        // Retrieve All Comments
+        List<Comment> commentList = commentRepository.findByPostIndentityPost(postToDisplay);
+        model.addAttribute("commentList", commentList);
+
+        // Count
+        model.addAttribute("starCount", starRepository.findByPostIndentityPost(postToDisplay).size());
+        model.addAttribute("likeCount", likeRepository.findByPostIndentityPost(postToDisplay).size());
+        model.addAttribute("shareCount", postRepository.findByOriginalPostIDAndIsRepost(postId, true).size());
+
+        model.addAttribute("myStar", starRepository.existsStarByPostIndentityPostAndPostIndentityUser(postToDisplay, user));
+        model.addAttribute("myLike", likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(postToDisplay, user));
 
         return "singlePost";
     }

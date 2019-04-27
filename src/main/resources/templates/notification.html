@@ -104,7 +104,7 @@
                                     <span th:text="${notification.toString()}"></span>
                                     <span th:if="${notification.type != T(celeste.comic_community_4_1.miscellaneous.NotificationType).FOLLOW && notification.type != T(celeste.comic_community_4_1.miscellaneous.NotificationType).SUBSCRIBE}">
                                         <a th:href="'singlePost?id=' + ${notification.postOrSeriesID}"
-                                           class="notification-link">[Single Post Link Placeholder]</a>
+                                           class="notification-link"><i class="fas fa-external-link-alt"></i></a>
                                         <span th:if="${notification.comment != null && notification.comment.length() > 0 && notification.type == T(celeste.comic_community_4_1.miscellaneous.NotificationType).SHARE}">
                                             and commented "<a class="notification-link"
                                                               th:text="${notification.comment}"
