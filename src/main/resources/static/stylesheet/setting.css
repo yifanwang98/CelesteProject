@@ -57,6 +57,7 @@
     text-align: center;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
     display: block;
+    color: #9a9a9a;
 }
 
 .setting-cancel-btn:hover {
@@ -82,10 +83,12 @@
     text-align: center;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
     display: block;
+    color: goldenrod;
 }
 
 .setting-upgrade-btn:hover {
     border: goldenrod 1.5px solid;
+    color: goldenrod;
     font-weight: 500;
 }
 

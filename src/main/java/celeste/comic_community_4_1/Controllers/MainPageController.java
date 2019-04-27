@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class MainPageController {
     @Autowired
     StarRepository starRepository;
 
-    @GetMapping("/mainPage")
+    @GetMapping(value = {"/mainPage", "/"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
 
         if (request.getSession().getAttribute("username") == null) {
@@ -101,10 +102,14 @@ public class MainPageController {
         }
 
         model.addAttribute("postDataList", postDataList);
-
-        request.getSession().setAttribute("username", username);
         return "mainPage";
 
+    }
+
+    @PostMapping("signOut")
+    public String signOut(ModelMap model, HttpServletRequest request) throws Exception {
+        request.getSession().removeAttribute("username");
+        return "index";
     }
 
 }

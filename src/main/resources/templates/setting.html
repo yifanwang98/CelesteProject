@@ -154,10 +154,10 @@
                         <a href="/mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="discover.html" class="headerUnselected">Discover</a>
+                        <a href="discover" class="headerUnselected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="search.html" class="headerUnselected">Search</a>
+                        <a href="search" class="headerUnselected">Search</a>
                     </td>
                 </tr>
             </table>
@@ -167,14 +167,16 @@
             <table style="padding: 0; margin: 0; align: right;">
                 <tr style="align: right;">
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="/setting" class="headerSelected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="profile_post.html" class="headerUnselected"><i
-                                class='fas fa-user-circle headerIcon'></i></a>
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
                     </td>
                     <td class="headerCellPadding"></td>
                 </tr>
@@ -184,6 +186,9 @@
     </tbody>
 </table>
 <div style="height: 2.75em;"></div>
+<!---------------------------------------->
+<!---------------------------------------->
+
 <!---------------------------------------->
 <!---------------------------------------->
 <div style="padding: 3em 30%;" class="webfont">
@@ -305,7 +310,7 @@
                         <div>Basic</div>
                     </td>
                     <td>
-                        <a id = "upgrade"class="setting-upgrade-btn" style="cursor: pointer;">Upgrade</a>
+                        <a id="upgrade" class="setting-upgrade-btn" style="cursor: pointer;">Upgrade</a>
                     </td>
                 </tr>
                 <tr th:unless="${User.getMembership()} == 'none'">
@@ -314,13 +319,18 @@
                         <div>Premium</div>
                     </td>
                     <td>
-                        <a id = "downgrade"class="setting-upgrade-btn" style="cursor: pointer;">DownGrade</a>
+                        <a id="downgrade" class="setting-cancel-btn" style="cursor: pointer;">Downgrade</a>
                     </td>
                 </tr>
             </table>
         </div>
         <div class="setting-inner-container">
-            <a id = "Reset_Account"class="setting-reset-account-btn" style="cursor: pointer;">Reset Account</a>
+            <form action="/signOut" method="post">
+                <input type="submit" class="setting-save-btn" value="Sign Out" name="submit" style="padding: 0.5em 0;">
+            </form>
+        </div>
+        <div class="setting-inner-container">
+            <a id="Reset_Account" class="setting-reset-account-btn" style="cursor: pointer;">Reset Account</a>
         </div>
         <div class="setting-inner-container">
             <a id = "Close_Account" class="setting-close-account-btn" style="cursor: pointer;">Close Account</a>
