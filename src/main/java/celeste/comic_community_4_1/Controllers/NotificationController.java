@@ -85,14 +85,16 @@ public class NotificationController {
             for (Like like : likeList) {
                 if (like.getPostIndentity().getUser().getUsername().equals(username))
                     continue;
-                notificationList.add(new Notification(NotificationType.LIKE, like.getPostIndentity().getUser().getUsername(), like.getCreatedAt()));
+                notificationList.add(new Notification(NotificationType.LIKE, like.getPostIndentity().getUser().getUsername(),
+                        like.getCreatedAt(), p.getPostID()));
             }
 
             List<Star> starList = starRepository.findByPostIndentityPost(p);
             for (Star star : starList) {
                 if (star.getPostIndentity().getUser().getUsername().equals(username))
                     continue;
-                notificationList.add(new Notification(NotificationType.STAR, star.getPostIndentity().getUser().getUsername(), star.getCreatedAt()));
+                notificationList.add(new Notification(NotificationType.STAR, star.getPostIndentity().getUser().getUsername(),
+                        star.getCreatedAt(), p.getPostID()));
             }
 
             List<Comment> commentList = commentRepository.findByPostIndentityPost(p);
@@ -101,7 +103,7 @@ public class NotificationController {
                     continue;
                 notificationList.add(new Notification(NotificationType.COMMENT,
                         comment.getPostIndentity().getUser().getUsername(), comment.getCreatedAt(),
-                        comment.getPostIndentity().getPost().getPostID(), comment.getContent()));
+                        p.getPostID(), comment.getContent()));
             }
 
             List<Post> shareList = postRepository.findByOriginalPostIDAndIsRepost(p.getPostID(), true);

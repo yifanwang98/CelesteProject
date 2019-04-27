@@ -14,5 +14,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     int countByoriginalPostIDAndIsRepost(long postid,Boolean b);
 
     List<Post> findByOriginalPostIDAndIsRepost(long postid, Boolean b);
+
+    List<Post> findByPostID(long postId);
 }
 

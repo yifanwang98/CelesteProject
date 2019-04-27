@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+.single-container {
+    margin: 2em 19.09854851%;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+}
+
+.single-inner-container {
+    padding-top: 0.5em;
+}
+
+.single-error {
+    font-size: 1.5em;
+    color: #218787;
+    padding: 1em;
+}
