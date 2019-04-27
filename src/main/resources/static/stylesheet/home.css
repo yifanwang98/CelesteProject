@@ -60,9 +60,9 @@
 }
 
 .post-image-single {
-    max-height: 15em;
-    max-height: 22em;
-    width: 15em;
+    min-height: 8em;
+    max-height: 10em;
+    width: 8em;
     border: #ccc 1px solid;
     border-radius: 3px;
     margin-right: 1em;
@@ -70,12 +70,20 @@
 }
 
 .post-image-multiple {
-    width: 15em;
-    height: 15em;
+    width: 8em;
+    height: 8em;
     border: #ccc 1px solid;
     border-radius: 3px;
     margin-right: 1em;
     object-fit: cover;
+}
+
+.imageLink:link, .imageLink:visited, .imageLink:hover {
+    text-decoration: none;
+}
+
+.post-image-single:hover, .post-image-multiple:hover {
+    cursor: pointer;
 }
 
 .post-text {
@@ -98,10 +106,41 @@
 
 .post-action-cell a:link, .post-action-cell a:visited {
     text-decoration: none;
+    color: #9a9a9a;
 }
 
 .post-action-cell a:hover {
     color: #218787;
+    text-decoration: none;
+}
+
+.post-action-liked {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-action-liked a:link, .post-action-liked a:visited {
+    text-decoration: none;
+    color: #3973a0;
+}
+
+.post-action-liked a:hover {
+    color: #9a9a9a;
+    text-decoration: none;
+}
+
+.post-action-stared {
+    padding: 0.25em 0;
+    text-decoration: none;
+}
+
+.post-action-stared a:link, .post-action-stared a:visited {
+    text-decoration: none;
+    color: goldenrod;
+}
+
+.post-action-stared a:hover {
+    color: #9a9a9a;
     text-decoration: none;
 }
 
