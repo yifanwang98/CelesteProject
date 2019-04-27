@@ -8,10 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, FollowIndentity> {
     List<Follow> findByFollowIndentityUserone(User user1);
     List<Follow> findByFollowIndentityUsertwo(User user2);
+    Optional<Follow> findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(String user1, String user2);
 }
 
