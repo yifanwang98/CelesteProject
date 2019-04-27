@@ -60,9 +60,9 @@
 }
 
 .post-image-single {
-    max-height: 15em;
-    max-height: 22em;
-    width: 15em;
+    min-height: 5em;
+    max-height: 8em;
+    width: 5em;
     border: #ccc 1px solid;
     border-radius: 3px;
     margin-right: 1em;
@@ -70,8 +70,8 @@
 }
 
 .post-image-multiple {
-    width: 15em;
-    height: 15em;
+    width: 5em;
+    height: 5em;
     border: #ccc 1px solid;
     border-radius: 3px;
     margin-right: 1em;

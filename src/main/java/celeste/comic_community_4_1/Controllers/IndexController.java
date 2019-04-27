@@ -2,6 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.PostComparator;
+import celeste.comic_community_4_1.miscellaneous.PostData;
 import celeste.comic_community_4_1.model.Follow;
 import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.PostContent;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 public class IndexController {
-
 
     @Autowired
     UserRepository userRepository;
@@ -37,6 +39,9 @@ public class IndexController {
     PostContentRepository postContentRepository;
 
     @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     LikeRepository likeRepository;
 
     @Autowired
@@ -46,144 +51,76 @@ public class IndexController {
     public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
                              @RequestParam(value = "password" ,required = false) String password,
                              ModelMap model, HttpServletRequest request) throws Exception{
-        if(request.getSession().getAttribute("username")!=null){
-            request.getSession().removeAttribute("username");
+        if (password != null && password.length() > 0) {
+            if (!userRepository.existsById(username)) {
+                model.addAttribute("errors", "This username doesn't exist.");
+                return "index";
+            }
+            User user = userRepository.findById(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+            if (!password.equals(user.getPassword())) {
+                model.addAttribute("errors", "Your password is incorrect.");
+                return "index";
+            }
+            request.getSession().setAttribute("username", username);
+            request.getSession().setAttribute("password", password);
         }
 
-        if (!userRepository.existsById(username)) {
-            model.addAttribute("errors","This username doesn't exist.");
+        if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
-        User founduser = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        if(!password.equals(founduser.getPassword())){
-            model.addAttribute("errors","Your password is incorrect.");
-            return "index";
-        }
-        Optional<User> a = userRepository.findById(username);
-        User b= a.get();
-        model.addAttribute("User",b);
+
+        // Session User
+        String username1 = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username1));
+        model.addAttribute("User", user);
+
+        // Get Following & Followers
+        model.addAttribute("following", followRepository.countFollowByFollowIndentityUserone(user));
+        model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(user));
+
         //All the post by this user
-        List<Post> postlist = postRepository.findByUser(b);
+        List<Post> postList = postRepository.findByUser(user);
+        model.addAttribute("postsCount", postList.size());
         //All the post by this user's follows
-        List<Follow> followlist = followRepository.findByFollowIndentityUserone(b);
-        for(int i =0; i<followlist.size();i++){
-            postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
+        List<Follow> followList = followRepository.findByFollowIndentityUserone(user);
+        for (int i = 0; i < followList.size(); i++) {
+            postList.addAll(postRepository.findByUser(followList.get(i).getFollowIndentity().getUser2()));
         }
-        Collections.sort(postlist, new PostComparator());
-        HashMap<Long, List<String>> imgsForeachPost = new HashMap<Long, List<String>>();
-        List<PostContent> temp;
-        for (int i = 0; i < postlist.size(); i++) {
-            ArrayList<String> list = new ArrayList<String>();
-            temp = postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID());
-            for (int j = 0; j < temp.size(); j++) {
-                list.add(temp.get(j).getPostIndentity().getWork().getThumbnail());
+        // Sort
+        Collections.sort(postList, new PostComparator());
+
+        // Organize Info
+        List<PostData> postDataList = new ArrayList<>();
+        for (int i = 0; i < postList.size(); i++) {
+            // Post Content
+            Post post = postList.get(i);
+            Post originalPost = null;
+            if (post.isRepost()) {
+                originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
             }
-            imgsForeachPost.put(postlist.get(i).getPostID(), list);
-        }
-
-        model.addAttribute("postlist",postlist);
-        model.addAttribute("imgsForeachPost",imgsForeachPost);
-
-
-        //Get Follows
-        List<Follow> c = followRepository.findByFollowIndentityUserone(b);
-        model.addAttribute("following",c.size());
-        //Get Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(b);
-        model.addAttribute("followers",d.size());
-
-        model.addAttribute("postsCount",postRepository.findByUser(b).size());
-
-        HashMap<Long, Integer> likesForeachPost = new HashMap<Long, Integer>();
-        for(int i =0; i<postlist.size();i++){
-            likesForeachPost.put(postlist.get(i).getPostID(),likeRepository.findByPostIndentityPost(postlist.get(i)).size());
-        }
-        HashMap<Long, Integer> starsForeachPost = new HashMap<Long, Integer>();
-        for(int i =0; i<postlist.size();i++){
-            starsForeachPost.put(postlist.get(i).getPostID(),starRepository.findByPostIndentityPost(postlist.get(i)).size());
-        }
-
-        HashMap<Long, Integer> repostsForeachPost = new HashMap<Long, Integer>();
-        for(int i =0; i<postlist.size();i++){
-            repostsForeachPost.put(postlist.get(i).getPostID(),postRepository.countByoriginalPostIDAndIsRepost(postlist.get(i).getOriginalPostID(),true));
-        }
-
-        model.addAttribute("repostsForeachPost",repostsForeachPost);
-        model.addAttribute("likesForeachPost",likesForeachPost);
-        model.addAttribute("starsForeachPost",starsForeachPost);
-
-
-//        System.out.println("Following:" + c.size() + ". Followers:" + d.size()+".");
-        request.getSession().setAttribute("username",username);
-        request.getSession().setAttribute("password",password);
-        return "home";
-
-    }
-    @GetMapping("/home")
-    public String getlogin(ModelMap model, HttpServletRequest request) throws Exception{
-        String username = (String)request.getSession().getAttribute("username");
-        String password = (String)request.getSession().getAttribute("password");
-
-        Optional<User> a = userRepository.findById(username);
-        User b= a.get();
-        model.addAttribute("User",b);
-        //All the post by this user
-        List<Post> postlist = postRepository.findByUser(b);
-        //All the post by this user's follows
-        List<Follow> followlist = followRepository.findByFollowIndentityUserone(b);
-        for(int i =0; i<followlist.size();i++){
-            postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
-        }
-//        postContentRepository.findByPostIndentityPost()
-        HashMap<Long, List<String>> imgsForeachPost = new HashMap<Long, List<String>>();
-        for(int i =0; i<postlist.size();i++){
-            ArrayList<String> list = new ArrayList<String>();
-            for(int j =0; j<postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID()).size();j++){
-                String content = postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID()).get(j).getPostIndentity().getWork().getContent();
-                list.add(content);
+            List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(postList.get(i).getOriginalPostID());
+            List<String> images = new ArrayList<>();
+            for (int j = 0; j < postContents.size(); j++) {
+                images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
             }
-            imgsForeachPost.put(postlist.get(i).getPostID(),list);
+
+            // Count
+            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
+            long commentCount = commentRepository.countCommentByPostIndentityPost(post);
+            long starCount = starRepository.findByPostIndentityPost(post).size();
+            long likeCount = likeRepository.findByPostIndentityPost(post).size();
+
+            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
+            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
+
+            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, myStar, myLike));
         }
 
-        int x = 1;
-        model.addAttribute("postlist",postlist);
-        model.addAttribute("imgsForeachPost",imgsForeachPost);
+        model.addAttribute("postDataList", postDataList);
 
-
-        //Get Follows
-        List<Follow> c = followRepository.findByFollowIndentityUserone(b);
-        model.addAttribute("following",c.size());
-        //Get Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(b);
-        model.addAttribute("followers",d.size());
-
-        model.addAttribute("postsCount",postRepository.findByUser(b).size());
-
-        HashMap<Long, Integer> likesForeachPost = new HashMap<Long, Integer>();
-        for(int i =0; i<postlist.size();i++){
-            likesForeachPost.put(postlist.get(i).getPostID(),likeRepository.findByPostIndentityPost(postlist.get(i)).size());
-        }
-        HashMap<Long, Integer> starsForeachPost = new HashMap<Long, Integer>();
-        for(int i =0; i<postlist.size();i++){
-            starsForeachPost.put(postlist.get(i).getPostID(),starRepository.findByPostIndentityPost(postlist.get(i)).size());
-        }
-
-        HashMap<Long, Integer> repostsForeachPost = new HashMap<Long, Integer>();
-        for(int i =0; i<postlist.size();i++){
-            repostsForeachPost.put(postlist.get(i).getPostID(),postRepository.countByoriginalPostIDAndIsRepost(postlist.get(i).getOriginalPostID(),true));
-        }
-
-        model.addAttribute("repostsForeachPost",repostsForeachPost);
-        model.addAttribute("likesForeachPost",likesForeachPost);
-        model.addAttribute("starsForeachPost",starsForeachPost);
-
-
-//        System.out.println("Following:" + c.size() + ". Followers:" + d.size()+".");
-        request.getSession().setAttribute("username",username);
-        request.getSession().setAttribute("password",password);
-        return "home";
-
+        request.getSession().setAttribute("username", username);
+        return "mainPage";
     }
 
     @GetMapping("/signup")

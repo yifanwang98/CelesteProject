@@ -88,7 +88,7 @@ public class SinglePostController {
         // Count
         model.addAttribute("starCount", starRepository.findByPostIndentityPost(postToDisplay).size());
         model.addAttribute("likeCount", likeRepository.findByPostIndentityPost(postToDisplay).size());
-        model.addAttribute("shareCount", postRepository.findByOriginalPostIDAndIsRepost(postId, true).size());
+        model.addAttribute("shareCount", postRepository.countByoriginalPostIDAndIsRepost(postId, true));
 
         model.addAttribute("myStar", starRepository.existsStarByPostIndentityPostAndPostIndentityUser(postToDisplay, user));
         model.addAttribute("myLike", likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(postToDisplay, user));

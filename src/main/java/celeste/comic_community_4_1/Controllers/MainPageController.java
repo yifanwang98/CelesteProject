@@ -2,6 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.PostComparator;
+import celeste.comic_community_4_1.miscellaneous.PostData;
 import celeste.comic_community_4_1.model.Follow;
 import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.PostContent;
@@ -15,12 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 @Controller
 public class MainPageController {
-
 
     @Autowired
     UserRepository userRepository;
@@ -38,6 +37,9 @@ public class MainPageController {
     PostContentRepository postContentRepository;
 
     @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     LikeRepository likeRepository;
 
     @Autowired
@@ -45,6 +47,7 @@ public class MainPageController {
 
     @GetMapping("/mainPage")
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
+
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -55,62 +58,52 @@ public class MainPageController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         model.addAttribute("User", user);
 
+        // Get Following & Followers
+        model.addAttribute("following", followRepository.countFollowByFollowIndentityUserone(user));
+        model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(user));
+
         //All the post by this user
-        List<Post> postlist = postRepository.findByUser(user);
+        List<Post> postList = postRepository.findByUser(user);
+        model.addAttribute("postsCount", postList.size());
         //All the post by this user's follows
-        List<Follow> followlist = followRepository.findByFollowIndentityUserone(user);
-        for (int i = 0; i < followlist.size(); i++) {
-            postlist.addAll(postRepository.findByUser(followlist.get(i).getFollowIndentity().getUser2()));
+        List<Follow> followList = followRepository.findByFollowIndentityUserone(user);
+        for (int i = 0; i < followList.size(); i++) {
+            postList.addAll(postRepository.findByUser(followList.get(i).getFollowIndentity().getUser2()));
         }
+        // Sort
+        Collections.sort(postList, new PostComparator());
 
-        Collections.sort(postlist, new PostComparator());
-
-        HashMap<Long, List<String>> imgsForeachPost = new HashMap<Long, List<String>>();
-        List<PostContent> temp;
-        for (int i = 0; i < postlist.size(); i++) {
-            ArrayList<String> list = new ArrayList<String>();
-            temp = postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID());
-            for (int j = 0; j < temp.size(); j++) {
-                list.add(temp.get(j).getPostIndentity().getWork().getThumbnail());
+        // Organize Info
+        List<PostData> postDataList = new ArrayList<>();
+        for (int i = 0; i < postList.size(); i++) {
+            // Post Content
+            Post post = postList.get(i);
+            Post originalPost = null;
+            if (post.isRepost()) {
+                originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
             }
-            imgsForeachPost.put(postlist.get(i).getPostID(), list);
+            List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(postList.get(i).getOriginalPostID());
+            List<String> images = new ArrayList<>();
+            for (int j = 0; j < postContents.size(); j++) {
+                images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
+            }
+
+            // Count
+            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
+            long commentCount = commentRepository.countCommentByPostIndentityPost(post);
+            long starCount = starRepository.findByPostIndentityPost(post).size();
+            long likeCount = likeRepository.findByPostIndentityPost(post).size();
+
+            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
+            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
+
+            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, myStar, myLike));
         }
 
-
-        model.addAttribute("postlist", postlist);
-        model.addAttribute("imgsForeachPost", imgsForeachPost);
-
-
-        //Get Follows
-        List<Follow> c = followRepository.findByFollowIndentityUserone(user);
-        model.addAttribute("following", c.size());
-        //Get Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(user);
-        model.addAttribute("followers", d.size());
-
-        model.addAttribute("postsCount", postRepository.findByUser(user).size());
-
-        HashMap<Long, Integer> likesForeachPost = new HashMap<Long, Integer>();
-        for (int i = 0; i < postlist.size(); i++) {
-            likesForeachPost.put(postlist.get(i).getPostID(), likeRepository.findByPostIndentityPost(postlist.get(i)).size());
-        }
-        HashMap<Long, Integer> starsForeachPost = new HashMap<Long, Integer>();
-        for (int i = 0; i < postlist.size(); i++) {
-            starsForeachPost.put(postlist.get(i).getPostID(), starRepository.findByPostIndentityPost(postlist.get(i)).size());
-        }
-
-        HashMap<Long, Integer> repostsForeachPost = new HashMap<Long, Integer>();
-        for (int i = 0; i < postlist.size(); i++) {
-            repostsForeachPost.put(postlist.get(i).getPostID(), postRepository.countByoriginalPostIDAndIsRepost(postlist.get(i).getOriginalPostID(), true));
-        }
-
-        model.addAttribute("repostsForeachPost", repostsForeachPost);
-        model.addAttribute("likesForeachPost", likesForeachPost);
-        model.addAttribute("starsForeachPost", starsForeachPost);
-
+        model.addAttribute("postDataList", postDataList);
 
         request.getSession().setAttribute("username", username);
-        return "home";
+        return "mainPage";
 
     }
 

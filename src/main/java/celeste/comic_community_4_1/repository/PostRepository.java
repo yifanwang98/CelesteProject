@@ -11,9 +11,12 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUser(User user1);
-    int countByoriginalPostIDAndIsRepost(long postid,Boolean b);
+
+    long countByoriginalPostIDAndIsRepost(long postid, Boolean b);
 
     List<Post> findByOriginalPostIDAndIsRepost(long postid, Boolean b);
+
+    Post findPostByPostID(long postid);
 
     List<Post> findByPostID(long postId);
 }
