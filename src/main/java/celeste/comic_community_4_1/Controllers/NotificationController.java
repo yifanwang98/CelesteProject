@@ -103,6 +103,23 @@ public class NotificationController {
                         comment.getPostIndentity().getUser().getUsername(), comment.getCreatedAt(),
                         comment.getPostIndentity().getPost().getPostID(), comment.getContent()));
             }
+
+            List<Post> shareList = postRepository.findByOriginalPostIDAndIsRepost(p.getPostID(), true);
+            for (Post shared : shareList) {
+                if (shared.getUser().getUsername().equals(username))
+                    continue;
+                if (shared.getPostComment().length() > 0) {
+                    String comment = shared.getPostComment();
+                    if (comment.length() > 10) {
+                        comment = comment.substring(0, 10) + "...";
+                    }
+                    notificationList.add(new Notification(NotificationType.SHARE, shared.getUser().getUsername(),
+                            shared.getCreatedAt(), p.getPostID(), shared.getPostID(), comment));
+                } else {
+                    notificationList.add(new Notification(NotificationType.SHARE, shared.getUser().getUsername(),
+                            shared.getCreatedAt(), p.getPostID(), shared.getPostID(), null));
+                }
+            }
         }
         // Notification - Series Subscription
         List<Series> seriesList = seriesRepository.findByUser(user);

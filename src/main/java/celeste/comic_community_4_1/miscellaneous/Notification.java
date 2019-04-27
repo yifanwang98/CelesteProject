@@ -12,6 +12,7 @@ public class Notification {
     public final Date time;
     public final String comment;
     public final long postOrSeriesID;
+    public final long repostID;
 
     public Notification(NotificationType type, String fromWhom, Date time) {
         this.type = type;
@@ -19,6 +20,7 @@ public class Notification {
         this.time = time;
         this.comment = null;
         this.postOrSeriesID = 0;
+        this.repostID = -1;
     }
 
     public Notification(NotificationType type, String fromWhom, Date time, long postOrSeriesID) {
@@ -27,6 +29,7 @@ public class Notification {
         this.time = time;
         this.postOrSeriesID = postOrSeriesID;
         this.comment = null;
+        this.repostID = -1;
     }
 
     public Notification(NotificationType type, String fromWhom, Date time, long postOrSeriesID, String comment) {
@@ -35,6 +38,16 @@ public class Notification {
         this.time = time;
         this.comment = comment;
         this.postOrSeriesID = postOrSeriesID;
+        this.repostID = -1;
+    }
+
+    public Notification(NotificationType type, String fromWhom, Date time, long postOrSeriesID, long repostID, String comment) {
+        this.type = type;
+        this.fromWhom = fromWhom;
+        this.time = time;
+        this.comment = comment;
+        this.postOrSeriesID = postOrSeriesID;
+        this.repostID = repostID;
     }
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, YYYY", Locale.ENGLISH);

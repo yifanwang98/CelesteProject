@@ -102,9 +102,18 @@
                                     <a th:href="'view_profile?user=' + ${notification.fromWhom}"
                                        th:text="${notification.fromWhom}" class="notification-link"></a>
                                     <span th:text="${notification.toString()}"></span>
-                                    <span th:if="${notification.type != T(celeste.comic_community_4_1.miscellaneous.NotificationType).FOLLOW}">
+                                    <span th:if="${notification.type != T(celeste.comic_community_4_1.miscellaneous.NotificationType).FOLLOW && notification.type != T(celeste.comic_community_4_1.miscellaneous.NotificationType).SUBSCRIBE}">
                                         <a th:href="'singlePost?id=' + ${notification.postOrSeriesID}"
                                            class="notification-link">[Single Post Link Placeholder]</a>
+                                        <span th:if="${notification.comment != null && notification.comment.length() > 0 && notification.type == T(celeste.comic_community_4_1.miscellaneous.NotificationType).SHARE}">
+                                            and commented "<a class="notification-link"
+                                                              th:text="${notification.comment}"
+                                                              th:href="'singlePost?id=' + ${notification.repostID}"></a>"
+                                        </span>
+                                    </span>
+                                    <span th:if="${notification.type == T(celeste.comic_community_4_1.miscellaneous.NotificationType).SUBSCRIBE}">
+                                        <a th:href="'viewSeries?id=' + ${notification.postOrSeriesID}"
+                                           class="notification-link">[Single Series Link Placeholder]</a>
                                     </span>
                                 </td>
                                 <td style="text-align: right">
