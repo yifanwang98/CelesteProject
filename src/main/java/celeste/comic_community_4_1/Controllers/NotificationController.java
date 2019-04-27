@@ -44,6 +44,12 @@ public class NotificationController {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
+
     @GetMapping("/notification")
     public String goToNotification(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -96,6 +102,15 @@ public class NotificationController {
                 notificationList.add(new Notification(NotificationType.COMMENT,
                         comment.getPostIndentity().getUser().getUsername(), comment.getCreatedAt(),
                         comment.getPostIndentity().getPost().getPostID(), comment.getContent()));
+            }
+        }
+        // Notification - Series Subscription
+        List<Series> seriesList = seriesRepository.findByUser(user);
+        for (Series series : seriesList) {
+            List<SeriesFollow> subscription = seriesFollowRepository.findBySeriesFollowIndentitySeries(series);
+            for (SeriesFollow sf : subscription) {
+                notificationList.add(new Notification(NotificationType.SUBSCRIBE,
+                        sf.getSeriesFollowIndentity().getUser().getUsername(), sf.getCreatedAt(), series.getSeriesID()));
             }
         }
 
