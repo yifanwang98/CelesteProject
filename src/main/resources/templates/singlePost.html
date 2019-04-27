@@ -67,7 +67,7 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <div class="single-container webfont">
-    <span th:if="${error != null}">
+    <span th:if="${hasError == false}">
     <div class="single-inner-container">
         <table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">
             <!-- Header -->
@@ -194,7 +194,7 @@
         </table>
     </div>
     </span>
-    <span th:unless="${error != null}">
+    <span th:unless="${hasError == false}">
         <div th:text="${error}" class="single-error"></div>
     </span>
 </div>

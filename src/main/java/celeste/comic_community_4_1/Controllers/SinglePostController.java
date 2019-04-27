@@ -51,7 +51,7 @@ public class SinglePostController {
         List<Post> postList = postRepository.findByPostID(postId);
         if (postList.isEmpty()) {
             model.addAttribute("error", "The post you are trying to view may have been removed.");
-            ;
+            return "singlePost";
         }
         Post postToDisplay = postList.get(0);
         model.addAttribute("postToDisplay", postToDisplay);
@@ -67,6 +67,7 @@ public class SinglePostController {
             postImages.add(temp.get(j).getPostIndentity().getWork().getThumbnail());
         }
         model.addAttribute("postImages", postImages);
+        model.addAttribute("hasError", false);
 
         return "singlePost";
     }
