@@ -158,8 +158,11 @@
                                         <td>
                                             <div>
                                                 <span th:each="work:${postData.images}">
-                                                    <image th:src="'data:image/png;base64,'+${work}"
-                                                           class="post-image-multiple"></image>
+                                                    <a th:href="'singlePost?id=' + ${postData.post.getPostID()}"
+                                                       class="imageLink">
+                                                        <image th:src="'data:image/png;base64,'+${work}"
+                                                               class="post-image-multiple"></image>
+                                                    </a>
                                                 </span>
                                             </div>
                                         </td>
@@ -169,8 +172,10 @@
                             <!-- Original -->
                             <div th:unless="${postData.post.isRepost()}">
                                 <span th:each="work:${postData.images}">
-                                    <image th:src="'data:image/png;base64,'+${work}"
+                                    <a th:href="'singlePost?id=' + ${postData.post.getPostID()}" class="imageLink">
+                                        <image th:src="'data:image/png;base64,'+${work}"
                                            th:class="${postData.images.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
+                                    </a>
                                 </span>
                             </div>
                         </td>
