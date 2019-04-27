@@ -13,8 +13,6 @@
     <link href="../static/stylesheet/notification.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <script>
-    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -110,7 +108,8 @@
                                     </span>
                                 </td>
                                 <td style="text-align: right">
-                                    <span th:text="${notification.time}" class="notification-time"></span>
+                                    <span th:if="${notification.time}"></span>
+                                    <span th:text="${notification.getDateString()}" class="notification-time"></span>
                                 </td>
                             </tr>
                             <tr th:if="${notification.type == T(celeste.comic_community_4_1.miscellaneous.NotificationType).COMMENT}">

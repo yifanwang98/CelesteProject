@@ -1,6 +1,9 @@
 package celeste.comic_community_4_1.miscellaneous;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class Notification {
 
@@ -32,6 +35,27 @@ public class Notification {
         this.time = time;
         this.comment = comment;
         this.postOrSeriesID = postOrSeriesID;
+    }
+
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, YYYY", Locale.ENGLISH);
+    private static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+
+    public String getDateString() {
+        Calendar c = Calendar.getInstance();
+        // set the calendar to start of today
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        if (this.time.before(c.getTime())) {
+            synchronized (dateFormat) {
+                return dateFormat.format(this.time);
+            }
+        } else {
+            synchronized (dateFormat) {
+                return timeFormat.format(this.time);
+            }
+        }
     }
 
     @Override
