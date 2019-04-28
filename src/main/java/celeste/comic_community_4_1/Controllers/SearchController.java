@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class SearchController {
@@ -130,7 +133,7 @@ public class SearchController {
                 starsForeachPost.put(postlist.get(i).getPostID(), starRepository.findByPostIndentityPost(postlist.get(i)).size());
             }
 
-            HashMap<Long, Integer> repostsForeachPost = new HashMap<Long, Integer>();
+            HashMap<Long, Long> repostsForeachPost = new HashMap<>();
             for (int i = 0; i < postlist.size(); i++) {
                 repostsForeachPost.put(postlist.get(i).getPostID(), postRepository.countByoriginalPostIDAndIsRepost(postlist.get(i).getOriginalPostID(), true));
             }

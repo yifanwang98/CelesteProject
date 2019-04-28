@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, FollowIndentity> {
@@ -18,5 +17,9 @@ public interface FollowRepository extends JpaRepository<Follow, FollowIndentity>
     long countFollowByFollowIndentityUserone(User user1);
 
     long countFollowByFollowIndentityUsertwo(User user2);
+
+    boolean existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(User user1, User user2);
+
+    List<Follow> findByFollowIndentityUseroneAndFollowIndentityUsertwo(String user1, String user2);
 }
 
