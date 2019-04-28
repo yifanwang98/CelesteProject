@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class SettingController {
@@ -148,14 +149,16 @@ public class SettingController {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        for(Post i : postRepository.findByUser(user)){
+        List<Post> postList = postRepository.findByUser(user);
+        for (Post i : postList) {
             postRepository.delete(i);
         }
-        for(Series i : seriesRepository.findByUser(user)){
+
+        List<Series> seriesList = seriesRepository.findByUser(user);
+        for (Series i : seriesList) {
             seriesRepository.delete(i);
         }
-//        model.addAttribute("User",user);
-        return "home";
+        return "setting";
     }
 
     @GetMapping("/closeAccount")

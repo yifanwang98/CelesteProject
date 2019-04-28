@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class FollowController {
@@ -180,12 +179,12 @@ public class FollowController {
     public String unfollow_follow(@RequestParam(value = "username1") String username1,
                                   @RequestParam(value = "username2") String username2,
                            ModelMap model, HttpServletRequest request) throws Exception {
-        Optional<Follow> x= followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(username1,username2);
-        if(x.isPresent()){
-            followRepository.delete(x.get());
+
+        List<Follow> x = followRepository.findByFollowIndentityUseroneAndFollowIndentityUsertwo(username1, username2);
+        if (!x.isEmpty()) {
+            followRepository.delete(x.get(0));
             return "Unfollow Success!";
-        }
-        else{
+        } else {
             Follow newfollow = new Follow();
             FollowIndentity newfi = new FollowIndentity();
             newfi.setUser1(userRepository.findById(username1).get());
@@ -194,12 +193,6 @@ public class FollowController {
             followRepository.save(newfollow);
             return "Follow Success!";
         }
-//        else {
-//            return "Unexpected Error!";
-//        }
-
-//        x.setUser1();
-//        Follow f = followRepository.find
     }
 }
 
