@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.model.EmbeddedClasses.FollowIndentity;
 import celeste.comic_community_4_1.model.Follow;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
@@ -8,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class FollowController {
@@ -160,6 +164,7 @@ public class FollowController {
         return result;
     }
 
+
     private boolean isSubscribing(User me, User others) {
         List<Follow> myFollowing = followRepository.findByFollowIndentityUserone(me);
         for (Follow f : myFollowing) {
@@ -168,6 +173,33 @@ public class FollowController {
             }
         }
         return false;
+    }
+
+    @ResponseBody
+    @PostMapping("/unfollow_follow")
+    public String unfollow_follow(@RequestParam(value = "username1") String username1,
+                                  @RequestParam(value = "username2") String username2,
+                           ModelMap model, HttpServletRequest request) throws Exception {
+        Optional<Follow> x= followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(username1,username2);
+        if(x.isPresent()){
+            followRepository.delete(x.get());
+            return "Unfollow Success!";
+        }
+        else{
+            Follow newfollow = new Follow();
+            FollowIndentity newfi = new FollowIndentity();
+            newfi.setUser1(userRepository.findById(username1).get());
+            newfi.setUser2(userRepository.findById(username2).get());
+            newfollow.setFollowIndentity(newfi);
+            followRepository.save(newfollow);
+            return "Follow Success!";
+        }
+//        else {
+//            return "Unexpected Error!";
+//        }
+
+//        x.setUser1();
+//        Follow f = followRepository.find
     }
 }
 
