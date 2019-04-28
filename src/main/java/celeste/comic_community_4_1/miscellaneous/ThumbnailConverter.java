@@ -18,6 +18,8 @@ public class ThumbnailConverter {
     private static BufferedImage scale(BufferedImage source, double ratio) {
         int w = (int) (source.getWidth() * ratio);
         int h = (int) (source.getHeight() * ratio);
+        w = (w > 1.25 * h) ? (int) (1.25 * h) : w;
+        h = (h > 1.25 * w) ? (int) (1.25 * w) : h;
         BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = bi.createGraphics();
         double xScale = (double) w / source.getWidth();
