@@ -84,9 +84,10 @@
         setTimeout( autoSave, 1000 * 60 );
 
         $("#save-button").click(function () {
-            console.log('save-button called')
+            // console.log('save-button called')
             saveDrawing();
-            console.log('saveDrawing Done')
+            alert("Your work is saved!")
+            // console.log('saveDrawing Done')
         });
 
         // post the data to the back end.
@@ -101,13 +102,12 @@
                 contentType: 'application/json',
                 data: JSON.stringify({saved: saved}),
                 cache : false,
-                success: function(res){
-                    if(res == "Your work is saved!"){
-                        alert(res)
-                        console.log(res.status)
+                success: function(data){
+                    if(data == "Your work is saved!(exist)" || data == "Your work is saved!(new)" ){
+                        console.log("saved")
                     }
                     else {
-                        alert(data)
+                        console.log(arguments[1])
                     }
 
                 },

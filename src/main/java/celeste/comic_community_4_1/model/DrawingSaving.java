@@ -1,9 +1,11 @@
 package celeste.comic_community_4_1.model;
 
-import celeste.comic_community_4_1.model.EmbeddedClasses.DrawingSavingIndentity;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,16 +14,42 @@ import java.util.Objects;
 @Table(name = "DrawingSave")
 @EntityListeners(AuditingEntityListener.class)
 public class DrawingSaving implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long drawsaveID;
 
-    @EmbeddedId
-    private DrawingSavingIndentity drawingSavingIndentity;
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "username")
+    private User userone;
 
-    public DrawingSavingIndentity getDrawingSavingIndentity() {
-        return drawingSavingIndentity;
+
+    @NotBlank
+    @Lob
+    private String drawing;
+
+    public long getDrawsaveID() {
+        return drawsaveID;
     }
 
-    public void setDrawingSavingIndentity(DrawingSavingIndentity drawingSavingIndentity) {
-        this.drawingSavingIndentity = drawingSavingIndentity;
+    public void setDrawsaveID(long drawsaveID) {
+        this.drawsaveID = drawsaveID;
+    }
+
+    public User getUserone() {
+        return userone;
+    }
+
+    public void setUserone(User userone) {
+        this.userone = userone;
+    }
+
+    public String getDrawing() {
+        return drawing;
+    }
+
+    public void setDrawing(String drawing) {
+        this.drawing = drawing;
     }
 
     @Override
@@ -29,12 +57,14 @@ public class DrawingSaving implements Serializable {
         if (this == o) return true;
         if (!(o instanceof DrawingSaving)) return false;
         DrawingSaving that = (DrawingSaving) o;
-        return Objects.equals(getDrawingSavingIndentity(), that.getDrawingSavingIndentity());
+        return getDrawsaveID() == that.getDrawsaveID() &&
+                Objects.equals(getUserone(), that.getUserone()) &&
+                Objects.equals(getDrawing(), that.getDrawing());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDrawingSavingIndentity());
+        return Objects.hash(getDrawsaveID(), getUserone(), getDrawing());
     }
 }
 
