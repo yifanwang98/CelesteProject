@@ -2,9 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
-import celeste.comic_community_4_1.model.Post;
-import celeste.comic_community_4_1.model.Series;
-import celeste.comic_community_4_1.model.User;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -150,14 +148,36 @@ public class SettingController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
         List<Post> postList = postRepository.findByUser(user);
-        for (Post i : postList) {
-            postRepository.delete(i);
+        for (Post post : postList) {
+            if (!post.isRepost()) {
+                List<PostContent> postContentList = postContentRepository.findByPostIndentityPostPostID(post.getPostID());
+                for (PostContent postContent : postContentList) {
+                    Work work = postContent.getPostIndentity().getWork();
+                    postContentRepository.delete(postContent);
+                    workRepository.delete(work);
+                }
+                List<Post> repostList = postRepository.findByOriginalPostIDAndIsRepost(post.getPostID(), true);
+                for (Post repost : repostList) {
+                    postRepository.delete(repost);
+                }
+                List<Like> likeList = likeRepository.findByPostIndentityPost(post);
+                for (Like like : likeList) {
+                    likeRepository.delete(like);
+                }
+                List<Star> starList = starRepository.findByPostIndentityPost(post);
+                for (Star star : starList) {
+                    starRepository.delete(star);
+                }
+            }
+            postRepository.delete(post);
         }
 
         List<Series> seriesList = seriesRepository.findByUser(user);
         for (Series i : seriesList) {
             seriesRepository.delete(i);
         }
+
+        model.addAttribute("User", user);
         return "setting";
     }
 

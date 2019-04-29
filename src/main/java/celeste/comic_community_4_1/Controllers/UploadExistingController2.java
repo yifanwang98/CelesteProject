@@ -163,11 +163,11 @@ public class UploadExistingController2 {
         newpost.setUser(user);
         newpost.setPostComment(description.trim());
         newpost.setOriginalPostID(newpost.getPostID());
+        newpost.setPrimaryGenre(genre1);
+        newpost.setSecondaryGenre(genre2);
         postRepository.save(newpost);
-
-        Post newpost2 = (postRepository.findById(newpost.getPostID()).get());
-        newpost2.setOriginalPostID(newpost2.getPostID());
-        postRepository.save(newpost2);
+        newpost.setOriginalPostID(newpost.getPostID());
+        postRepository.save(newpost);
 
         for (int i = 0; i < upd.getImageString().size(); i++) {
             Work newwork = new Work();
