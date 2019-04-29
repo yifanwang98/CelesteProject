@@ -111,7 +111,12 @@
                         <table width="100%">
                             <tr>
                                 <td>
-                                    <span class="post-author" th:text="${postToDisplay.getUser().getUsername()}"></span><br>
+                                    <span class="post-author" th:text="${postToDisplay.getUser().getUsername()}"></span>
+                                    <span th:if="${postToDisplay.getUser().getGender() == 'male'}"
+                                          class="follow-male"><i class='fas fa-mars'></i></span>
+                                    <span th:unless="${postToDisplay.getUser().getGender() == 'male'}"
+                                          class="follow-female"><i class='fas fa-venus'></i></span>
+                                    <br>
                                     <span class="post-time" th:text="${postToDisplay.getCreatedAt()}"></span>
                                 </td>
                                 <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
@@ -135,6 +140,12 @@
                     <td></td>
                     <td>
                         <div th:text="${postToDisplay.getPostComment()}" class="post-text"></div>
+                        <div class="post-genre">
+                                <span th:if="${!postToDisplay.getPrimaryGenre().equals('None')}" class="post-genre-text"
+                                      th:text="'#' + ${postToDisplay.getPrimaryGenre()} + ' '"></span>
+                        <span th:if="${!postToDisplay.getSecondaryGenre().equals('None')}" class="post-genre-text"
+                              th:text="'#' + ${postToDisplay.getSecondaryGenre()}"></span>
+                    </div>
                     </td>
                 </tr>
                 <!-- Images -->
@@ -157,7 +168,12 @@
                                             <tr>
                                                 <td>
                                                     <span class="post-author"
-                                                          th:text="${originalPost.getUser().getUsername()}"></span><br>
+                                                          th:text="${originalPost.getUser().getUsername()}"></span>
+                                                    <span th:if="${originalPost.getUser().getGender() == 'male'}"
+                                                          class="follow-male"><i class='fas fa-mars'></i></span>
+                                                    <span th:unless="${originalPost.getUser().getGender() == 'male'}"
+                                                          class="follow-female"><i class='fas fa-venus'></i></span>
+                                                    <br>
                                                     <span class="post-time"
                                                           th:text="${originalPost.getCreatedAt()}"></span>
                                                 </td>
@@ -171,6 +187,14 @@
                                     <td></td>
                                     <td>
                                         <div th:text="${originalPost.getPostComment()}" class="post-text"></div>
+                                        <div class="post-genre">
+                                            <span th:if="${!originalPost.getPrimaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${originalPost.getPrimaryGenre()} + ' '"></span>
+                                            <span th:if="${!originalPost.getSecondaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${originalPost.getSecondaryGenre()}"></span>
+                                            </div>
                                     </td>
                                 </tr>
                                 <!-- Images -->

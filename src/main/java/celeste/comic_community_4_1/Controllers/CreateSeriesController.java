@@ -90,8 +90,12 @@ public class CreateSeriesController {
 
         Series newseries = new Series();
         if(description!=null){newseries.setDescription(description);}
-        if(genre1!=null){newseries.setGenre(genre1);}
-        if(genre2!=null){newseries.setGenre(newseries.getGenre()+"_"+genre2);}
+        if (genre1 != null) {
+            newseries.setPrimaryGenre(genre1);
+        }
+        if (genre2 != null) {
+            newseries.setSecondaryGenre(genre2);
+        }
         newseries.setSeriesName(title);
         newseries.setPublicEditing(wiki.equals("Yes")?true:false);
         newseries.setUser(user);

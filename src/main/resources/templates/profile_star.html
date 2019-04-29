@@ -12,6 +12,7 @@
     <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/single.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
@@ -45,7 +46,7 @@
             <table style="padding: 0; margin: 0; align: right;">
                 <tr style="align: right; vertical-align: center">
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
@@ -71,20 +72,24 @@
     <div style="text-align: center">
         <image th:src="'data:image/png;base64,'+${profileOwner.getAvatar()}" class="avatar-image"></image>
     </div>
-    <div class="profile-name" th:text="${profileOwner.getUsername()}">
-
+    <div class="profile-name">
+        <span class="profile-name" th:text="${profileOwner.getUsername()}"></span>
+        <span th:if="${profileOwner.getGender() == 'male'}" class="follow-male"><i class='fas fa-mars'></i></span>
+        <span th:unless="${profileOwner.getGender() == 'male'}" class="follow-female"><i
+                class='fas fa-venus'></i></span>
     </div>
     <div class="profile-follow-info">
         <table width="100%">
             <col width="50%"/>
             <col width="50%"/>
             <tr style="">
-                <td style="text-align: right; border-right: #b6b6b6 1px solid; color: #666666;"
-                    th:text="'Following: '+ ${following} + '&nbsp'">
-
+                <td style="text-align: right; border-right: #b6b6b6 1px solid;">
+                    <a th:href="'/following?user=' + ${profileOwner.getUsername()}"
+                       th:text="'Following: '+ ${following} + '&nbsp'" class="profile-follow-content"></a>
                 </td>
-                <td style="text-align: left;color: #666666;" th:text="'&nbspFollower: '+ ${followers}">
-
+                <td style="text-align: left;color: #666666;">
+                    <a th:href="'/follower?user=' + ${profileOwner.getUsername()}"
+                       th:text="'&nbspFollower: '+ ${followers}" class="profile-follow-content"></a>
                 </td>
             </tr>
         </table>
@@ -173,6 +178,12 @@
                 <td></td>
                 <td>
                     <div th:text="${postData.post.getPostComment()}" class="post-text"></div>
+                    <div class="post-genre">
+                                <span th:if="${!postData.post.getPrimaryGenre().equals('None')}" class="post-genre-text"
+                                      th:text="'#' + ${postData.post.getPrimaryGenre()} + ' '"></span>
+                        <span th:if="${!postData.post.getSecondaryGenre().equals('None')}" class="post-genre-text"
+                              th:text="'#' + ${postData.post.getSecondaryGenre()}"></span>
+                    </div>
                 </td>
             </tr>
             <!-- Images -->
@@ -210,6 +221,14 @@
                                 <td>
                                     <div th:text="${postData.originalPost.getPostComment()}"
                                          class="post-text"></div>
+                                    <div class="post-genre">
+                                            <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                        <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                              class="post-genre-text"
+                                              th:text="'#' + ${postData.originalPost.getSecondaryGenre()}"></span>
+                                    </div>
                                 </td>
                             </tr>
                             <!-- Images -->

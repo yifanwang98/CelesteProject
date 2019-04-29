@@ -91,6 +91,17 @@
     text-align: justify-all;
 }
 
+.post-genre {
+    color: #9a9a9a;
+    font-size: 0.9em;
+    padding: 0.15em 0 0.25em 0;
+}
+
+.post-genre-text {
+    color: #9a9a9a;
+    font-size: 0.9em;
+}
+
 .post-action {
     padding: 0.25em;
     text-align: center;
