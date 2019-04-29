@@ -19,5 +19,7 @@ public interface StarRepository extends JpaRepository<Star, PostIndentity> {
 
     long countStarByPostIndentityUser(User user);
 
+    long countStarByPostIndentityPost(Post post);
+
 }
 

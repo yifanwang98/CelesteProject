@@ -1,7 +1,10 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.model.Follow;
+import celeste.comic_community_4_1.miscellaneous.FollowStatus;
+import celeste.comic_community_4_1.miscellaneous.PostData;
+import celeste.comic_community_4_1.model.Post;
+import celeste.comic_community_4_1.model.PostContent;
 import celeste.comic_community_4_1.model.Star;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
@@ -12,10 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class StarController {
+
 
 
     @Autowired
@@ -23,9 +28,6 @@ public class StarController {
 
     @Autowired
     FollowRepository followRepository;
-
-    @Autowired
-    SeriesRepository seriesRepository;
 
     @Autowired
     WorkRepository workRepository;
@@ -37,10 +39,19 @@ public class StarController {
     PostContentRepository postContentRepository;
 
     @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     LikeRepository likeRepository;
 
     @Autowired
     StarRepository starRepository;
+
+    @Autowired
+    SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
 
     @GetMapping("/view_profile_star")
     public String viewProfileStar(@RequestParam(value = "user") String linkedUsername,
@@ -51,29 +62,69 @@ public class StarController {
 
         // Session User
         String username = (String) request.getSession().getAttribute("username");
-
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         model.addAttribute("User", user);
 
-        // Is the same user
-        model.addAttribute("isOthersProfile", false);
-        model.addAttribute("profileOwner", user);
+        User profileOwner = userRepository.findById(linkedUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        model.addAttribute("profileOwner", profileOwner);
 
-        //All Counts
-        //Get Num of Follows
-        List<Follow> c = followRepository.findByFollowIndentityUserone(user);
-        model.addAttribute("following", c.size());
-        //Get Num of Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(user);
-        model.addAttribute("followers", d.size());
-        // Get Num of Post
-        model.addAttribute("num_post", postRepository.findByUser(user).size());
+        model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
+
+        // Get Following & Followers
+        model.addAttribute("following", followRepository.countFollowByFollowIndentityUserone(profileOwner));
+        model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(profileOwner));
+
+        //All the post by this user
+        model.addAttribute("postsCount", postRepository.countPostByUser(profileOwner));
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(profileOwner));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(profileOwner));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(profileOwner));
 
         // Get Star List
         List<Star> starList = starRepository.findByPostIndentityUser(user);
-        model.addAttribute("num_star", starList.size());
-        model.addAttribute("starList", starList);
+
+        // Organize Info
+        List<PostData> postDataList = new ArrayList<>();
+        List<FollowStatus> followingStatus = new ArrayList<>();
+        for (int i = 0; i < starList.size(); i++) {
+            // Post Content
+            Post post = starList.get(i).getPostIndentity().getPost();
+            Post originalPost = null;
+            if (post.isRepost()) {
+                originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
+            }
+            List<PostContent> postContents = postContentRepository.
+                    findByPostIndentityPostPostID(starList.get(i).getPostIndentity().getPost().getOriginalPostID());
+            List<String> images = new ArrayList<>();
+            for (int j = 0; j < postContents.size(); j++) {
+                images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
+            }
+
+            // Count
+            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
+            long commentCount = commentRepository.countCommentByPostIndentityPost(post);
+            long starCount = starRepository.countStarByPostIndentityPost(post);
+            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
+
+            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
+
+            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, true, myLike));
+
+            if (linkedUsername.equals(post.getUser().getUsername())) {
+                followingStatus.add(FollowStatus.SELF);
+            } else if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(profileOwner, post.getUser())) {
+                followingStatus.add(FollowStatus.FOLLOWING);
+            } else {
+                followingStatus.add(FollowStatus.NOT_FOLLOWED);
+            }
+        }
+
+        model.addAttribute("followingStatus", followingStatus);
+        model.addAttribute("postDataList", postDataList);
+
+//        model.addAttribute("starList", starList);
 
         return "profile_star";
     }
