@@ -7,12 +7,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "post")
@@ -49,6 +46,12 @@ public class Post implements Serializable {
 
     @NotNull
     private long originalPostID=postID;
+
+    @NotNull
+    private String primaryGenre = "None";
+
+    @NotNull
+    private String secondaryGenre = "None";
 
     public long getPostID() {
         return postID;
@@ -104,5 +107,21 @@ public class Post implements Serializable {
 
     public void setOriginalPostID(long originalPostID) {
         this.originalPostID = originalPostID;
+    }
+
+    public String getPrimaryGenre() {
+        return primaryGenre;
+    }
+
+    public void setPrimaryGenre(String primaryGenre) {
+        this.primaryGenre = primaryGenre;
+    }
+
+    public String getSecondaryGenre() {
+        return secondaryGenre;
+    }
+
+    public void setSecondaryGenre(String secondaryGenre) {
+        this.secondaryGenre = secondaryGenre;
     }
 }

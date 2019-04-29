@@ -112,6 +112,13 @@
                         <td></td>
                         <td>
                             <div th:text="${postData.post.getPostComment()}" class="post-text"></div>
+                            <div class="post-genre">
+                                <span th:if="${!postData.post.getPrimaryGenre().equals('None')}" class="post-genre-text"
+                                      th:text="'#' + ${postData.post.getPrimaryGenre()} + ' '"></span>
+                                <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                                      class="post-genre-text"
+                                      th:text="'#' + ${postData.post.getSecondaryGenre()}"></span>
+                            </div>
                         </td>
                     </tr>
                     <!-- Images -->
@@ -149,6 +156,14 @@
                                         <td>
                                             <div th:text="${postData.originalPost.getPostComment()}"
                                                  class="post-text"></div>
+                                            <div class="post-genre">
+                                            <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                                      class="post-genre-text"
+                                                      th:text="'#' + ${postData.originalPost.getSecondaryGenre()}"></span>
+                                            </div>
                                         </td>
                                     </tr>
                                     <!-- Images -->
@@ -258,7 +273,7 @@
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a href="">
+                                <a th:href="'view_profile?user=' + ${User.getUsername()}">
                                     <div>
                                         <span class="semibold" style="font-size: 1.05em;">My Post</span><br><span
                                             th:text="${postsCount}" class="semibold" style="font-size: 1.05em;"></span>

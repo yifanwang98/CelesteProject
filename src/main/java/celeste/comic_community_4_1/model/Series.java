@@ -28,8 +28,11 @@ public class Series implements Serializable {
 
     private String description="some content";
 
-    @NotBlank
-    private String genre="genre";
+    @NotNull
+    private String primaryGenre = "None";
+
+    @NotNull
+    private String secondaryGenre = "None";
 
 
     @NotNull
@@ -46,12 +49,20 @@ public class Series implements Serializable {
     @JoinColumn(name = "createdBy")
     private User user;
 
-    public String getGenre() {
-        return genre;
+    public String getPrimaryGenre() {
+        return primaryGenre;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setPrimaryGenre(String primaryGenre) {
+        this.primaryGenre = primaryGenre;
+    }
+
+    public String getSecondaryGenre() {
+        return secondaryGenre;
+    }
+
+    public void setSecondaryGenre(String secondaryGenre) {
+        this.secondaryGenre = secondaryGenre;
     }
 
     public String getDescription() {

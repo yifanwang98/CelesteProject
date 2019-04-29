@@ -135,6 +135,12 @@
                     <td></td>
                     <td>
                         <div th:text="${postToDisplay.getPostComment()}" class="post-text"></div>
+                        <div class="post-genre">
+                                <span th:if="${!postToDisplay.getPrimaryGenre().equals('None')}" class="post-genre-text"
+                                      th:text="'#' + ${postToDisplay.getPrimaryGenre()} + ' '"></span>
+                        <span th:if="${!postToDisplay.getSecondaryGenre().equals('None')}" class="post-genre-text"
+                              th:text="'#' + ${postToDisplay.getSecondaryGenre()}"></span>
+                    </div>
                     </td>
                 </tr>
                 <!-- Images -->
@@ -171,6 +177,14 @@
                                     <td></td>
                                     <td>
                                         <div th:text="${originalPost.getPostComment()}" class="post-text"></div>
+                                        <div class="post-genre">
+                                            <span th:if="${!originalPost.getPrimaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${originalPost.getPrimaryGenre()} + ' '"></span>
+                                            <span th:if="${!originalPost.getSecondaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${originalPost.getSecondaryGenre()}"></span>
+                                            </div>
                                     </td>
                                 </tr>
                                 <!-- Images -->
