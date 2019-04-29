@@ -12,6 +12,7 @@
     <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/single.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
@@ -71,8 +72,11 @@
     <div style="text-align: center">
         <image th:src="'data:image/png;base64,'+${profileOwner.getAvatar()}" class="avatar-image"></image>
     </div>
-    <div class="profile-name" th:text="${profileOwner.getUsername()}">
-
+    <div class="profile-name">
+        <span class="profile-name" th:text="${profileOwner.getUsername()}"></span>
+        <span th:if="${profileOwner.getGender() == 'male'}" class="follow-male"><i class='fas fa-mars'></i></span>
+        <span th:unless="${profileOwner.getGender() == 'male'}" class="follow-female"><i
+                class='fas fa-venus'></i></span>
     </div>
     <div class="profile-follow-info">
         <table width="100%">

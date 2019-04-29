@@ -111,7 +111,12 @@
                         <table width="100%">
                             <tr>
                                 <td>
-                                    <span class="post-author" th:text="${postToDisplay.getUser().getUsername()}"></span><br>
+                                    <span class="post-author" th:text="${postToDisplay.getUser().getUsername()}"></span>
+                                    <span th:if="${postToDisplay.getUser().getGender() == 'male'}"
+                                          class="follow-male"><i class='fas fa-mars'></i></span>
+                                    <span th:unless="${postToDisplay.getUser().getGender() == 'male'}"
+                                          class="follow-female"><i class='fas fa-venus'></i></span>
+                                    <br>
                                     <span class="post-time" th:text="${postToDisplay.getCreatedAt()}"></span>
                                 </td>
                                 <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
@@ -163,7 +168,12 @@
                                             <tr>
                                                 <td>
                                                     <span class="post-author"
-                                                          th:text="${originalPost.getUser().getUsername()}"></span><br>
+                                                          th:text="${originalPost.getUser().getUsername()}"></span>
+                                                    <span th:if="${originalPost.getUser().getGender() == 'male'}"
+                                                          class="follow-male"><i class='fas fa-mars'></i></span>
+                                                    <span th:unless="${originalPost.getUser().getGender() == 'male'}"
+                                                          class="follow-female"><i class='fas fa-venus'></i></span>
+                                                    <br>
                                                     <span class="post-time"
                                                           th:text="${originalPost.getCreatedAt()}"></span>
                                                 </td>
