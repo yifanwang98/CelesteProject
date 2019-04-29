@@ -145,8 +145,6 @@ public class ProfileController {
         model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(profileOwner));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(profileOwner));
 
-        // Sort
-
         return "profile_series";
     }
 
