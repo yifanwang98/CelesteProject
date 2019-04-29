@@ -101,22 +101,27 @@
         </span>
         <tr>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (2)</a>
+                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (<span
+                        th:text="${postsCount}"></span>)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (1)</a>
+                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (<span
+                        th:text="${seriesCount}"></span>)</a>
             </td>
             <span th:if="${isOthersProfile}">
                 <td class="profile-index-cell-selected">
-                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (<span
+                            th:text="${subscriptionCount}"></span>)</a>
                 </td>
             </span>
             <span th:unless="${isOthersProfile}">
                 <td class="profile-index-cell-border profile-index-cell-selected">
-                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (<span
+                            th:text="${subscriptionCount}"></span>)</a>
                 </td>
                 <td class="profile-index-cell-border profile-index-cell-unselected">
-                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (1)</a>
+                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (<span
+                            th:text="${starCount}"></span>)</a>
                 </td>
                 <td class="profile-index-cell-unselected">
                     <a th:href="'profile_analysis'">Analysis</a>

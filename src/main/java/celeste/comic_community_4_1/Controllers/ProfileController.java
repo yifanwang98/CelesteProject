@@ -2,7 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.PostComparator;
-import celeste.comic_community_4_1.model.Follow;
+import celeste.comic_community_4_1.miscellaneous.PostData;
 import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.PostContent;
 import celeste.comic_community_4_1.model.User;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -38,6 +37,21 @@ public class ProfileController {
     @Autowired
     PostContentRepository postContentRepository;
 
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
+
+    @Autowired
+    StarRepository starRepository;
+
+    @Autowired
+    SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
+
     @GetMapping("/view_profile")
     public String viewProfile(@RequestParam(value = "user") String linkedUsername,
                               ModelMap model, HttpServletRequest request) throws Exception {
@@ -47,41 +61,58 @@ public class ProfileController {
 
         // Session User
         String username = (String) request.getSession().getAttribute("username");
-
-        User founduser = userRepository.findById(username)
+        User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        model.addAttribute("User", founduser);
+        model.addAttribute("User", user);
 
-        // Is the same user
-        model.addAttribute("isOthersProfile", !username.equals(linkedUsername));
-        User linkedUser = userRepository.findById(linkedUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
-        model.addAttribute("profileOwner", linkedUser);
+        User profileOwner = userRepository.findById(linkedUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        model.addAttribute("profileOwner", profileOwner);
+
+        model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
+
+        // Get Following & Followers
+        model.addAttribute("following", followRepository.countFollowByFollowIndentityUserone(profileOwner));
+        model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(profileOwner));
 
         //All the post by this user
-        List<Post> postlist = postRepository.findByUser(linkedUser);
-        HashMap<Long, List<String>> imgsForeachPost = new HashMap<Long, List<String>>();
-        List<PostContent> temp;
-        for (int i = 0; i < postlist.size(); i++) {
-            ArrayList<String> list = new ArrayList<String>();
-            temp = postContentRepository.findByPostIndentityPostPostID(postlist.get(i).getOriginalPostID());
-            for (int j = 0; j < temp.size(); j++) {
-                list.add(temp.get(j).getPostIndentity().getWork().getThumbnail());
+        List<Post> postList = postRepository.findByUser(profileOwner);
+        model.addAttribute("postsCount", postList.size());
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(profileOwner));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(profileOwner));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(profileOwner));
+
+        // Sort
+        Collections.sort(postList, new PostComparator());
+
+        // Organize Info
+        List<PostData> postDataList = new ArrayList<>();
+        for (int i = 0; i < postList.size(); i++) {
+            // Post Content
+            Post post = postList.get(i);
+            Post originalPost = null;
+            if (post.isRepost()) {
+                originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
             }
-            imgsForeachPost.put(postlist.get(i).getPostID(), list);
+            List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(postList.get(i).getOriginalPostID());
+            List<String> images = new ArrayList<>();
+            for (int j = 0; j < postContents.size(); j++) {
+                images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
+            }
+
+            // Count
+            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
+            long commentCount = commentRepository.countCommentByPostIndentityPost(post);
+            long starCount = starRepository.countStarByPostIndentityPost(post);
+            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
+
+            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, profileOwner);
+            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, profileOwner);
+
+            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, myStar, myLike));
         }
 
-        Collections.sort(postlist, new PostComparator());
-
-        model.addAttribute("postlist", postlist);
-        model.addAttribute("imgsForeachPost", imgsForeachPost);
-
-        //Get Follows
-        List<Follow> c = followRepository.findByFollowIndentityUserone(linkedUser);
-        model.addAttribute("following", c.size());
-        //Get Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(linkedUser);
-        model.addAttribute("followers", d.size());
+        model.addAttribute("postDataList", postDataList);
         return "profile_post";
     }
 
@@ -94,25 +125,28 @@ public class ProfileController {
 
         // Session User
         String username = (String) request.getSession().getAttribute("username");
-
-        User founduser = userRepository.findById(username)
+        User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        model.addAttribute("User", founduser);
+        model.addAttribute("User", user);
 
-        // Is the same user
-        model.addAttribute("isOthersProfile", !username.equals(linkedUsername));
-        User linkedUser = userRepository.findById(linkedUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
-        model.addAttribute("profileOwner", linkedUser);
+        User profileOwner = userRepository.findById(linkedUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        model.addAttribute("profileOwner", profileOwner);
 
-        //All the series by this user
+        model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
 
-        //Get Follows
-        List<Follow> c = followRepository.findByFollowIndentityUserone(linkedUser);
-        model.addAttribute("following", c.size());
-        //Get Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(linkedUser);
-        model.addAttribute("followers", d.size());
+        // Get Following & Followers
+        model.addAttribute("following", followRepository.countFollowByFollowIndentityUserone(profileOwner));
+        model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(profileOwner));
+
+        //All the post by this user
+        model.addAttribute("postsCount", postRepository.countPostByUser(profileOwner));
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(profileOwner));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(profileOwner));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(profileOwner));
+
+        // Sort
+
         return "profile_series";
     }
 
@@ -125,25 +159,26 @@ public class ProfileController {
 
         // Session User
         String username = (String) request.getSession().getAttribute("username");
-
-        User founduser = userRepository.findById(username)
+        User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        model.addAttribute("User", founduser);
+        model.addAttribute("User", user);
 
-        // Is the same user
-        model.addAttribute("isOthersProfile", !username.equals(linkedUsername));
-        User linkedUser = userRepository.findById(linkedUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
-        model.addAttribute("profileOwner", linkedUser);
+        User profileOwner = userRepository.findById(linkedUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        model.addAttribute("profileOwner", profileOwner);
 
-        //All the series by this user
+        model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
 
-        //Get Follows
-        List<Follow> c = followRepository.findByFollowIndentityUserone(linkedUser);
-        model.addAttribute("following", c.size());
-        //Get Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(linkedUser);
-        model.addAttribute("followers", d.size());
+        // Get Following & Followers
+        model.addAttribute("following", followRepository.countFollowByFollowIndentityUserone(profileOwner));
+        model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(profileOwner));
+
+        //All the post by this user
+        model.addAttribute("postsCount", postRepository.countPostByUser(profileOwner));
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(profileOwner));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(profileOwner));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(profileOwner));
+
         return "profile_subscription";
     }
 

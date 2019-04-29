@@ -17,5 +17,9 @@ public interface StarRepository extends JpaRepository<Star, PostIndentity> {
 
     boolean existsStarByPostIndentityPostAndPostIndentityUser(Post post, User user);
 
+    long countStarByPostIndentityUser(User user);
+
+    long countStarByPostIndentityPost(Post post);
+
 }
 

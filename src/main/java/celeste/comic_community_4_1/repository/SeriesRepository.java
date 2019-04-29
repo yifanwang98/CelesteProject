@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface SeriesRepository extends JpaRepository<Series, Long> {
     List<Series> findByUser(User user);
+
+    long countSeriesByUser(User user);
 }

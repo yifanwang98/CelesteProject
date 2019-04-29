@@ -92,8 +92,8 @@ public class MainPageController {
             // Count
             long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
             long commentCount = commentRepository.countCommentByPostIndentityPost(post);
-            long starCount = starRepository.findByPostIndentityPost(post).size();
-            long likeCount = likeRepository.findByPostIndentityPost(post).size();
+            long starCount = starRepository.countStarByPostIndentityPost(post);
+            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
 
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
