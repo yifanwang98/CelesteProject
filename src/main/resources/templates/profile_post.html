@@ -10,6 +10,7 @@
     <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -50,8 +51,10 @@
                         <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><image th:src="'data:image/png;base64,'+${User.getAvatar()}"
-                                                                   class="header-avatar-image"></image></a>
+                        <a href="" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
                     </td>
                     <td class="headerCellPadding"></td>
                 </tr>
@@ -99,22 +102,27 @@
         </span>
         <tr>
             <td class="profile-index-cell-border profile-index-cell-selected">
-                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (2)</a>
+                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (<span
+                        th:text="${postDataList.size()}"></span>)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (1)</a>
+                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (<span
+                        th:text="${seriesCount}"></span>)</a>
             </td>
             <span th:if="${isOthersProfile}">
                 <td class="profile-index-cell-unselected">
-                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (<span
+                            th:text="${subscriptionCount}"></span>)</a>
                 </td>
             </span>
             <span th:unless="${isOthersProfile}">
                 <td class="profile-index-cell-border profile-index-cell-unselected">
-                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (<span
+                            th:text="${subscriptionCount}"></span>)</a>
                 </td>
                 <td class="profile-index-cell-border profile-index-cell-unselected">
-                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (1)</a>
+                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (<span
+                            th:text="${starCount}"></span>)</a>
                 </td>
                 <td class="profile-index-cell-unselected">
                     <a th:href="'profile_analysis'">Analysis</a>
@@ -126,24 +134,35 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <div class="webfont" style="margin: 1em 12.5%;">
-    <div th:each="post:${postlist}" class="home-posts-card">
+    <div th:each="postData:${postDataList}" class="home-posts-card">
         <table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">
             <!-- Header -->
             <tr>
                 <td class="post-avatar">
-                    <a href="">
-                        <image th:src="'data:image/png;base64,'+${post.getUser().getAvatar()}" class="post-avatar-image"></image>
+                    <a th:href="'view_profile?user=' + ${postData.post.getUser().getUsername()}">
+                        <image th:src="'data:image/png;base64,'+${postData.post.getUser().getAvatar()}"
+                               class="post-avatar-image"></image>
                     </a>
                 </td>
                 <td>
                     <table width="100%">
                         <tr>
                             <td>
-                                <span class="post-author" th:text="${post.getUser().getUsername()}"></span><br>
-                                <span class="post-time" th:text="${post.getCreatedAt()}"></span>
+                                <span class="post-author" th:text="${postData.post.getUser().getUsername()}"></span><br>
+                                <span class="post-time" th:text="${postData.post.getCreatedAt()}"></span>
                             </td>
-                            <td th:switch="${User.getUsername()}" width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
-                                <a href="" th:case="${post.getUser().getUsername()}" class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                            <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
+                                <a href=""
+                                   th:if="${User.getUsername() == postData.post.getUser().getUsername()}"
+                                   class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                <div class="dropdown"
+                                     th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
+                                    <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
+                                    <div class="dropdown-content">
+                                        <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
+                                        <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </table>
@@ -153,17 +172,71 @@
             <tr>
                 <td></td>
                 <td>
-                    <div th:text="${post.getPostComment()}" class="post-text"></div>
+                    <div th:text="${postData.post.getPostComment()}" class="post-text"></div>
                 </td>
             </tr>
             <!-- Images -->
             <tr>
                 <td></td>
                 <td>
-                    <div >
-                        <span th:each="work:${imgsForeachPost.get(post.getPostID())}">
-                            <image th:src="'data:image/png;base64,'+${work}" th:class="${imgsForeachPost.get(post.getPostID()).size()>1} ? 'post-image-multiple': 'post-image-single'" ></image>
-                        </span><!--<img src="../static/images/samplePost/T-2-1.jpg" class="post-image-single">-->
+                    <!-- Repost -->
+                    <div th:if="${postData.post.isRepost()}">
+                        <table style="border-spacing: 0em; padding-top: 0.5em; margin-bottom: 0.5em; width:100%; border-left: 2px solid lightgrey;">
+                            <!-- Header -->
+                            <tr>
+                                <td class="post-avatar">
+                                    <a th:href="'view_profile?user=' + ${postData.originalPost.getUser().getUsername()}">
+                                        <image th:src="'data:image/png;base64,'+${postData.originalPost.getUser().getAvatar()}"
+                                               class="post-avatar-image"></image>
+                                    </a>
+                                </td>
+                                <td>
+                                    <table width="100%">
+                                        <tr>
+                                            <td>
+                                                        <span class="post-author"
+                                                              th:text="${postData.originalPost.getUser().getUsername()}"></span><br>
+                                                <span class="post-time"
+                                                      th:text="${postData.originalPost.getCreatedAt()}"></span>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- Text -->
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div th:text="${postData.originalPost.getPostComment()}"
+                                         class="post-text"></div>
+                                </td>
+                            </tr>
+                            <!-- Images -->
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div>
+                                        <span th:each="work:${postData.images}">
+                                            <a th:href="'singlePost?id=' + ${postData.post.getPostID()}"
+                                               class="imageLink">
+                                                <image th:src="'data:image/png;base64,'+${work}"
+                                                       class="post-image-multiple"></image>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- Original -->
+                    <div th:unless="${postData.post.isRepost()}">
+                        <span th:each="work:${postData.images}">
+                            <a th:href="'singlePost?id=' + ${postData.post.getPostID()}" class="imageLink">
+                                <image th:src="'data:image/png;base64,'+${work}"
+                                       th:class="${postData.images.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
+                            </a>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -176,17 +249,41 @@
             <col width="25%"/>
             <tr>
                 <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                    <a href=""><i class='fas fa-share-square'></i> Share (1w+)</a>
+                    <a href="">
+                        <i class='fas fa-share-square'></i> Share (<span
+                            th:text="${postData.shareCount}"></span>)
+                    </a>
                 </td>
                 <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                    <a href=""><i class='far fa-comment-dots'></i> Comment (1k+)</a>
+                    <a th:href="'singlePost?id=' + ${postData.post.getPostID()}">
+                        <i class='far fa-comment-dots'></i> Comment (<span
+                            th:text="${postData.commentCount}"></span>)
+                    </a>
                 </td>
-                <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                    <a href=""><i class='fas fa-star'></i> Star (128)</a>
-                </td>
-                <td class="post-action-cell">
-                    <a href=""><i class='far fa-thumbs-up'></i> Like (10w+)</a>
-                </td>
+                <span th:if="${postData.starred}">
+                    <td class="post-action-stared" style="border-right: #ccc 1px solid">
+                        <a href=""><i class='fas fa-star'></i> Star (<span
+                                th:text="${postData.starCount}"></span>)</a>
+                    </td>
+                </span>
+                <span th:unless="${postData.starred}">
+                    <td class="post-action-cell" style="border-right: #ccc 1px solid">
+                        <a href=""><i class='fas fa-star'></i> Star (<span
+                                th:text="${postData.starCount}"></span>)</a>
+                    </td>
+                </span>
+                <span th:if="${postData.liked}">
+                    <td class="post-action-liked">
+                        <a href=""><i class='fas fa-thumbs-up'></i> Like (<span
+                                th:text="${postData.likeCount}"></span>)</a>
+                    </td>
+                </span>
+                <span th:unless="${postData.liked}">
+                    <td class="post-action-cell">
+                        <a href=""><i class='far fa-thumbs-up'></i> Like (<span
+                                th:text="${postData.likeCount}"></span>)</a>
+                    </td>
+                </span>
             </tr>
         </table>
     </div>
