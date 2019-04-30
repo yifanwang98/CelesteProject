@@ -159,6 +159,9 @@
                             <a href=""><span th:text="${seriesData.series.getSeriesName()}"></span></a>
                         </div>
                         <div class="subscription-series-date">
+                            <span th:text="${seriesData.series.getDescription()}"></span>
+                        </div>
+                        <div class="subscription-series-date">
                             <span class="semibold">Created On: </span><span
                                 th:text="${seriesData.creationDate()}"></span>
                         </div>

@@ -20,6 +20,41 @@
     <!-- Script -->
     <script src="http://code.jquery.com/jquery-1.5.js"></script>
     <script>
+        $(document).ready(function () {
+            $('#newCover').change(function () {
+                var form = new FormData(document.getElementById("editSeriesInfo"));
+                $.ajax({
+                    type: "POST",
+                    url: 'tempChangeCover',
+                    data: form,
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    success: function (data) {
+                        if (data != "Error" && data != "Only .png or .jpg is accepted!") {
+                            // alert(data)
+                            $('#seriesCover').attr("src", "data:image/png;base64," + data.toString());
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+                    error: function () {
+                        alert(arguments[1]);
+                    }
+                });
+            });
+            $('#deleteSeriesBTN').click(function () {
+                var answer = confirm("Do you really want to delete this series? All posted contents would be removed")
+                if (answer == true) {
+                    var answer2 = prompt("Please enter \"Confirm Deletion\"");
+                    if (answer2 == "Confirm Close") {
+                        window.location.href = "deleteSeriesBTN";
+                    }
+                }
+
+            });
+        });
     </script>
 </head>
 <body>
@@ -73,14 +108,15 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<form method="post" id="editSeriesInfo" action=""></form>
+<form method="post" id="editSeriesInfo" action="editSeriesInfo" enctype="multipart/form-data"></form>
+<input name="sid" hidden th:value="${seriesToBeEdited.getSeriesID()}" form="editSeriesInfo">
 <div class="single-container webfont">
     <div class="single-inner-container">
-        <div style="padding: 1em 2em; ">
-            <div style="padding: 0.25em 0;color: #269b9b; font-size: 1.75em;">
+        <div style="padding: 1em 2em 1em 1em; ">
+            <div style="padding: 0em 0.5em; color: #269b9b; font-size: 1.8em;" class="semibold">
                 Edit Series
             </div>
-            <table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">
+            <table style="border-spacing: 0em; padding-top: 0.5em; margin-bottom: 0.5em;" width="100%">
                 <col width="12em;"/>
                 <col width="1%;"/>
                 <col width="90%"/>
@@ -90,13 +126,13 @@
                     <td>
                         <div>
                             <img th:src="'data:image/png;base64,'+${seriesToBeEdited.getCover()}"
-                                 class="series-cover-image">
+                                 class="series-cover-image" id="seriesCover">
                         </div>
                         <div style="padding: 0 1em;">
-                            <input type="file" accept=".jpg,.png" style="display: none;" id="new-cover" name="file"
-                                   form="editSeriesInfo">
+                            <input type="file" accept=".jpg,.png" style="display: none;" id="newCover"
+                                   name="file" form="editSeriesInfo">
                             <input type="button" value="Change" class="setting-save-btn"
-                                   onclick="document.getElementById('new-avatar').click();"/>
+                                   onclick="document.getElementById('newCover').click();"/>
                         </div>
                     </td>
                     <td></td>
@@ -110,7 +146,7 @@
                             <!-- Description -->
                             <div class="series-title semibold">Description</div>
                             <textarea type="text" name="description" placeholder="Enter Description Here (Optional)"
-                                      th:value="${seriesToBeEdited.getDescription()}" form="editSeriesInfo"
+                                      form="editSeriesInfo" th:text="${seriesToBeEdited.getDescription()}"
                                       maxlength="100" class="create-series-textfield"></textarea>
                             <div style="padding: 0.25em;"></div>
 
@@ -210,6 +246,25 @@
                     <td></td>
                     <td>
                         <input type="submit" class="setting-save-btn" value="Save" name="submit" form="editSeriesInfo">
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <div style="padding: 0.25em;"></div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <form method="post" id="deleteSeries" action="deleteSeries"></form>
+                        <input name="sid" hidden th:value="${seriesToBeEdited.getSeriesID()}" form="deleteSeries">
+                        <input type="submit" class="delete-series-btn" value="Delete" name="submit"
+                               id="deleteSeriesBTN" form="deleteSeries">
                     </td>
                     <td></td>
                 </tr>
