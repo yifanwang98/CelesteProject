@@ -2,6 +2,9 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.ComicGenre;
+import celeste.comic_community_4_1.miscellaneous.SeriesComparator;
+import celeste.comic_community_4_1.miscellaneous.SeriesData;
+import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.model.Series;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
@@ -12,7 +15,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 public class CreateSeriesController {
@@ -90,6 +99,12 @@ public class CreateSeriesController {
         newSeries.setSeriesName(title);
         newSeries.setPublicEditing(wiki.equals("Yes") ? true : false);
         newSeries.setUser(user);
+
+        String coverPath = "src/main/resources/static/images/samplePost/default-upload.png";
+        BufferedImage bImage = ImageIO.read(new File(coverPath));
+        String base64 = ThumbnailConverter.toBase64(ThumbnailConverter.convertSquare(bImage), "png");
+        newSeries.setCover(base64);
+
         seriesRepository.save(newSeries);
 
         // Profile Info
@@ -105,6 +120,20 @@ public class CreateSeriesController {
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Series List
+        List<Series> seriesList = seriesRepository.findByUser(user);
+        Collections.sort(seriesList, new SeriesComparator());
+        List<SeriesData> seriesDataList = new ArrayList<>();
+        for (Series series : seriesList) {
+            List<String> tags = new ArrayList<>();
+            long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
+            boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
+            boolean owner = series.getUser().getUsername().equals(username);
+
+            seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
+        }
+        model.addAttribute("seriesDataList", seriesDataList);
 
         return "profile_series";
     }

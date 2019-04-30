@@ -49,6 +49,18 @@ public class Series implements Serializable {
     @JoinColumn(name = "createdBy")
     private User user;
 
+    @Lob
+    @NotBlank
+    private String cover;
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
     public String getPrimaryGenre() {
         return primaryGenre;
     }

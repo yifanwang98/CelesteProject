@@ -85,7 +85,7 @@
                         <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected">
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
                             <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
                                    class="header-avatar-image"></image>
                         </a>

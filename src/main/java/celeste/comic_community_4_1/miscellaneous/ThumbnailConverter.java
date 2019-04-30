@@ -14,6 +14,7 @@ import java.util.Base64;
 public class ThumbnailConverter {
 
     private static final double LENGTH = 200.0;
+    private static final double SQUARE_LENGTH = 400.0;
 
     private static BufferedImage scale(BufferedImage source, double ratio) {
         int w = (int) (source.getWidth() * ratio);
@@ -38,6 +39,22 @@ public class ThumbnailConverter {
             } else {
                 ratio = LENGTH / width;
             }
+        }
+        return scale(source, ratio);
+    }
+
+    public static BufferedImage convertSquare(BufferedImage source) {
+        double ratio = 1.0, width = source.getWidth(), height = source.getHeight();
+
+        if (width > height) {
+            source = source.getSubimage(0, 0, (int) height, (int) height);
+            width = height;
+        } else {
+            source = source.getSubimage(0, 0, (int) width, (int) width);
+        }
+
+        if (width > SQUARE_LENGTH) {
+            ratio = SQUARE_LENGTH / width;
         }
         return scale(source, ratio);
     }
