@@ -65,7 +65,7 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<div style="margin: 3em 30%; background: rgba(255,255,255,0.75); border-radius: 8px;" class="webfont">
+<div style="margin: 3em 27.5%; background: rgba(255,255,255,0.85); border-radius: 5px;" class="webfont">
     <div class="create-series-inner-container">
         <!-- Header -->
         <div class="create-series-title semibold">Create Series</div>
@@ -95,9 +95,7 @@
                     </td>
                     <td>
                         <select name="genre1" style="width: 100%; font-size: 1em;">
-                            <option>Choose a genre</option>
-                            <option  th:each="list:${genreList}" th:value="${list}" th:text="${list}"></option>
-                            <!--<option value="" selected disabled></option>-->
+                            <option th:each="list:${genreList}" th:value="${list}" th:text="${list}"></option>
                         </select>
                     </td>
                     <td></td>
@@ -106,9 +104,7 @@
                     </td>
                     <td>
                         <select name="genre2" style="width: 100%; font-size: 1em;">
-                            <option>Choose a genre</option>
-                            <option  th:each="list:${genreList}" th:value="${list}" th:text="${list}"></option>
-                            <!--<option value="" selected disabled></option>-->
+                            <option th:each="list:${genreList}" th:value="${list}" th:text="${list}"></option>
                         </select>
                     </td>
                 </tr>
@@ -128,7 +124,7 @@
                     <tr>
                         <td></td>
                         <td>
-                            Open For Edit:
+                            Open For Wiki:
                         </td>
                         <td style="text-align: center">
                             <input type="radio" name="wiki" value="Yes"/> Yes
@@ -149,10 +145,10 @@
                 <col width="50%"/>
                 <tr>
                     <td style="text-align: left">
-                        <a href="home.html" class="cancel-button">Cancel</a>
+                        <a href="/mainPage" class="cancel-button">Cancel</a>
                     </td>
                     <td style="text-align: right">
-                        <input type="submit" value="Done" class="create-button">
+                        <input type="submit" value="Create" class="create-button">
                     </td>
                 </tr>
             </table>

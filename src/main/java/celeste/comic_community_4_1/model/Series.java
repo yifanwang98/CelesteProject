@@ -23,10 +23,10 @@ public class Series implements Serializable {
     private long seriesID;
 
     @NotBlank
-    private String seriesName="newSeries";
+    private String seriesName = "newSeries";
 
 
-    private String description="some content";
+    private String description = "some content";
 
     @NotNull
     private String primaryGenre = "None";
@@ -36,18 +36,30 @@ public class Series implements Serializable {
 
 
     @NotNull
-    private boolean isPublicEditing=false;
+    private boolean isPublicEditing = false;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private Date createdAt=new Date();
+    private Date createdAt = new Date();
 
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "createdBy")
     private User user;
+
+    @Lob
+    @NotBlank
+    private String cover;
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     public String getPrimaryGenre() {
         return primaryGenre;
