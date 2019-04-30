@@ -51,7 +51,7 @@
                         <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected">
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
                             <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
                                    class="header-avatar-image"></image>
                         </a>
@@ -138,44 +138,72 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <div class="webfont" style="margin: 1em 12.5%;">
+    <span th:each="seriesData, iter: ${seriesDataList}">
     <div class="series-subscription-card">
         <table cellpadding="0" cellspacing="0">
             <col width="12em;"/>
-            <col width="80%"/>
-            <col width="9%;"/>
+            <col width="70%"/>
+            <col width="15%;"/>
             <tr>
                 <!-- Image Cover -->
                 <td>
-                    <img src="../static/images/samplePost/seriesCover2.jpg" class="series-cover-image">
+                    <a style="text-decoration: none">
+                        <img th:src="'data:image/png;base64,'+${seriesData.series.getCover()}"
+                             class="series-cover-image">
+                    </a>
                 </td>
                 <!-- Series Description -->
                 <td>
                     <div style="padding: 0 1.5em">
                         <div class="subscription-series-title">
-                            <a href="">Created Series Title Placeholder</a>
+                            <a href=""><span th:text="${seriesData.series.getSeriesName()}"></span></a>
                         </div>
                         <div class="subscription-series-date">
-                            <span class="semibold">Created On: </span>September 2, 2018
+                            <span class="semibold">Created On: </span><span
+                                th:text="${seriesData.creationDate()}"></span>
                         </div>
                         <div class="subscription-series-date">
-                            <span class="semibold">Subscribers: </span>24601
+                            <span class="semibold">Subscribers: </span><span
+                                th:text="${seriesData.subscriptionCount}"></span>
+                        </div>
+                        <div class="subscription-series-date">
+                            <span class="semibold">Open For Wiki: </span>
+                            <span th:if="${seriesData.series.isPublicEditing()}" th:text="'Yes'"></span>
+                            <span th:unless="${seriesData.series.isPublicEditing()}" th:text="'No'"></span>
                         </div>
                         <div class="subscription-series-tag">
-                            <a href="">#tag1</a>
-                            <a href="">#tag2</a>
-                            <a href="" class="series-add-tag">+</a>
+                            <span th:if="${!seriesData.series.getPrimaryGenre().equals('None')}">
+                                <a href="">#<span th:text="${seriesData.series.getPrimaryGenre()}"></span></a>
+                            </span>
+                            <span th:if="${!seriesData.series.getSecondaryGenre().equals('None')}">
+                                <a href="">#<span th:text="${seriesData.series.getSecondaryGenre()}"></span></a>
+                            </span>
+                            <span th:each="tag: ${seriesData.tags}">
+                                <a href="">#<span th:text="${tag}"></span></a>
+                            </span>
+                            <a href="" class="series-add-tag" th:if="${seriesData.owner}">+</a>
                         </div>
                     </div>
                 </td>
                 <!-- Unsubscribe -->
                 <td>
-                    <div class="subscription-series-unsubscribe">
-                        <a href=""><i class='far fa-edit'></i> Edit</a>
+                    <div style="margin: 0.75em 0;">
+                        <div th:if="${seriesData.owner}" class="subscription-series-unsubscribe">
+                            <a href=""><i class='far fa-edit'></i> Edit</a>
+                        </div>
+                    </div>
+                    <div th:if="${seriesData.subscribed}" class="subscription-series-unsubscribe">
+                        <a href=""><i class='fas fa-minus'></i> Unsubscribe</a>
+                    </div>
+                    <div th:if="${!seriesData.subscribed && !seriesData.owner}" class="subscription-series-unsubscribe">
+                        <a href=""><i class='fas fa-plus'></i> Subscribe</a>
                     </div>
                 </td>
             </tr>
         </table>
     </div>
+        <div style="padding: 0.25em 0;"></div>
+    </span>
 </div>
 
 <!---------------------------------------->

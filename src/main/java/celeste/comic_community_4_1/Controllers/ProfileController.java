@@ -1,11 +1,8 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.PostComparator;
-import celeste.comic_community_4_1.miscellaneous.PostData;
-import celeste.comic_community_4_1.model.Post;
-import celeste.comic_community_4_1.model.PostContent;
-import celeste.comic_community_4_1.model.User;
+import celeste.comic_community_4_1.miscellaneous.*;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -145,7 +142,19 @@ public class ProfileController {
         model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(profileOwner));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(profileOwner));
 
-        // Sort
+        // Series List
+        List<Series> seriesList = seriesRepository.findByUser(profileOwner);
+        Collections.sort(seriesList, new SeriesComparator());
+        List<SeriesData> seriesDataList = new ArrayList<>();
+        for (Series series : seriesList) {
+            List<String> tags = new ArrayList<>();
+            long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
+            boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
+            boolean owner = series.getUser().getUsername().equals(user.getUsername());
+
+            seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
+        }
+        model.addAttribute("seriesDataList", seriesDataList);
 
         return "profile_series";
     }
@@ -178,6 +187,21 @@ public class ProfileController {
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(profileOwner));
         model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(profileOwner));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(profileOwner));
+
+        // Subscription List
+        List<SeriesFollow> subscriptionList = seriesFollowRepository.findSeriesFollowBySeriesFollowIndentityUser(profileOwner);
+        Collections.sort(subscriptionList, new SubscriptionComparator());
+        List<SeriesData> seriesDataList = new ArrayList<>();
+        for (SeriesFollow subscription : subscriptionList) {
+            Series series = subscription.getSeriesFollowIndentity().getSeries();
+            List<String> tags = new ArrayList<>();
+            long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
+            boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
+            boolean owner = series.getUser().getUsername().equals(user.getUsername());
+
+            seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
+        }
+        model.addAttribute("seriesDataList", seriesDataList);
 
         return "profile_subscription";
     }

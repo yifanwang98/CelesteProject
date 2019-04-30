@@ -13,6 +13,12 @@ import java.util.List;
 public interface SeriesFollowRepository extends JpaRepository<SeriesFollow, SeriesFollowIndentity> {
     List<SeriesFollow> findBySeriesFollowIndentitySeries(Series series);
 
+    List<SeriesFollow> findSeriesFollowBySeriesFollowIndentityUser(User user);
+
     long countSeriesFollowBySeriesFollowIndentityUser(User user);
+
+    long countSeriesFollowBySeriesFollowIndentitySeries(Series series);
+
+    boolean existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(Series series, User user);
 }
 
