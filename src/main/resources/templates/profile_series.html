@@ -189,7 +189,8 @@
                 <td>
                     <div style="margin: 0.75em 0;">
                         <div th:if="${seriesData.owner}" class="subscription-series-unsubscribe">
-                            <a href=""><i class='far fa-edit'></i> Edit</a>
+                            <a th:href="'/editSeries?id=' + ${seriesData.series.getSeriesID()}"><i
+                                    class='far fa-edit'></i> Edit</a>
                         </div>
                     </div>
                     <div th:if="${seriesData.subscribed}" class="subscription-series-unsubscribe">
