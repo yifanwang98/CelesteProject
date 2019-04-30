@@ -6,6 +6,8 @@ import celeste.comic_community_4_1.miscellaneous.SeriesComparator;
 import celeste.comic_community_4_1.miscellaneous.SeriesData;
 import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.model.Series;
+import celeste.comic_community_4_1.model.SeriesContent;
+import celeste.comic_community_4_1.model.SeriesFollow;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,9 @@ public class EditSeriesController {
 
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
+
+    @Autowired
+    SeriesContentRepository seriesContentRepository;
 
     @GetMapping("/editSeries")
     public String goToEditSeries(@RequestParam(value = "id") long seriesId,
@@ -165,6 +170,65 @@ public class EditSeriesController {
             seriesToBeEdited.setSecondaryGenre(genre2);
             seriesToBeEdited.setPublicEditing(wiki.equals("Yes"));
             seriesRepository.save(seriesToBeEdited);
+        }
+
+        model.addAttribute("profileOwner", user);
+        model.addAttribute("isOthersProfile", false);
+
+        // Get Following & Followers
+        model.addAttribute("following", followRepository.countFollowByFollowIndentityUserone(user));
+        model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(user));
+
+        //All the post by this user
+        model.addAttribute("postsCount", postRepository.countPostByUser(user));
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Series List
+        List<Series> seriesList = seriesRepository.findByUser(user);
+        Collections.sort(seriesList, new SeriesComparator());
+        List<SeriesData> seriesDataList = new ArrayList<>();
+        for (Series series : seriesList) {
+            List<String> tags = new ArrayList<>();
+            seriesDataList.add(new SeriesData(series, tags,
+                    seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series),
+                    seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user),
+                    series.getUser().getUsername().equals(user.getUsername())));
+        }
+        model.addAttribute("seriesDataList", seriesDataList);
+        return "profile_series";
+    }
+
+    @PostMapping("/deleteSeries")
+    public String deleteSeries(@RequestParam(value = "sid") long seriesId,
+                               ModelMap model,
+                               HttpServletRequest request) throws Exception {
+
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        model.addAttribute("User", user);
+
+        if (seriesRepository.existsSeriesBySeriesID(seriesId)) {
+            Series seriesToBeDeleted = seriesRepository.findSeriesBySeriesID(seriesId);
+            // Remove Subscription
+            List<SeriesFollow> seriesFollowList = seriesFollowRepository.findBySeriesFollowIndentitySeries(seriesToBeDeleted);
+            for (SeriesFollow seriesFollow : seriesFollowList) {
+                seriesFollowRepository.delete(seriesFollow);
+            }
+            // Remove Content
+            List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentitySeries(seriesToBeDeleted);
+            for (SeriesContent seriesContent : seriesContentList) {
+                seriesContentRepository.delete(seriesContent);
+            }
+            // Remove Series
+            seriesRepository.delete(seriesToBeDeleted);
         }
 
         model.addAttribute("profileOwner", user);

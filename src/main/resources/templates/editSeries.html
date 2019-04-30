@@ -44,6 +44,16 @@
                     }
                 });
             });
+            $('#deleteSeriesBTN').click(function () {
+                var answer = confirm("Do you really want to delete this series? All posted contents would be removed")
+                if (answer == true) {
+                    var answer2 = prompt("Please enter \"Confirm Deletion\"");
+                    if (answer2 == "Confirm Close") {
+                        window.location.href = "deleteSeriesBTN";
+                    }
+                }
+
+            });
         });
     </script>
 </head>
@@ -243,9 +253,18 @@
                     <td></td>
                     <td></td>
                     <td>
+                        <div style="padding: 0.25em;"></div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
                         <form method="post" id="deleteSeries" action="deleteSeries"></form>
                         <input name="sid" hidden th:value="${seriesToBeEdited.getSeriesID()}" form="deleteSeries">
-                        <input type="submit" class="setting-save-btn" value="Save" name="submit" form="deleteSeries">
+                        <input type="submit" class="delete-series-btn" value="Delete" name="submit"
+                               id="deleteSeriesBTN" form="deleteSeries">
                     </td>
                     <td></td>
                 </tr>
