@@ -25,8 +25,8 @@ public class Series implements Serializable {
     @NotBlank
     private String seriesName = "newSeries";
 
-
-    private String description = "some content";
+    @NotNull
+    private String description = "";
 
     @NotNull
     private String primaryGenre = "None";
