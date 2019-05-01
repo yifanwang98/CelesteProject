@@ -133,14 +133,23 @@
         function loadDrawing(){
             console.log('load-button')
             $.ajax({
-                type:'GET',
+                type:'POST',
                 url: '/load_drawing',
-                success: function(res){
-                    console.log('get success!')
-                    // console.log(typeof(res))
-                    var data = res.result
-                    // console.log(data)
-                    ctx.load(data);
+                // dataType:"json",
+                cache : false,
+                success: function(data){
+                    if(data!="You do not have any saved work!"){
+                        console.log('load success!')
+                        // console.log(typeof(res))
+                        // console.log(data)
+                         alert("Auto load your previous work.");
+                        ctx.load(data);
+
+                    }
+                    else {
+                        alert("You do not have any saved work! Start new!")
+                    }
+
                 }
             });
         }

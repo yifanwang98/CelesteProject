@@ -61,9 +61,29 @@ public class DrawingController {
     }
 
     @ResponseBody
-    @GetMapping("/load_drawing")
+    @PostMapping("/load_drawing")
     public String load_drawing(ModelMap model, HttpServletRequest request) throws Exception {
-        return "123";
+
+        String username = (String) request.getSession().getAttribute("username");
+
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        List<DrawingSaving> x = drawingSavingRepository.findByUserone(user);
+
+        if(!x.isEmpty()){
+            DrawingSaving exist = x.get(0);
+            String drawing = exist.getDrawing();
+            drawing=drawing.replaceAll("\\\\","");
+            drawing=drawing.substring(10);
+            drawing=drawing.substring(0,drawing.length()-2);
+            //System.out.println(drawing);
+            return drawing;
+        }
+        else {
+            return "You do not have any saved work!";
+        }
+//        return "123";
     }
 
 }
