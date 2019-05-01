@@ -104,7 +104,7 @@ public class StarController {
 
             // Count
             long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-            long commentCount = commentRepository.countCommentByPostIndentityPost(post);
+            long commentCount = commentRepository.countCommentByPost(post);
             long starCount = starRepository.countStarByPostIndentityPost(post);
             long likeCount = likeRepository.countLikeByPostIndentityPost(post);
 

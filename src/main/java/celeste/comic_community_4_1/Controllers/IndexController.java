@@ -107,7 +107,7 @@ public class IndexController {
 
             // Count
             long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-            long commentCount = commentRepository.countCommentByPostIndentityPost(post);
+            long commentCount = commentRepository.countCommentByPost(post);
             long starCount = starRepository.findByPostIndentityPost(post).size();
             long likeCount = likeRepository.findByPostIndentityPost(post).size();
 

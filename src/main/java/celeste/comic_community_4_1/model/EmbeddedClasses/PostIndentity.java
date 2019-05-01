@@ -14,6 +14,7 @@ import java.util.Objects;
 @Embeddable
 public class PostIndentity implements Serializable {
 
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "username")

@@ -39,6 +39,8 @@ public class AnalysisController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         model.addAttribute("User", user);
 
+        model.addAttribute("profileOwner", user);
+
         // Analysis data
         AnalysisData analysisData = new AnalysisData();
 
