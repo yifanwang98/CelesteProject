@@ -89,5 +89,24 @@ public class ThumbnailConverter {
         return new String[]{base64, thumbnail};
     }
 
+    public static String toBase64Square(MultipartFile f) throws Exception {
+        String type = f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".") + 1);
+        File convFile = new File(f.getOriginalFilename());
+        convFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(f.getBytes());
+        fos.close();
+
+        BufferedImage bImage = ImageIO.read(convFile);
+        bImage = convertSquare(bImage);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bImage, type, bos);
+        final String base64 = Base64.getEncoder().encodeToString(bos.toByteArray());
+        bos.close();
+        convFile.delete();
+
+        return base64;
+    }
+
 
 }

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Post - Celeste</title>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Style Sheet -->
+    <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/single.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/setting.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/createSeries.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <!-- Script -->
+    <script src="http://code.jquery.com/jquery-1.5.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#newCover').change(function () {
+                var form = new FormData(document.getElementById("editSeriesInfo"));
+                $.ajax({
+                    type: "POST",
+                    url: 'tempChangeCover',
+                    data: form,
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    success: function (data) {
+                        if (data != "Error" && data != "Only .png or .jpg is accepted!") {
+                            // alert(data)
+                            $('#seriesCover').attr("src", "data:image/png;base64," + data.toString());
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+                    error: function () {
+                        alert(arguments[1]);
+                    }
+                });
+            });
+            $('#deleteSeriesBTN').click(function () {
+                var answer = confirm("Do you really want to delete this series? All posted contents would be removed")
+                if (answer == true) {
+                    var answer2 = prompt("Please enter \"Confirm Deletion\"");
+                    if (answer2 == "Confirm Close") {
+                        window.location.href = "deleteSeriesBTN";
+                    }
+                }
+
+            });
+        });
+    </script>
+</head>
+<body>
+<!-- Header Banner -->
+<table class="header webfont semibold">
+    </tbody>
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/mainPage" class="headerUnselected">Home</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="discover" class="headerUnselected">Discover</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="search" class="headerUnselected">Search</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- Right Part -->
+        <td style="width: 5em;">
+            <table style="padding: 0; margin: 0; align: right;">
+                <tr style="align: right;">
+                    <td class="headerCellPadding">
+                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
+                    </td>
+                    <td class="headerCellPadding"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div style="height: 2.75em;"></div>
+<!---------------------------------------->
+<!---------------------------------------->
+<form method="post" id="editSeriesInfo" action="editSeriesInfo" enctype="multipart/form-data"></form>
+<input name="sid" hidden th:value="${seriesToBeEdited.getSeriesID()}" form="editSeriesInfo">
+<div class="single-container webfont">
+    <div class="single-inner-container">
+        <div style="padding: 1em 2em 1em 1em; ">
+            <div style="padding: 0em 0.5em; color: #269b9b; font-size: 1.8em;" class="semibold">
+                Edit Series
+            </div>
+            <table style="border-spacing: 0em; padding-top: 0.5em; margin-bottom: 0.5em;" width="100%">
+                <col width="12em;"/>
+                <col width="1%;"/>
+                <col width="90%"/>
+                <col width="0.001%;"/>
+                <tr>
+                    <!-- Image Cover -->
+                    <td>
+                        <div>
+                            <img th:src="'data:image/png;base64,'+${seriesToBeEdited.getCover()}"
+                                 class="series-cover-image" id="seriesCover">
+                        </div>
+                        <div style="padding: 0 1em;">
+                            <input type="file" accept=".jpg,.png" style="display: none;" id="newCover"
+                                   name="file" form="editSeriesInfo">
+                            <input type="button" value="Change" class="setting-save-btn"
+                                   onclick="document.getElementById('newCover').click();"/>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td>
+                        <div style="padding: 1em 0;">
+                            <div class="series-title semibold">Series Title</div>
+                            <input type="text" name="title" placeholder="Enter Title Here" form="editSeriesInfo"
+                                   th:value="${seriesToBeEdited.getSeriesName()}"
+                                   class="create-series-textfield" maxlength="24" required>
+                            <div style="padding: 0.25em;"></div>
+                            <!-- Description -->
+                            <div class="series-title semibold">Description</div>
+                            <textarea type="text" name="description" placeholder="Enter Description Here (Optional)"
+                                      form="editSeriesInfo" th:text="${seriesToBeEdited.getDescription()}"
+                                      maxlength="100" class="create-series-textfield"></textarea>
+                            <div style="padding: 0.25em;"></div>
+
+                            <div class="series-title semibold">Genre</div>
+                            <table style="border-spacing: 0; width: 100%">
+                                <col width="4%"/>
+                                <col width="14%"/>
+                                <col width="30%"/>
+                                <col width="4%"/>
+                                <col width="18%"/>
+                                <col width="30%"/>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        Primary:
+                                    </td>
+                                    <td>
+                                        <select name="genre1" style="width: 100%; font-size: 1em;"
+                                                form="editSeriesInfo">
+                                            <span th:each="genre:${genreList}">
+                                                <span th:if="${genre.equals(seriesToBeEdited.getPrimaryGenre())}">
+                                                    <option th:value="${genre}" th:text="${genre}" selected></option>
+                                                </span>
+                                                <span th:unless="${genre.equals(seriesToBeEdited.getPrimaryGenre())}">
+                                                    <option th:value="${genre}" th:text="${genre}"></option>
+                                                </span>
+                                            </span>
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        Secondary:
+                                    </td>
+                                    <td>
+                                        <select name="genre2" style="width: 100%; font-size: 1em;"
+                                                form="editSeriesInfo">
+                                            <span th:each="genre:${genreList}">
+                                                <span th:if="${genre.equals(seriesToBeEdited.getSecondaryGenre())}">
+                                                    <option th:value="${genre}" th:text="${genre}" selected></option>
+                                                </span>
+                                                <span th:unless="${genre.equals(seriesToBeEdited.getPrimaryGenre())}">
+                                                    <option th:value="${genre}" th:text="${genre}"></option>
+                                                </span>
+                                            </span>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div style="padding: 0.5em;"></div>
+                            <table style="border-spacing: 0; width: 100%">
+                                <col width="34%"/>
+                                <col width="33%"/>
+                                <col width="33%"/>
+                                <tr>
+                                    <td class="series-title semibold">
+                                        Open For Wiki:
+                                    </td>
+                                    <td style="text-align: center">
+                                        <span th:if="${seriesToBeEdited.isPublicEditing()}">
+                                            <input type="radio" name="wiki" value="Yes" form="editSeriesInfo"
+                                                   checked="checked"/> Yes
+                                        </span>
+                                        <span th:unless="${seriesToBeEdited.isPublicEditing()}">
+                                            <input type="radio" name="wiki" value="Yes" form="editSeriesInfo"/> Yes
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <span th:if="${!seriesToBeEdited.isPublicEditing()}">
+                                            <input type="radio" name="wiki" value="No" form="editSeriesInfo"
+                                                   checked="checked"/> No
+                                        </span>
+                                        <span th:unless="${!seriesToBeEdited.isPublicEditing()}">
+                                            <input type="radio" name="wiki" value="No" form="editSeriesInfo"/> No
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <div style="padding: 0.25em;"></div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="padding: 0 1em;">
+                            <a th:href="'/view_profile_series?user=' + ${User.getUsername()}"
+                               class="setting-cancel-btn">Cancel</a>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="submit" class="setting-save-btn" value="Save" name="submit" form="editSeriesInfo">
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <div style="padding: 0.25em;"></div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <form method="post" id="deleteSeries" action="deleteSeries"></form>
+                        <input name="sid" hidden th:value="${seriesToBeEdited.getSeriesID()}" form="deleteSeries">
+                        <input type="submit" class="delete-series-btn" value="Delete" name="submit"
+                               id="deleteSeriesBTN" form="deleteSeries">
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 2.5em;"></div>
+</body>
+</html>

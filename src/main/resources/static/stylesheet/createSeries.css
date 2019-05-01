@@ -60,3 +60,23 @@
     background: #9a9a9a;
     text-decoration: none;
 }
+
+.delete-series-btn {
+    padding: 0.5em 0;
+    font-size: 0.95em;
+    border: #a30000 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    display: block;
+    background: none;
+    width: 100%;
+    color: #a30000;
+    font-weight: normal;
+}
+
+.delete-series-btn:hover {
+    background: #a30000;
+    color: white;
+    cursor: pointer;
+}

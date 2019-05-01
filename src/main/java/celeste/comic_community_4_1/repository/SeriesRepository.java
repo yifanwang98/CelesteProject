@@ -11,5 +11,9 @@ import java.util.List;
 public interface SeriesRepository extends JpaRepository<Series, Long> {
     List<Series> findByUser(User user);
 
+    boolean existsSeriesBySeriesID(long id);
+
+    Series findSeriesBySeriesID(long id);
+
     long countSeriesByUser(User user);
 }

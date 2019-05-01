@@ -159,6 +159,9 @@
                             <a href=""><span th:text="${seriesData.series.getSeriesName()}"></span></a>
                         </div>
                         <div class="subscription-series-date">
+                            <span th:text="${seriesData.series.getDescription()}"></span>
+                        </div>
+                        <div class="subscription-series-date">
                             <span class="semibold">Created On: </span><span
                                 th:text="${seriesData.creationDate()}"></span>
                         </div>
@@ -189,7 +192,8 @@
                 <td>
                     <div style="margin: 0.75em 0;">
                         <div th:if="${seriesData.owner}" class="subscription-series-unsubscribe">
-                            <a href=""><i class='far fa-edit'></i> Edit</a>
+                            <a th:href="'/editSeries?id=' + ${seriesData.series.getSeriesID()}"><i
+                                    class='far fa-edit'></i> Edit</a>
                         </div>
                     </div>
                     <div th:if="${seriesData.subscribed}" class="subscription-series-unsubscribe">

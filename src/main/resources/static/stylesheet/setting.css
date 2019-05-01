@@ -50,7 +50,7 @@
 }
 
 .setting-cancel-btn {
-    padding: 0.25em 0em;
+    padding: 0.5em 0em;
     font-size: 0.95em;
     border: #9a9a9a 1px solid;
     border-radius: 5px;
@@ -58,11 +58,15 @@
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
     display: block;
     color: #9a9a9a;
+    cursor: pointer;
 }
 
 .setting-cancel-btn:hover {
     border: #9a9a9a 1.5px solid;
     font-weight: 500;
+    cursor: pointer;
+    /*color: white;*/
+    background: #eeeeee;
 }
 
 .setting-cancel-btn:link, .setting-cancel-btn:visited {
@@ -138,7 +142,7 @@
 }
 
 .setting-save-btn {
-    padding: 0.3em 0;
+    padding: 0.5em 0;
     font-size: 0.95em;
     border: #218787 1px solid;
     border-radius: 5px;
