@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Post - Celeste</title>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Style Sheet -->
+    <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/single.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/notification.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <!-- Script -->
+    <script src="http://code.jquery.com/jquery-1.5.js"></script>
+    <script>
+
+    </script>
+</head>
+<body>
+<!-- Header Banner -->
+<table class="header webfont semibold">
+    </tbody>
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/mainPage" class="headerUnselected">Home</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="discover" class="headerUnselected">Discover</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="search" class="headerUnselected">Search</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- Right Part -->
+        <td style="width: 5em;">
+            <table style="padding: 0; margin: 0; align: right;">
+                <tr style="align: right;">
+                    <td class="headerCellPadding">
+                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
+                    </td>
+                    <td class="headerCellPadding"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div style="padding: 2.5em;"></div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div class="series-image">
+    <img th:src="'data:image/png;base64,'+${selectedImage}" style="width: 100%; border-radius: 5px;">
+</div>
+<!---------------------------------------->
+<!---------------------------------------->
+<!---------------------------------------->
+<!---------------------------------------->
+<div class="series-footer webfont">
+    <table style="height: 100%" width="100%" cellspacing="0" cellpadding="0">
+        <col width="5em"/>
+        <col width="20%"/>
+        <col width="65%"/>
+        <col width="15%"/>
+        <tr>
+            <!-- Cover -->
+            <td>
+                <img th:src="'data:image/png;base64,'+${seriesToView.getCover()}"
+                     style="width: 5em; box-shadow: 3px 3px 3px rgba(255, 255, 255, 0.3);">
+            </td>
+            <!-- Series Info -->
+            <td>
+                <div class="series-footer-left-info">
+                    <div th:text="${seriesToView.getSeriesName()}" class="series-footer-left-title semibold"></div>
+                    <div class="series-footer-left-content"><span class="semibold">Creator: </span><span
+                            th:text="${seriesToView.getUser().getUsername()}"></span></div>
+                </div>
+            </td>
+            <!-- Thumbnails -->
+            <td>
+                <div th:if="${thumbnails.isEmpty()}" style="text-align: center; color: #cccccc; font-size: 1.2em;">
+                    No content. Try to add your art to the series.
+                </div>
+                <div th:unless="${thumbnails.isEmpty()}" style="padding: 0.5em;">
+                    <table width="100%" style="height: 100%; max-height: 100%; text-align: center;" cellspacing="0"
+                           cellpadding="0">
+                        <tr>
+                            <span th:each="thumb, iter : ${thumbnails}">
+                                <span th:if="${iter.index == (selectedSubIndex - fromIndex)}">
+                                    <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"
+                                       style="height: 100%; margin: 0 1em;"><img
+                                            th:src="'data:image/png;base64,'+${thumb}"
+                                            style="height: 4em; width: 4em; border: #269b9b 3px solid; border-radius: 3px;"></a>
+                                </span>
+                                <span th:unless="${iter.index == (selectedSubIndex - fromIndex)}">
+                                    <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"
+                                       style="height: 100%; margin: 0 1em;"><img
+                                            th:src="'data:image/png;base64,'+${thumb}"
+                                            style="height: 4em; width: 4em; border-radius: 3px;"></a>
+                                </span>
+                            </span>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+            <td>
+                <div style="padding: 0 1em;">
+                    <div th:if="${canEdit}">
+                        <a href="#" class="series-footer-r-btn"><i class='fas fa-marker'></i> Add Content</a>
+                    </div>
+                    <div th:if="${subscribed && !isOwner}">
+                        <a href="#" class="series-footer-r-btn"><i class='fas fa-minus'></i> Unsubscribe</a>
+                    </div>
+                    <div th:if="${!subscribed && !isOwner}">
+                        <a href="#" class="series-footer-r-btn"><i class='fas fa-plus'></i> Subscribe</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 4em;"></div>
+</body>
+</html>
