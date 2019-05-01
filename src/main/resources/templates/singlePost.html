@@ -42,6 +42,31 @@
                 x.style.display = "none";
             }
         }
+        $(document).ready(function(){
+            $('#commentForm').submit(function(event) {
+                event.preventDefault();
+                var values = $(this).serialize();
+                $.ajax({
+                    type : "POST",
+                    url : 'uploadComment',
+                    data:values,
+                    cache : false,
+                    success : function(data) {
+                        if(data == "Comment Success!"){
+                            alert(data)
+                            location.reload();
+
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+                    error: function(){
+                        alert(arguments[1]);
+                    }
+                });
+            })
+        })
     </script>
 </head>
 <body>
@@ -262,14 +287,15 @@
     </div>
     <div class="single-comment-container webfont" id="commentContainer" style="display: none;">
         <div class="single-comment-inner-container">
-            <form id="commentForm" method="post"></form>
+            <form id="commentForm" action="uploadComment">
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                     <td>
                         <textarea class="single-comment-textarea webfont" placeholder="Enter Comment Here"
                                   maxlength="140"
-                                  name="description" form="commentForm" onkeyup="countChar(this)"
+                                  name="description"  onkeyup="countChar(this)"
                                   id="description_ta"></textarea>
+                        <input type="hidden" name = "postID" th:value="${postToDisplay.getPostID()}">
                     </td>
                 </tr>
                 <tr>
@@ -282,7 +308,7 @@
                                 <td>
                                     <div style="text-align: right; margin-top: -0.1em; display: none;"
                                          id="submitCommentBTN">
-                                        <input type="submit" form="commentForm" class="single-comment-submit"
+                                        <input type="submit"  class="single-comment-submit"
                                                value=" Comment ">
                                     </div>
                                 </td>
@@ -291,6 +317,7 @@
                     </td>
                 </tr>
             </table>
+            </form>
         </div>
     </div>
     <div class="single-all-comment-container webfont" id="">
@@ -301,8 +328,8 @@
                 <table width="100%">
                     <tr>
                         <td class="single-comment-avatar">
-                            <a th:href="'view_profile?user=' + ${comment.getPostIndentity().getUser().getUsername()}">
-                                <image th:src="'data:image/png;base64,'+${comment.getPostIndentity().getUser().getAvatar()}"
+                            <a th:href="'view_profile?user=' + ${comment.getUser().getUsername()}">
+                                <image th:src="'data:image/png;base64,'+${comment.getUser().getAvatar()}"
                                        class="post-avatar-image" style="width: 1.6em;"></image>
                             </a>
                         </td>
@@ -310,24 +337,24 @@
                             <table width="100%">
                                 <tr>
                                     <td>
-                                        <a th:href="'view_profile?user=' + ${comment.getPostIndentity().getUser().getUsername()}"
+                                        <a th:href="'view_profile?user=' + ${comment.getUser().getUsername()}"
                                            class="single-comment-username">
                                             <span class="post-author"
-                                                  th:text="${comment.getPostIndentity().getUser().getUsername()}"></span>
+                                                  th:text="${comment.getUser().getUsername()}"></span>
                                         </a>
-                                        <span th:if="${comment.getPostIndentity().getUser().getGender() == 'male'}"
+                                        <span th:if="${comment.getUser().getGender() == 'male'}"
                                               class="follow-male"><i class='fas fa-mars'></i></span>
-                                        <span th:unless="${comment.getPostIndentity().getUser().getGender() == 'male'}"
+                                        <span th:unless="${comment.getUser().getGender() == 'male'}"
                                               class="follow-female"><i class='fas fa-venus'></i></span>
                                         <br/>
                                         <span class="post-time" th:text="${comment.getCreatedAt()}"></span>
                                     </td>
                                     <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
                                         <a href=""
-                                           th:if="${User.getUsername() == comment.getPostIndentity().getUser().getUsername()}"
+                                           th:if="${User.getUsername() == comment.getUser().getUsername()}"
                                            class="post-action-more"><i class='far fa-trash-alt'></i></a>
                                         <div class="dropdown"
-                                             th:unless="${User.getUsername() == comment.getPostIndentity().getUser().getUsername()}">
+                                             th:unless="${User.getUsername() == comment.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                             <div class="dropdown-content">
                                                 <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>

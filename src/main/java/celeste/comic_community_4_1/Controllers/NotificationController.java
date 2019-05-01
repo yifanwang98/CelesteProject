@@ -97,12 +97,12 @@ public class NotificationController {
                         star.getCreatedAt(), p.getPostID()));
             }
 
-            List<Comment> commentList = commentRepository.findByPostIndentityPost(p);
+            List<Comment> commentList = commentRepository.findByPost(p);
             for (Comment comment : commentList) {
-                if (comment.getPostIndentity().getUser().getUsername().equals(username))
+                if (comment.getUser().getUsername().equals(username))
                     continue;
                 notificationList.add(new Notification(NotificationType.COMMENT,
-                        comment.getPostIndentity().getUser().getUsername(), comment.getCreatedAt(),
+                        comment.getUser().getUsername(), comment.getCreatedAt(),
                         p.getPostID(), comment.getContent()));
             }
 
