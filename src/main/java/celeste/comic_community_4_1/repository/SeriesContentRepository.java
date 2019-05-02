@@ -12,5 +12,7 @@ import java.util.List;
 @Repository
 public interface SeriesContentRepository extends JpaRepository<SeriesContent, SeriesContentIndentity> {
     List<SeriesContent> findSeriesContentBySeriesContentIndentitySeries(Series series);
+
+    List<SeriesContent> findSeriesContentBySeriesContentIndentitySeriesOrderByCreatedAtAsc(Series series);
 }
 
