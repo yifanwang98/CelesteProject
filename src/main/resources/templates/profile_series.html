@@ -147,7 +147,8 @@
             <tr>
                 <!-- Image Cover -->
                 <td>
-                    <a style="text-decoration: none">
+                    <a style="text-decoration: none"
+                       th:href="'singleSeries?id=' + ${seriesData.series.getSeriesID()} + '&index=0'">
                         <img th:src="'data:image/png;base64,'+${seriesData.series.getCover()}"
                              class="series-cover-image">
                     </a>
@@ -156,7 +157,8 @@
                 <td>
                     <div style="padding: 0 1.5em">
                         <div class="subscription-series-title">
-                            <a href=""><span th:text="${seriesData.series.getSeriesName()}"></span></a>
+                            <a th:href="'singleSeries?id=' + ${seriesData.series.getSeriesID()} + '&index=0'"><span
+                                    th:text="${seriesData.series.getSeriesName()}"></span></a>
                         </div>
                         <div class="subscription-series-date">
                             <span th:text="${seriesData.series.getDescription()}"></span>

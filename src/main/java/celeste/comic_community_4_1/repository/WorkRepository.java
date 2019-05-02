@@ -10,4 +10,6 @@ import java.util.List;
 public interface WorkRepository extends JpaRepository<Work, Long> {
     List<Work> findByUserUsername(String username);
     List<Work> findByGenre(String genre);
+
+    Work findWorkByWorkID(long id);
 }
