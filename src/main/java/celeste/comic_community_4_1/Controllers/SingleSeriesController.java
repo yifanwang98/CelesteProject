@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.model.Series;
 import celeste.comic_community_4_1.model.SeriesContent;
 import celeste.comic_community_4_1.model.User;
@@ -73,9 +74,11 @@ public class SingleSeriesController {
         List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentitySeriesOrderByCreatedAtAsc(seriesToView);
         int selectedIndex = index >= seriesContentList.size() ? seriesContentList.size() - 1 : index;
         selectedIndex = selectedIndex < 0 ? 0 : selectedIndex;
-        int fromIndex = selectedIndex - 2;
+        int endIndex = selectedIndex + 2;
+        endIndex = endIndex > seriesContentList.size() - 1 ? seriesContentList.size() - 1 : endIndex;
+        int fromIndex = endIndex - 5;
         fromIndex = fromIndex < 0 ? 0 : fromIndex;
-        int endIndex = fromIndex + 5;
+        endIndex = fromIndex + 5;
         endIndex = endIndex > seriesContentList.size() - 1 ? seriesContentList.size() - 1 : endIndex;
         // SubList
         List<SeriesContent> subContent = seriesContentList.subList(fromIndex, endIndex + 1);
@@ -85,7 +88,7 @@ public class SingleSeriesController {
         }
         String selectedImage = null;
         if (!thumbnails.isEmpty())
-            selectedImage = workRepository.findWorkByWorkID(subContent.get(selectedIndex).getSeriesContentIndentity().getWork().getWorkID()).getContent();
+            selectedImage = workRepository.findWorkByWorkID(subContent.get(selectedIndex - fromIndex).getSeriesContentIndentity().getWork().getWorkID()).getContent();
 
         model.addAttribute("thumbnails", thumbnails);
         model.addAttribute("selectedImage", selectedImage);
@@ -93,6 +96,11 @@ public class SingleSeriesController {
         model.addAttribute("fromIndex", fromIndex);
         model.addAttribute("seriesToView", seriesToView);
         model.addAttribute("seriesTotalContent", seriesContentList.size());
+
+        model.addAttribute("createdAt", Notification.getDateString(seriesToView.getCreatedAt()));
+        model.addAttribute("lastUpdate", Notification.getDateString(seriesToView.getCreatedAt()));
+
+        model.addAttribute("numSubscribers", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(seriesToView));
 
         // Other Info
         model.addAttribute("isOwner", username.equals(seriesToView.getUser().getUsername()));

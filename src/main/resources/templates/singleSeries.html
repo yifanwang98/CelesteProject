@@ -2,7 +2,7 @@
 <html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Post - Celeste</title>
+    <title th:text="${seriesToView.getSeriesName()}"></title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -18,7 +18,20 @@
     <!-- Script -->
     <script src="http://code.jquery.com/jquery-1.5.js"></script>
     <script>
-
+        function toggleSeriesInfo() {
+            var x = document.getElementById("series-info-float-left");
+            var y = document.getElementById("series-info-collapse-icon");
+            var z = document.getElementById("series-info-expand-icon");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+                y.style.display = "inline-block";
+                z.style.display = "none";
+            } else {
+                x.style.display = "none";
+                z.style.display = "inline-block";
+                y.style.display = "none";
+            }
+        }
     </script>
 </head>
 <body>
@@ -72,9 +85,70 @@
 <div style="padding: 2.5em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<div class="series-image">
-    <img th:src="'data:image/png;base64,'+${selectedImage}" style="border-radius: 5px;">
+<div class="series-info-float-left webfont" id="series-info-float-left" style="display: none;">
+    <div class="series-info-float-left-inner">
+        <div style="text-align: center;">
+            <img th:src="'data:image/png;base64,'+${seriesToView.getCover()}"
+                 style="width: 70%; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);">
+        </div>
+        <div style="padding: 0.25em;"></div>
+
+        <div th:text="${seriesToView.getSeriesName()}" style="text-align: center;"
+             class="series-footer-left-title semibold series-info-float-left-inner-margin"></div>
+        <div class="series-info-float-left-inner-margin"><span class="semibold">Description: </span><br/>
+            <span th:text="${seriesToView.getDescription()}" class="series-info-float-left-inner-margin-left"></span>
+        </div>
+
+        <div class="series-info-float-left-inner-margin"><span class="semibold">Created By: </span><br/>
+            <span th:text="${seriesToView.getUser().getUsername()}"
+                  class="series-info-float-left-inner-margin-left"></span></div>
+
+        <div class="series-info-float-left-inner-margin"><span class="semibold">Created At: </span><br/>
+            <span th:text="${createdAt}" class="series-info-float-left-inner-margin-left"></span></div>
+
+        <div class="series-info-float-left-inner-margin"><span class="semibold">Last Update: </span><br/>
+            <span th:text="${lastUpdate}" class="series-info-float-left-inner-margin-left"></span></div>
+
+        <div class="series-info-float-left-inner-margin"><span class="semibold">Wiki: </span>
+            <span th:if="${seriesToView.isPublicEditing()}" th:text="'Yes'"></span>
+            <span th:unless="${seriesToView.isPublicEditing()}" th:text="'No'"></span></div>
+
+        <div class="series-info-float-left-inner-margin"><span class="semibold">Genre: </span><span
+                th:if="${!seriesToView.getPrimaryGenre().equals('None')}"
+                th:text="${seriesToView.getPrimaryGenre()}"></span>
+            <span th:if="${!seriesToView.getPrimaryGenre().equals('None') && !seriesToView.getSecondaryGenre().equals('None')}"
+                  th:text="' & '"></span>
+            <span th:if="${!seriesToView.getSecondaryGenre().equals('None')}"
+                  th:text="${seriesToView.getSecondaryGenre()}"></span>
+        </div>
+        <div class="series-info-float-left-inner-margin"><span class="semibold">Posts: </span><span
+                th:text="${seriesTotalContent}"></span></div>
+        <div class="series-info-float-left-inner-margin"><span class="semibold">Subscribers: </span><span
+                th:text="${numSubscribers}"></span></div>
+    </div>
 </div>
+<div class="series-info-expand" id="series-info-expand">
+    <a href="#" class="series-info-expand-icon" onclick="toggleSeriesInfo()"
+       style="margin-left: -7.5em; "
+       id="series-info-expand-icon"><i class='fas fa-angle-double-right'></i></a>
+    <a href="#" class="series-info-collapse-icon" onclick="toggleSeriesInfo()"
+       style="display: none;"
+       id="series-info-collapse-icon"><i class='fas fa-angle-double-left'></i></a>
+</div>
+<div th:if="${selectedSubIndex < 3 || User.getMembership().equals('1')}">
+    <div class="series-image">
+        <img th:src="'data:image/png;base64,'+${selectedImage}" style="border-radius: 5px;">
+    </div>
+</div>
+<div th:unless="${selectedSubIndex < 3 || User.getMembership().equals('1')}">
+    <div class="series-image webfont semibold">
+        <div style="padding: 10% 0;">
+            <a href="/setting" class="series-upgrade-link">Upgrade to premium to enjoy entire series <i
+                    class='far fa-arrow-alt-circle-right'></i></a>
+        </div>
+    </div>
+</div>
+
 <!---------------------------------------->
 <!---------------------------------------->
 <!---------------------------------------->
@@ -96,36 +170,9 @@
                 <div class="series-footer-left-info">
                     <div>
                         <span th:text="${seriesToView.getSeriesName()}"
-                              class="series-footer-left-title semibold"></span>
-                        <span class="series-info-dropdown">
-                            <button class="series-info-dropdownBTN"><i class='fas fa-exclamation-circle'></i></button>
-                            <div class="series-info-dropdown-content">
-                                <div th:text="${seriesToView.getSeriesName()}"
-                                     class="series-footer-left-title semibold"></div>
-                                <div><span class="semibold">Description: </span><span
-                                        th:text="${seriesToView.getDescription()}"></span></div>
-                                <div><span class="semibold">Created By: </span><span
-                                        th:text="${seriesToView.getUser().getUsername()}"></span></div>
-                                <div><span class="semibold">Created At: </span><span
-                                        th:text="${seriesToView.getCreatedAt()}"></span></div>
-                                <div><span class="semibold">Last Update: </span><span
-                                        th:text="${seriesToView.getCreatedAt()}"></span></div>
-                                <div><span class="semibold">Wiki: </span><span th:if="${seriesToView.isPublicEditing()}"
-                                                                               th:text="'Yes'"></span>
-                                    <span th:unless="${seriesToView.isPublicEditing()}" th:text="'No'"></span></div>
-                                <div><span class="semibold">Posts: </span><span th:text="${seriesTotalContent}"></span></div>
-                                <div><span class="semibold">Genre: </span><span
-                                        th:if="${!seriesToView.getPrimaryGenre().equals('None')}"
-                                        th:text="${seriesToView.getPrimaryGenre()}"></span>
-                                    <span th:if="${!seriesToView.getPrimaryGenre().equals('None') && !seriesToView.getSecondaryGenre().equals('None')}"
-                                          th:text="' & '"></span>
-                                    <span th:if="${!seriesToView.getSecondaryGenre().equals('None')}"
-                                          th:text="${seriesToView.getSecondaryGenre()}"></span></div>
-                            </div>
-                        </span>
+                              class="series-footer-left-title semibold"></span><br/>
+                        <span th:text="'(' + ${selectedSubIndex + 1} + '/' + ${seriesTotalContent} + ')'"></span>
                     </div>
-                    <div class="series-footer-left-content"><span class="semibold">Creator: </span><span
-                            th:text="${seriesToView.getUser().getUsername()}"></span></div>
                 </div>
             </td>
             <!-- Thumbnails -->
@@ -133,26 +180,21 @@
                 <div th:if="${thumbnails.isEmpty()}" style="text-align: center; color: #cccccc; font-size: 1.2em;">
                     No content. Try to add your art to the series.
                 </div>
-                <div th:unless="${thumbnails.isEmpty()}" style="padding: 0.5em;">
-                    <table width="100%" style="height: 100%; max-height: 100%; text-align: center;" cellspacing="0"
-                           cellpadding="0">
-                        <tr>
-                            <span th:each="thumb, iter : ${thumbnails}">
-                                <span th:if="${iter.index == (selectedSubIndex - fromIndex)}">
-                                    <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"
-                                       style="height: 100%; margin: 0 1em;"><img
-                                            th:src="'data:image/png;base64,'+${thumb}"
-                                            style="height: 4em; width: 4em; border-radius: 3px;"></a>
-                                </span>
-                                <span th:unless="${iter.index == (selectedSubIndex - fromIndex)}">
-                                    <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"
-                                       style="height: 100%; margin: 0 0.75em;"><img
-                                            th:src="'data:image/png;base64,'+${thumb}"
-                                            style="height: 3.5em; width: 3.5em; border-radius: 3px; opacity: 0.3;"></a>
-                                </span>
-                            </span>
-                        </tr>
-                    </table>
+                <div th:unless="${thumbnails.isEmpty()}" style="padding: 0.5em; overflow: hidden; float: none;">
+                    <span th:each="thumb, iter : ${thumbnails}">
+                        <span th:if="${iter.index == (selectedSubIndex - fromIndex)}">
+                            <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"
+                               style="height: 100%; margin: 0 1em;"><img
+                                    th:src="'data:image/png;base64,'+${thumb}"
+                                    style="height: 4em; width: 4em; border-radius: 3px;"></a>
+                        </span>
+                        <span th:unless="${iter.index == (selectedSubIndex - fromIndex)}">
+                            <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"
+                               style="height: 100%; margin: 0 0.75em;"><img
+                                    th:src="'data:image/png;base64,'+${thumb}"
+                                    style="height: 3.5em; width: 3.5em; border-radius: 3px; opacity: 0.3;"></a>
+                        </span>
+                    </span>
                 </div>
             </td>
             <td>
