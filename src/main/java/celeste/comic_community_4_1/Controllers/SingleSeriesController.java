@@ -92,11 +92,7 @@ public class SingleSeriesController {
         model.addAttribute("selectedSubIndex", selectedIndex);
         model.addAttribute("fromIndex", fromIndex);
         model.addAttribute("seriesToView", seriesToView);
-
-        if (thumbnails.isEmpty())
-            model.addAttribute("thumbnailWidth", 0);
-        else
-            model.addAttribute("thumbnailWidth", 1.0 / thumbnails.size());
+        model.addAttribute("seriesTotalContent", seriesContentList.size());
 
         // Other Info
         model.addAttribute("isOwner", username.equals(seriesToView.getUser().getUsername()));

@@ -73,14 +73,14 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <div class="series-image">
-    <img th:src="'data:image/png;base64,'+${selectedImage}" style="width: 100%; border-radius: 5px;">
+    <img th:src="'data:image/png;base64,'+${selectedImage}" style="border-radius: 5px;">
 </div>
 <!---------------------------------------->
 <!---------------------------------------->
 <!---------------------------------------->
 <!---------------------------------------->
 <div class="series-footer webfont">
-    <table style="height: 100%" width="100%" cellspacing="0" cellpadding="0">
+    <table style="height: 100%; margin: 0; padding: 0;" width="100%" cellspacing="0" cellpadding="0">
         <col width="5em"/>
         <col width="20%"/>
         <col width="65%"/>
@@ -89,12 +89,41 @@
             <!-- Cover -->
             <td>
                 <img th:src="'data:image/png;base64,'+${seriesToView.getCover()}"
-                     style="width: 5em; box-shadow: 3px 3px 3px rgba(255, 255, 255, 0.3);">
+                     style="width: 5em;">
             </td>
             <!-- Series Info -->
             <td>
                 <div class="series-footer-left-info">
-                    <div th:text="${seriesToView.getSeriesName()}" class="series-footer-left-title semibold"></div>
+                    <div>
+                        <span th:text="${seriesToView.getSeriesName()}"
+                              class="series-footer-left-title semibold"></span>
+                        <span class="series-info-dropdown">
+                            <button class="series-info-dropdownBTN"><i class='fas fa-exclamation-circle'></i></button>
+                            <div class="series-info-dropdown-content">
+                                <div th:text="${seriesToView.getSeriesName()}"
+                                     class="series-footer-left-title semibold"></div>
+                                <div><span class="semibold">Description: </span><span
+                                        th:text="${seriesToView.getDescription()}"></span></div>
+                                <div><span class="semibold">Created By: </span><span
+                                        th:text="${seriesToView.getUser().getUsername()}"></span></div>
+                                <div><span class="semibold">Created At: </span><span
+                                        th:text="${seriesToView.getCreatedAt()}"></span></div>
+                                <div><span class="semibold">Last Update: </span><span
+                                        th:text="${seriesToView.getCreatedAt()}"></span></div>
+                                <div><span class="semibold">Wiki: </span><span th:if="${seriesToView.isPublicEditing()}"
+                                                                               th:text="'Yes'"></span>
+                                    <span th:unless="${seriesToView.isPublicEditing()}" th:text="'No'"></span></div>
+                                <div><span class="semibold">Posts: </span><span th:text="${seriesTotalContent}"></span></div>
+                                <div><span class="semibold">Genre: </span><span
+                                        th:if="${!seriesToView.getPrimaryGenre().equals('None')}"
+                                        th:text="${seriesToView.getPrimaryGenre()}"></span>
+                                    <span th:if="${!seriesToView.getPrimaryGenre().equals('None') && !seriesToView.getSecondaryGenre().equals('None')}"
+                                          th:text="' & '"></span>
+                                    <span th:if="${!seriesToView.getSecondaryGenre().equals('None')}"
+                                          th:text="${seriesToView.getSecondaryGenre()}"></span></div>
+                            </div>
+                        </span>
+                    </div>
                     <div class="series-footer-left-content"><span class="semibold">Creator: </span><span
                             th:text="${seriesToView.getUser().getUsername()}"></span></div>
                 </div>
@@ -113,13 +142,13 @@
                                     <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"
                                        style="height: 100%; margin: 0 1em;"><img
                                             th:src="'data:image/png;base64,'+${thumb}"
-                                            style="height: 4em; width: 4em; border: #269b9b 3px solid; border-radius: 3px;"></a>
+                                            style="height: 4em; width: 4em; border-radius: 3px;"></a>
                                 </span>
                                 <span th:unless="${iter.index == (selectedSubIndex - fromIndex)}">
                                     <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"
-                                       style="height: 100%; margin: 0 1em;"><img
+                                       style="height: 100%; margin: 0 0.75em;"><img
                                             th:src="'data:image/png;base64,'+${thumb}"
-                                            style="height: 4em; width: 4em; border-radius: 3px;"></a>
+                                            style="height: 3.5em; width: 3.5em; border-radius: 3px; opacity: 0.3;"></a>
                                 </span>
                             </span>
                         </tr>

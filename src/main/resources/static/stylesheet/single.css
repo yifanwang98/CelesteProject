@@ -153,3 +153,59 @@
     padding: 0 20%;
     text-align: center;
 }
+
+/****************/
+/****************/
+.series-info-dropdownBTN {
+    font-size: 1.2em;
+    background: none;
+    color: white;
+    text-decoration: none;
+    border: none;
+}
+
+.series-info-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.series-info-dropdown-content {
+    text-align: left;
+    font-size: 0.92em;
+    display: none;
+    /*min-width: 6em;*/
+    width: auto;
+    position: absolute;
+    margin-top: -13em;
+    margin-left: 1em;
+    color: black;
+    padding: 0.75em;
+    background-color: #f3f3f3;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.series-info-dropdown-content a {
+    color: #444;
+    padding: 0.75em;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.series-info-dropdown-content a:hover {
+    background-color: #ddd;
+    color: #269b9b
+}
+
+/* Show the dropdown menu on hover */
+.series-info-dropdown:hover .series-info-dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.series-info-dropdown:hover .series-info-dropdownBTN {
+    color: #269b9b
+}
