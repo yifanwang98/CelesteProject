@@ -189,7 +189,7 @@
                                     <td>
                                         <span class="post-author"
                                               th:text="${postData.post.getUser().getUsername()}"></span><br>
-                                        <span class="post-time" th:text="${postData.post.getCreatedAt()}"></span>
+                                        <span class="post-time" th:text="${postData.postCreatedAt()}"></span>
                                     </td>
                                     <td width="10%"
                                         style="vertical-align: top; text-align: right; padding-right: 1em; min-width: 10em;">
@@ -264,7 +264,7 @@
                                                         <span class="post-author"
                                                               th:text="${postData.originalPost.getUser().getUsername()}"></span><br>
                                                         <span class="post-time"
-                                                              th:text="${postData.originalPost.getCreatedAt()}"></span>
+                                                              th:text="${postData.originalPostCreatedAt()}"></span>
                                                     </td>
                                                     <td></td>
                                                 </tr>
