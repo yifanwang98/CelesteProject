@@ -144,7 +144,7 @@ public class SinglePostController {
             newLike.setPostIndentity(newPi);
             likeRepository.save(newLike);
 
-            System.out.println(postID);
+//            System.out.println(postID);
             return "Like Success!";
         }
 
@@ -180,5 +180,29 @@ public class SinglePostController {
         }
 
     }
+    @ResponseBody
+    @PostMapping("/singlepostRepost")
+    public String singlepostRepost(@RequestParam(value = "postID") long postID,
+                                   @RequestParam(value = "comment") String comment,
+                                 ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        Post newRepost = new Post();
+        newRepost.setOriginalPostID(postID);
+        newRepost.setRepost(true);
+        newRepost.setUser(user);
+        newRepost.setPostComment(comment);
+        postRepository.save(newRepost);
+        return "Repost Success!";
+
+
     }
+}
 
