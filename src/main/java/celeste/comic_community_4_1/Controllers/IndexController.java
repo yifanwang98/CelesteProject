@@ -3,10 +3,7 @@ package celeste.comic_community_4_1.Controllers;
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.PostComparator;
 import celeste.comic_community_4_1.miscellaneous.PostData;
-import celeste.comic_community_4_1.model.Follow;
-import celeste.comic_community_4_1.model.Post;
-import celeste.comic_community_4_1.model.PostContent;
-import celeste.comic_community_4_1.model.User;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,9 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class IndexController {
@@ -38,14 +33,17 @@ public class IndexController {
     @Autowired
     PostContentRepository postContentRepository;
 
-    @Autowired
-    CommentRepository commentRepository;
+//    @Autowired
+//    CommentRepository commentRepository;
 
     @Autowired
     LikeRepository likeRepository;
 
     @Autowired
     StarRepository starRepository;
+
+    @Autowired
+    SeriesContentRepository seriesContentRepository;
 
     @PostMapping("/home")
     public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
@@ -101,20 +99,21 @@ public class IndexController {
             }
             List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(postList.get(i).getOriginalPostID());
             List<String> images = new ArrayList<>();
+            Set<Series> fromSeries = new HashSet<>();
             for (int j = 0; j < postContents.size(); j++) {
-                images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
+                Work work = postContents.get(j).getPostIndentity().getWork();
+                images.add(work.getThumbnail());
+                List<SeriesContent> seriesContents = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+                for (SeriesContent content : seriesContents) {
+                    fromSeries.add(content.getSeriesContentIndentity().getSeries());
+                }
             }
 
             // Count
-            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-            long commentCount = commentRepository.countCommentByPost(post);
-            long starCount = starRepository.findByPostIndentityPost(post).size();
-            long likeCount = likeRepository.findByPostIndentityPost(post).size();
-
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
-            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, myStar, myLike));
+            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries));
         }
 
         model.addAttribute("postDataList", postDataList);

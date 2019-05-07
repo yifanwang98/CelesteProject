@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class ProfileController {
@@ -93,6 +91,7 @@ public class ProfileController {
             }
             List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(postList.get(i).getOriginalPostID());
             List<String> images = new ArrayList<>();
+            Set<Series> fromSeries = new TreeSet<>();
             for (int j = 0; j < postContents.size(); j++) {
                 images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
             }
@@ -106,7 +105,8 @@ public class ProfileController {
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, profileOwner);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, profileOwner);
 
-            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, myStar, myLike));
+            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount,
+                    myStar, myLike, fromSeries));
         }
 
         model.addAttribute("postDataList", postDataList);

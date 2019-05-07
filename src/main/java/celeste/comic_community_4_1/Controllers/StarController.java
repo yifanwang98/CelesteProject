@@ -3,10 +3,7 @@ package celeste.comic_community_4_1.Controllers;
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.FollowStatus;
 import celeste.comic_community_4_1.miscellaneous.PostData;
-import celeste.comic_community_4_1.model.Post;
-import celeste.comic_community_4_1.model.PostContent;
-import celeste.comic_community_4_1.model.Star;
-import celeste.comic_community_4_1.model.User;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Controller
 public class StarController {
@@ -98,6 +97,7 @@ public class StarController {
             List<PostContent> postContents = postContentRepository.
                     findByPostIndentityPostPostID(starList.get(i).getPostIndentity().getPost().getOriginalPostID());
             List<String> images = new ArrayList<>();
+            Set<Series> fromSeries = new TreeSet<>();
             for (int j = 0; j < postContents.size(); j++) {
                 images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
             }
@@ -110,7 +110,7 @@ public class StarController {
 
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
-            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, true, myLike));
+            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, true, myLike, fromSeries));
 
             if (linkedUsername.equals(post.getUser().getUsername())) {
                 followingStatus.add(FollowStatus.SELF);
