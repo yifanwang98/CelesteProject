@@ -44,6 +44,9 @@ public class SinglePostController {
     @Autowired
     StarRepository starRepository;
 
+    @Autowired
+    ReportInfoRepository reportInfoRepository;
+
 
     @GetMapping("/singlePost")
     public String userprofile(@RequestParam(value = "id") long postId,
@@ -151,8 +154,31 @@ public class SinglePostController {
     }
 
     @ResponseBody
-    @PostMapping("/singlepostStar")
+    @PostMapping("/singlepostReport")
     public String singlepostStar(@RequestParam(value = "postID") long postID,
+                                 @RequestParam(value = "reason") String reason,
+                                 ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        ReportInfo newReport = new ReportInfo();
+        newReport.setPost(postRepository.findById(postID).get());
+        newReport.setUserone(user);
+        newReport.setReason(reason);
+        reportInfoRepository.save(newReport);
+        return "Report has been sent. Please wait for our reply.";
+
+
+    }
+    @ResponseBody
+    @PostMapping("/singlepostStar")
+    public String singlepostReport(@RequestParam(value = "postID") long postID,
                                  ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
