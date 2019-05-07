@@ -62,4 +62,12 @@ public class PostData {
         this.liked = liked;
         this.fromSeries = fromSeries;
     }
+
+    public String postCreatedAt() {
+        return Notification.getDateString(post.getCreatedAt());
+    }
+
+    public String originalPostCreatedAt() {
+        return Notification.getDateString(originalPost.getCreatedAt());
+    }
 }
