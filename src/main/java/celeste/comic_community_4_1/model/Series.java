@@ -43,6 +43,11 @@ public class Series implements Serializable {
     @CreatedDate
     private Date createdAt = new Date();
 
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+    private Date lastUpdate = new Date();
+
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -52,6 +57,14 @@ public class Series implements Serializable {
     @Lob
     @NotBlank
     private String cover;
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
     public String getCover() {
         return cover;

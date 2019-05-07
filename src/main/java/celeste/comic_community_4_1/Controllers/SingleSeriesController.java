@@ -98,7 +98,7 @@ public class SingleSeriesController {
         model.addAttribute("seriesTotalContent", seriesContentList.size());
 
         model.addAttribute("createdAt", Notification.getDateString(seriesToView.getCreatedAt()));
-        model.addAttribute("lastUpdate", Notification.getDateString(seriesToView.getCreatedAt()));
+        model.addAttribute("lastUpdate", Notification.getDateString(seriesToView.getLastUpdate()));
 
         model.addAttribute("numSubscribers", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(seriesToView));
 

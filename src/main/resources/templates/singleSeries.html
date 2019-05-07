@@ -198,9 +198,9 @@
                 </div>
             </td>
             <td>
-                <div style="padding: 0 1em;">
+                <div style="padding: 0 1em; min-width: 10em;">
                     <div th:if="${canEdit}">
-                        <a href="#" class="series-footer-r-btn"><i class='fas fa-marker'></i> Add Content</a>
+                        <a href="/uploadPost2" class="series-footer-r-btn"><i class='fas fa-marker'></i> Add Content</a>
                     </div>
                     <div th:if="${subscribed && !isOwner}">
                         <a href="#" class="series-footer-r-btn"><i class='fas fa-minus'></i> Unsubscribe</a>
