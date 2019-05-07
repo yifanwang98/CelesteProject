@@ -28,24 +28,23 @@ public class Post implements Serializable {
     private User user;
 
 
-
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private Date createdAt=new Date();
+    private Date createdAt = new Date();
 
 
     @NotNull
-    private long viewCount=0;
+    private long viewCount = 0;
 
     @NotNull
-    private String postComment="";
+    private String postComment = "";
 
     @NotNull
-    private boolean isRepost=false;
+    private boolean isRepost = false;
 
     @NotNull
-    private long originalPostID=postID;
+    private long originalPostID = postID;
 
     @NotNull
     private String primaryGenre = "None";

@@ -81,7 +81,7 @@ public class SettingController {
                 return "Only .png or .jpg is accepted!";
             }
 
-            String base64 = ThumbnailConverter.toBase64(file)[1];
+            String base64 = ThumbnailConverter.toBase64Square(file);
             String username = (String) (request.getSession().getAttribute("username"));
             userRepository.findById(username).get().setAvatar(base64);
             userRepository.save(userRepository.findById(username).get());
@@ -105,8 +105,7 @@ public class SettingController {
                 return "Only .png or .jpg is accepted!";
             }
 
-            String base64 = ThumbnailConverter.toBase64(file)[1];
-            //String username = (String) (request.getSession().getAttribute("username"));
+            String base64 = ThumbnailConverter.toBase64Square(file);
             return base64;
 
         }

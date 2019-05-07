@@ -59,6 +59,22 @@ public class ThumbnailConverter {
         return scale(source, ratio);
     }
 
+    public static BufferedImage convertSquare(BufferedImage source, double squareSize) {
+        double ratio = 1.0, width = source.getWidth(), height = source.getHeight();
+
+        if (width > height) {
+            source = source.getSubimage(0, 0, (int) height, (int) height);
+            width = height;
+        } else {
+            source = source.getSubimage(0, 0, (int) width, (int) width);
+        }
+
+        if (width > squareSize) {
+            ratio = squareSize / width;
+        }
+        return scale(source, ratio);
+    }
+
     public static String toBase64(BufferedImage source, String type) throws Exception {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(source, type, bos);
@@ -66,6 +82,7 @@ public class ThumbnailConverter {
         return Base64.getEncoder().encodeToString(data);
     }
 
+    @Deprecated
     public static String[] toBase64(MultipartFile f) throws Exception {
         String type = f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".") + 1);
         File convFile = new File(f.getOriginalFilename());
@@ -89,6 +106,24 @@ public class ThumbnailConverter {
         return new String[]{base64, thumbnail};
     }
 
+    public static String toBase64Only(MultipartFile f) throws Exception {
+        String type = f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".") + 1);
+        File convFile = new File(f.getOriginalFilename());
+        convFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(f.getBytes());
+        fos.close();
+
+        BufferedImage bImage = ImageIO.read(convFile);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bImage, type, bos);
+        final String base64 = Base64.getEncoder().encodeToString(bos.toByteArray());
+        bos.close();
+        convFile.delete();
+
+        return base64;
+    }
+
     public static String toBase64Square(MultipartFile f) throws Exception {
         String type = f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".") + 1);
         File convFile = new File(f.getOriginalFilename());
@@ -99,6 +134,25 @@ public class ThumbnailConverter {
 
         BufferedImage bImage = ImageIO.read(convFile);
         bImage = convertSquare(bImage);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bImage, type, bos);
+        final String base64 = Base64.getEncoder().encodeToString(bos.toByteArray());
+        bos.close();
+        convFile.delete();
+
+        return base64;
+    }
+
+    public static String toBase64Square(MultipartFile f, double squareSize) throws Exception {
+        String type = f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".") + 1);
+        File convFile = new File(f.getOriginalFilename());
+        convFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(f.getBytes());
+        fos.close();
+
+        BufferedImage bImage = ImageIO.read(convFile);
+        bImage = convertSquare(bImage, squareSize);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(bImage, type, bos);
         final String base64 = Base64.getEncoder().encodeToString(bos.toByteArray());

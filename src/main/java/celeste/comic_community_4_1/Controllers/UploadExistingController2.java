@@ -5,10 +5,8 @@ import celeste.comic_community_4_1.miscellaneous.ComicGenre;
 import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.miscellaneous.UploadPostDraft;
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostContentIndentity;
-import celeste.comic_community_4_1.model.Post;
-import celeste.comic_community_4_1.model.PostContent;
-import celeste.comic_community_4_1.model.User;
-import celeste.comic_community_4_1.model.Work;
+import celeste.comic_community_4_1.model.EmbeddedClasses.SeriesContentIndentity;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class UploadExistingController2 {
@@ -47,6 +47,9 @@ public class UploadExistingController2 {
 
     @Autowired
     SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesContentRepository seriesContentRepository;
 
 
     @GetMapping("/uploadPost2")
@@ -87,9 +90,8 @@ public class UploadExistingController2 {
         for (MultipartFile f : file) {
             if (f.isEmpty())
                 continue;
-            String[] result = ThumbnailConverter.toBase64(f);
-            upd.addImage(result[0]);
-            upd.addThumbnail(result[1]);
+            upd.addImage(ThumbnailConverter.toBase64Only(f));
+            upd.addThumbnail(ThumbnailConverter.toBase64Square(f, 200.0));
         }
         request.getSession().setAttribute("postDraft", upd);
         model.addAttribute("postDraft", upd);
@@ -135,6 +137,9 @@ public class UploadExistingController2 {
         }
         model.addAttribute("postDraft", request.getSession().getAttribute("postDraft"));
         model.addAttribute("genreList", ComicGenre.GENRE);
+
+        List<Series> mySeries = seriesRepository.findByUser(user);
+        model.addAttribute("mySeries", mySeries);
         return "uploadPost3";
     }
 
@@ -142,6 +147,7 @@ public class UploadExistingController2 {
     public String uploadPostInfo(@RequestParam("description") String description,
                                  @RequestParam("primaryGenre") String genre1,
                                  @RequestParam("secondaryGenre") String genre2,
+                                 @RequestParam("selectedSeries") long[] selectedSeries,
                                  ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
@@ -182,7 +188,25 @@ public class UploadExistingController2 {
             newpostcontentid.setWork(newwork);
             newpostcontent.setPostIndentity(newpostcontentid);
             postContentRepository.save(newpostcontent);
+
+            if (selectedSeries.length > 0) {
+                for (long seriesID : selectedSeries) {
+                    Series series = seriesRepository.findSeriesBySeriesID(seriesID);
+
+                    SeriesContentIndentity seriesContentIndentity = new SeriesContentIndentity();
+                    seriesContentIndentity.setWork(newwork);
+                    seriesContentIndentity.setSeries(series);
+
+                    SeriesContent seriesContent = new SeriesContent();
+                    seriesContent.setSeriesContentIndentity(seriesContentIndentity);
+                    seriesContentRepository.save(seriesContent);
+
+                    series.setLastUpdate(new Date());
+                    seriesRepository.save(series);
+                }
+            }
         }
+
 
         request.getSession().setAttribute("postDraft", null);
 

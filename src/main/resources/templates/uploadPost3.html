@@ -183,8 +183,21 @@
             </table>
         </td>
     </tr>
+    <tr>
+        <td>
+            <div style="padding: 0.25em;"></div>
+        </td>
+    </tr>
+    <!-- Add To My Series -->
+    <tr>
+        <td class="semibold upload-post-subtitle">Append To Series (Optional)</td>
+    </tr>
+    <tr th:each="series: ${mySeries}">
+        <td><input type="checkbox" name="selectedSeries" th:value="${series.getSeriesID()}" form="uploadPostInfo"/>
+            <span th:text="${series.getSeriesName()}"></span></td>
+    </tr>
 </table>
-<div style="padding: 5em;"></div>
+<div style="padding: 2em;"></div>
 <!-- Footer Banner -->
 <table class="footer webfont semibold">
     <tbody style="padding: 0; margin: 0;">

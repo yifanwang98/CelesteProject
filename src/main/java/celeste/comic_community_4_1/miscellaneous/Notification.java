@@ -52,6 +52,7 @@ public class Notification {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, YYYY", Locale.ENGLISH);
     private static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+    private static SimpleDateFormat datetimeFormat = new SimpleDateFormat("MMM dd, YYYY HH:mm", Locale.ENGLISH);
 
     public String getDateString() {
         Calendar c = Calendar.getInstance();
@@ -68,6 +69,12 @@ public class Notification {
             synchronized (dateFormat) {
                 return timeFormat.format(this.time);
             }
+        }
+    }
+
+    public static String getDateString(Date time) {
+        synchronized (datetimeFormat) {
+            return datetimeFormat.format(time);
         }
     }
 

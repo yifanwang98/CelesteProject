@@ -4,6 +4,7 @@ body {
     background-color: #f3f3f3;
     background-image: url("../images/full-bloom.png");
     margin: 0;
+    min-width: 1000px;
 }
 
 .header {
