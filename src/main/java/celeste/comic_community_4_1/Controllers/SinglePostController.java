@@ -1,11 +1,8 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.model.Comment;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostIndentity;
-import celeste.comic_community_4_1.model.Post;
-import celeste.comic_community_4_1.model.PostContent;
-import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -120,16 +117,92 @@ public class SinglePostController {
         newComment.setContent(comment);
         commentRepository.save(newComment);
         return "Comment Success!";
-//        if (request.getSession().getAttribute("username") == null) {
-//            return "index";
-//        }
-//
-//        // Session User
-//        String username = (String) request.getSession().getAttribute("username");
-//        User user = userRepository.findById(username)
-//                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-//        model.addAttribute("User", user);
     }
 
+    @ResponseBody
+    @PostMapping("/singlepostLike")
+    public String singlepostLike(@RequestParam(value = "postID") long postID,
+                                ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        Like newLike = new Like();
+        PostIndentity newPi = new PostIndentity();
+        newPi.setUser(user);
+        newPi.setPost(postRepository.findById(postID).get());
+        if(likeRepository.findById(newPi).isPresent()){
+            likeRepository.delete(likeRepository.findById(newPi).get());
+            return "Unlike Success!";
+        }
+        else {
+            newLike.setPostIndentity(newPi);
+            likeRepository.save(newLike);
+
+//            System.out.println(postID);
+            return "Like Success!";
+        }
+
     }
+
+    @ResponseBody
+    @PostMapping("/singlepostStar")
+    public String singlepostStar(@RequestParam(value = "postID") long postID,
+                                 ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        Star newStar = new Star();
+        PostIndentity newPi = new PostIndentity();
+        newPi.setUser(user);
+        newPi.setPost(postRepository.findById(postID).get());
+        if(starRepository.findById(newPi).isPresent()){
+            starRepository.delete(starRepository.findById(newPi).get());
+            return "Unstar Success!";
+        }
+        else {
+            newStar.setPostIndentity(newPi);
+            starRepository.save(newStar);
+
+            System.out.println(postID);
+            return "Star Success!";
+        }
+
+    }
+    @ResponseBody
+    @PostMapping("/singlepostRepost")
+    public String singlepostRepost(@RequestParam(value = "postID") long postID,
+                                   @RequestParam(value = "comment") String comment,
+                                 ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        Post newRepost = new Post();
+        newRepost.setOriginalPostID(postID);
+        newRepost.setRepost(true);
+        newRepost.setUser(user);
+        newRepost.setPostComment(comment);
+        postRepository.save(newRepost);
+        return "Repost Success!";
+
+
+    }
+}
 
