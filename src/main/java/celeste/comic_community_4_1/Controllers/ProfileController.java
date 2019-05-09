@@ -47,6 +47,9 @@ public class ProfileController {
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
 
+    @Autowired
+    SeriesTagRepository seriesTagRepository;
+
     @GetMapping("/view_profile")
     public String viewProfile(@RequestParam(value = "user") String linkedUsername,
                               ModelMap model, HttpServletRequest request) throws Exception {
@@ -148,6 +151,14 @@ public class ProfileController {
         List<SeriesData> seriesDataList = new ArrayList<>();
         for (Series series : seriesList) {
             List<String> tags = new ArrayList<>();
+            List<SeriesTag> seriesTags = seriesTagRepository.findSeriesTagBySeries(series);
+            for (SeriesTag tag : seriesTags) {
+                tags.add(tag.getTag());
+            }
+            while (tags.size() < TagProcessor.MAX_TAG_PER_SERIES) {
+                tags.add(null);
+            }
+
             long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
             boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
             boolean owner = series.getUser().getUsername().equals(user.getUsername());
