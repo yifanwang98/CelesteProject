@@ -1,14 +1,8 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.ComicGenre;
-import celeste.comic_community_4_1.miscellaneous.SeriesComparator;
-import celeste.comic_community_4_1.miscellaneous.SeriesData;
-import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
-import celeste.comic_community_4_1.model.Series;
-import celeste.comic_community_4_1.model.SeriesContent;
-import celeste.comic_community_4_1.model.SeriesFollow;
-import celeste.comic_community_4_1.model.User;
+import celeste.comic_community_4_1.miscellaneous.*;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,6 +55,9 @@ public class EditSeriesController {
     @Autowired
     SeriesContentRepository seriesContentRepository;
 
+    @Autowired
+    SeriesTagRepository seriesTagRepository;
+
     @GetMapping("/editSeries")
     public String goToEditSeries(@RequestParam(value = "id") long seriesId,
                                  ModelMap model,
@@ -103,12 +100,22 @@ public class EditSeriesController {
             List<SeriesData> seriesDataList = new ArrayList<>();
             for (Series series : seriesList) {
                 List<String> tags = new ArrayList<>();
-                seriesDataList.add(new SeriesData(series, tags,
-                        seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series),
-                        seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user),
-                        series.getUser().getUsername().equals(user.getUsername())));
+                List<SeriesTag> seriesTags = seriesTagRepository.findSeriesTagBySeries(series);
+                for (SeriesTag tag : seriesTags) {
+                    tags.add(tag.getTag());
+                }
+                while (tags.size() < TagProcessor.MAX_TAG_PER_SERIES) {
+                    tags.add(null);
+                }
+
+                long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
+                boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
+                boolean owner = series.getUser().getUsername().equals(user.getUsername());
+
+                seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
             }
             model.addAttribute("seriesDataList", seriesDataList);
+
             return "profile_series";
         }
 
@@ -191,10 +198,19 @@ public class EditSeriesController {
         List<SeriesData> seriesDataList = new ArrayList<>();
         for (Series series : seriesList) {
             List<String> tags = new ArrayList<>();
-            seriesDataList.add(new SeriesData(series, tags,
-                    seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series),
-                    seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user),
-                    series.getUser().getUsername().equals(user.getUsername())));
+            List<SeriesTag> seriesTags = seriesTagRepository.findSeriesTagBySeries(series);
+            for (SeriesTag tag : seriesTags) {
+                tags.add(tag.getTag());
+            }
+            while (tags.size() < TagProcessor.MAX_TAG_PER_SERIES) {
+                tags.add(null);
+            }
+
+            long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
+            boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
+            boolean owner = series.getUser().getUsername().equals(user.getUsername());
+
+            seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
         }
         model.addAttribute("seriesDataList", seriesDataList);
         return "profile_series";
@@ -250,10 +266,19 @@ public class EditSeriesController {
         List<SeriesData> seriesDataList = new ArrayList<>();
         for (Series series : seriesList) {
             List<String> tags = new ArrayList<>();
-            seriesDataList.add(new SeriesData(series, tags,
-                    seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series),
-                    seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user),
-                    series.getUser().getUsername().equals(user.getUsername())));
+            List<SeriesTag> seriesTags = seriesTagRepository.findSeriesTagBySeries(series);
+            for (SeriesTag tag : seriesTags) {
+                tags.add(tag.getTag());
+            }
+            while (tags.size() < TagProcessor.MAX_TAG_PER_SERIES) {
+                tags.add(null);
+            }
+
+            long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
+            boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
+            boolean owner = series.getUser().getUsername().equals(user.getUsername());
+
+            seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
         }
         model.addAttribute("seriesDataList", seriesDataList);
         return "profile_series";
