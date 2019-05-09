@@ -50,6 +50,9 @@ public class ProfileController {
     @Autowired
     SeriesTagRepository seriesTagRepository;
 
+    @Autowired
+    PostTagRepository postTagRepository;
+
     @GetMapping("/view_profile")
     public String viewProfile(@RequestParam(value = "user") String linkedUsername,
                               ModelMap model, HttpServletRequest request) throws Exception {
@@ -108,8 +111,14 @@ public class ProfileController {
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, profileOwner);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, profileOwner);
 
+            List<String> postTags = new ArrayList<>();
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            for (PostTag tag : postTagList) {
+                postTags.add(tag.getTag());
+            }
+
             postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount,
-                    myStar, myLike, fromSeries));
+                    myStar, myLike, fromSeries, postTags));
         }
 
         model.addAttribute("postDataList", postDataList);

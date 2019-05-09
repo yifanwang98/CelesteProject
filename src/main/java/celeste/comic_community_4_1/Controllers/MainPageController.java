@@ -44,6 +44,9 @@ public class MainPageController {
     @Autowired
     SeriesContentRepository seriesContentRepository;
 
+    @Autowired
+    PostTagRepository postTagRepository;
+
     @GetMapping(value = {"/mainPage", "/"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
 
@@ -103,7 +106,14 @@ public class MainPageController {
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
-            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries));
+            // Tag
+            List<String> postTags = new ArrayList<>();
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            for (PostTag tag : postTagList) {
+                postTags.add(tag.getTag());
+            }
+
+            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries, postTags));
         }
 
         model.addAttribute("postDataList", postDataList);

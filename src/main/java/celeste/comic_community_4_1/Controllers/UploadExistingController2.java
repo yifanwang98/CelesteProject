@@ -2,6 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.ComicGenre;
+import celeste.comic_community_4_1.miscellaneous.TagProcessor;
 import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.miscellaneous.UploadPostDraft;
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostContentIndentity;
@@ -18,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class UploadExistingController2 {
@@ -50,6 +53,9 @@ public class UploadExistingController2 {
 
     @Autowired
     SeriesContentRepository seriesContentRepository;
+
+    @Autowired
+    PostTagRepository postTagRepository;
 
 
     @GetMapping("/uploadPost2")
@@ -135,7 +141,8 @@ public class UploadExistingController2 {
         if (request.getSession().getAttribute("postDraft") == null) {
             return "uploadPost2";
         }
-        model.addAttribute("postDraft", request.getSession().getAttribute("postDraft"));
+        UploadPostDraft draft = (UploadPostDraft) request.getSession().getAttribute("postDraft");
+        model.addAttribute("postDraft", draft);
         model.addAttribute("genreList", ComicGenre.GENRE);
 
         List<Series> mySeries = seriesRepository.findByUser(user);
@@ -147,6 +154,11 @@ public class UploadExistingController2 {
     public String uploadPostInfo(@RequestParam("description") String description,
                                  @RequestParam("primaryGenre") String genre1,
                                  @RequestParam("secondaryGenre") String genre2,
+                                 @RequestParam("tag1") String tag1,
+                                 @RequestParam("tag2") String tag2,
+                                 @RequestParam("tag3") String tag3,
+                                 @RequestParam("tag4") String tag4,
+                                 @RequestParam("tag5") String tag5,
                                  @RequestParam("selectedSeries") long[] selectedSeries,
                                  ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -164,16 +176,51 @@ public class UploadExistingController2 {
 
         UploadPostDraft upd = (UploadPostDraft) request.getSession().getAttribute("postDraft");
 
+        Set<String> set = new HashSet<>();
+        if (!(tag1 == null || tag1.length() <= 0)) {
+            set.add(TagProcessor.process(tag1));
+        }
+        if (!(tag2 == null || tag2.length() <= 0)) {
+            set.add(TagProcessor.process(tag2));
+        }
+        if (!(tag3 == null || tag3.length() <= 0)) {
+            set.add(TagProcessor.process(tag3));
+        }
+        if (!(tag4 == null || tag4.length() <= 0)) {
+            set.add(TagProcessor.process(tag4));
+        }
+        if (!(tag5 == null || tag5.length() <= 0)) {
+            set.add(TagProcessor.process(tag5));
+        }
+
+        if (genre1.equals(genre2) && !genre1.equals("None")) {
+            genre2 = "None"; // Prevent Duplicate Genre
+        }
+
+        if (!genre1.equals("None")) {
+            set.remove(TagProcessor.process(genre1));
+        }
+        if (!genre2.equals("None")) {
+            set.remove(TagProcessor.process(genre2));
+        }
+
         // Save To Database
-        Post newpost = new Post();
-        newpost.setUser(user);
-        newpost.setPostComment(description.trim());
-        newpost.setOriginalPostID(newpost.getPostID());
-        newpost.setPrimaryGenre(genre1);
-        newpost.setSecondaryGenre(genre2);
-        postRepository.save(newpost);
-        newpost.setOriginalPostID(newpost.getPostID());
-        postRepository.save(newpost);
+        Post newPost = new Post();
+        newPost.setUser(user);
+        newPost.setPostComment(description.trim());
+        newPost.setOriginalPostID(newPost.getPostID());
+        newPost.setPrimaryGenre(genre1);
+        newPost.setSecondaryGenre(genre2);
+        postRepository.save(newPost);
+        newPost.setOriginalPostID(newPost.getPostID());
+        postRepository.save(newPost);
+
+        for (String tag : set) {
+            PostTag newPostTag = new PostTag();
+            newPostTag.setPost(newPost);
+            newPostTag.setTag(tag);
+            postTagRepository.save(newPostTag);
+        }
 
         for (int i = 0; i < upd.getImageString().size(); i++) {
             Work newwork = new Work();
@@ -184,7 +231,7 @@ public class UploadExistingController2 {
 
             PostContent newpostcontent = new PostContent();
             PostContentIndentity newpostcontentid = new PostContentIndentity();
-            newpostcontentid.setPost(newpost);
+            newpostcontentid.setPost(newPost);
             newpostcontentid.setWork(newwork);
             newpostcontent.setPostIndentity(newpostcontentid);
             postContentRepository.save(newpostcontent);
@@ -207,8 +254,7 @@ public class UploadExistingController2 {
             }
         }
 
-
-        request.getSession().setAttribute("postDraft", null);
+        request.getSession().removeAttribute("postDraft");
 
         return "uploadPost4";
     }

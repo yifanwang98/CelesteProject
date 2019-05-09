@@ -123,12 +123,12 @@
         <td style="width: 6em;">
         </td>
         <td style="width: 6em;">
-            <span th:if="${postDraft.isValid()}">
+            <span th:if="${postDraft.valid()}">
                 <form method="post" action="/uploadPost3">
                     <input type="submit" value="Next" class="add-img-button"/>
                 </form>
             </span>
-            <span th:unless="${postDraft.isValid()}">
+            <span th:unless="${postDraft.valid()}">
                 <input type="submit" value="Next" class="add-img-button" disabled style="color: #949494"/>
             </span>
         </td>

@@ -3,6 +3,7 @@ package celeste.comic_community_4_1.miscellaneous;
 import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.Series;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -21,9 +22,11 @@ public class PostData {
 
     public final Set<Series> fromSeries;
 
+    public final List<String> postTags;
+
     public PostData(Post post, Post originalPost, List<String> images,
                     long shareCount, long commentCount, long starCount, long likeCount,
-                    boolean starred, boolean liked, Set<Series> fromSeries) {
+                    boolean starred, boolean liked, Set<Series> fromSeries, List<String> postTags) {
         this.post = post;
         this.originalPost = originalPost;
         this.images = images;
@@ -34,6 +37,7 @@ public class PostData {
         this.starred = starred;
         this.liked = liked;
         this.fromSeries = fromSeries;
+        this.postTags = postTags;
     }
 
     public PostData(Post post, Post originalPost, List<String> images, Set<Series> fromSeries) {
@@ -47,10 +51,11 @@ public class PostData {
         this.starred = false;
         this.liked = false;
         this.fromSeries = fromSeries;
+        this.postTags = new ArrayList<>();
     }
 
     public PostData(Post post, Post originalPost, List<String> images,
-                    boolean starred, boolean liked, Set<Series> fromSeries) {
+                    boolean starred, boolean liked, Set<Series> fromSeries, List<String> postTags) {
         this.post = post;
         this.originalPost = originalPost;
         this.images = images;
@@ -61,6 +66,7 @@ public class PostData {
         this.starred = starred;
         this.liked = liked;
         this.fromSeries = fromSeries;
+        this.postTags = postTags;
     }
 
     public String postCreatedAt() {
