@@ -282,7 +282,7 @@
                                 </table>
                             </div>
                         </div>
-                    </span>
+                    </span><!-- End Of User -->
                     <!------------- Series Result ------------->
                     <span th:if="${result.resultType.equals('SERIES')}">
                         <div class="searchResultOuterContainer">
@@ -359,8 +359,37 @@
                                 </table>
                             </div>
                         </div>
-                    </span>
-                </span>
+                    </span> <!-- End Of Series -->
+                    <!------------- Hashtag Result ------------->
+                    <span th:if="${result.resultType.equals('HASHTAG')}">
+                        <div class="searchResultOuterContainer">
+                            <div class="searchResultInnerContainer">
+                                <table width="100%">
+                                    <col width="50%"/>
+                                    <col width="25%"/>
+                                    <col width="25%"/>
+                                    <tr>
+                                        <td style="text-align: center;">
+                                            <div class="searchResult-tag">
+                                                <a href="#">
+                                                    # <span th:text="${result.hashTagData.hashtag}"></span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center; color: #3c3c3c">
+                                            <span class="semibold">Post(s): </span>
+                                            <span th:text="${result.hashTagData.postCount}"></span>
+                                        </td>
+                                        <td style="text-align: center; color: #3c3c3c">
+                                            <span class="semibold">Series: </span>
+                                            <span th:text="${result.hashTagData.seriesCount}"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </span><!-- End Of Hash Tag -->
+                </span><!-- End Of For Each -->
             </div>
             </span>
         </td>

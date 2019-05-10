@@ -1,14 +1,8 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.ComicGenre;
-import celeste.comic_community_4_1.miscellaneous.SearchResult;
-import celeste.comic_community_4_1.miscellaneous.SeriesData;
-import celeste.comic_community_4_1.miscellaneous.UserData;
-import celeste.comic_community_4_1.model.Follow;
-import celeste.comic_community_4_1.model.Series;
-import celeste.comic_community_4_1.model.SeriesTag;
-import celeste.comic_community_4_1.model.User;
+import celeste.comic_community_4_1.miscellaneous.*;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,9 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class SearchController {
@@ -105,6 +97,11 @@ public class SearchController {
             return "index";
         }
 
+        searchContent = searchContent.trim();
+        if (searchContent.isEmpty()) {
+            return goToSearch(model, request);
+        }
+
         // Session User
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
@@ -119,7 +116,6 @@ public class SearchController {
         model.addAttribute("postsCount", postRepository.findByUser(user).size());
         model.addAttribute("genreList", ComicGenre.GENRE);
 
-        searchContent = searchContent.trim();
         model.addAttribute("searchContent", searchContent);
 
         List<SearchResult> searchResultList = new ArrayList<>();
@@ -141,6 +137,10 @@ public class SearchController {
                 results = findSeries(searchContent, user, genres);
                 searchResultList.addAll(results);
                 searchResultCount[3] = results.size();
+            } else if (type.equalsIgnoreCase("hashtag")) {
+                results = findHashTag(searchContent);
+                searchResultList.addAll(results);
+                searchResultCount[1] = results.size();
             }
         }
         searchResultCount[0] = searchResultCount[1] + searchResultCount[2]
@@ -163,7 +163,7 @@ public class SearchController {
             if (!user.getUsername().toLowerCase().contains(keyword))
                 continue;
             SearchResult searchResult = new SearchResult();
-            searchResult.relavence = keyword.length() / user.getUsername().length();// + SearchResult.USER_WEIGHT;
+            searchResult.relavence = (double) keyword.length() / (double) user.getUsername().length();
             searchResult.userData = new UserData(user,
                     followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(currentUser, user));
             searchResult.resultType = "USER";
@@ -194,7 +194,7 @@ public class SearchController {
             if (!valid) continue;
 
             SearchResult searchResult = new SearchResult();
-            searchResult.relavence = keyword.length() / series.getSeriesName().length();// + SearchResult.SERIES_WEIGHT;
+            searchResult.relavence = (double) keyword.length() / (double) series.getSeriesName().length();
 
             List<String> tags = new ArrayList<>();
             List<SeriesTag> seriesTags = seriesTagRepository.findSeriesTagBySeries(series);
@@ -211,6 +211,35 @@ public class SearchController {
             searchResultList.add(searchResult);
         }
         //System.out.println(searchResultList.size());
+        return searchResultList;
+    }
+
+    private List<SearchResult> findHashTag(String keyword) {
+        List<SearchResult> searchResultList = new ArrayList<>();
+        // Full Search
+        keyword = TagProcessor.process(keyword).toLowerCase();
+
+        Set<String> tags = new HashSet<>();
+        List<SeriesTag> seriesTagList = seriesTagRepository.findAll();
+        for (SeriesTag tag : seriesTagList) {
+            if (tag.getTag().toLowerCase().contains(keyword))
+                tags.add(tag.getTag());
+        }
+        List<PostTag> postTagList = postTagRepository.findAll();
+        for (PostTag tag : postTagList) {
+            if (tag.getTag().toLowerCase().contains(keyword))
+                tags.add(tag.getTag());
+        }
+
+        for (String tag : tags) {
+            SearchResult searchResult = new SearchResult();
+            searchResult.resultType = "HASHTAG";
+            searchResult.relavence = (double) keyword.length() / (double) tag.length();
+            searchResult.hashTagData = new HashTagData(tag,
+                    postTagRepository.countPostTagByTag(tag),
+                    seriesTagRepository.countSeriesTagByTag(tag));
+            searchResultList.add(searchResult);
+        }
         return searchResultList;
     }
 

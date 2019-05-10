@@ -97,3 +97,16 @@
 .searchResultInnerContainer {
     padding: 1em;
 }
+
+.searchResult-tag, .searchResult-tag a:link, .searchResult-tag a:visited {
+    font-size: 1.05em;
+    text-decoration: none;
+    text-align: left;
+    margin: 0 1em;
+    color: #269b9b;
+    font-weight: 500;
+}
+
+.searchResult-tag a:hover {
+    font-style: italic;
+}

@@ -11,6 +11,7 @@ public class SearchResult implements Comparable<SearchResult> {
     public PostData postData;
     public SeriesData seriesData;
     public UserData userData;
+    public HashTagData hashTagData;
 
     public double relavence;
 
