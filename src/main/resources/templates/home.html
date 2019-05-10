@@ -1,302 +1,302 @@
-<!DOCTYPE html>
-<html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Home - Celeste</title>
-    <!-- Metadata -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Style Sheet -->
-    <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
-    <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
-    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
-    <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+    <!--<title>Home - Celeste</title>-->
+    <!--&lt;!&ndash; Metadata &ndash;&gt;-->
+    <!--<meta charset="UTF-8">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+    <!--&lt;!&ndash; Style Sheet &ndash;&gt;-->
+    <!--<link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">-->
+    <!--<link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">-->
+    <!--<link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">-->
+    <!--<link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">-->
+    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"-->
+          <!--integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">-->
 
-</head>
-<body>
-<!-- Header Banner -->
-<!--div class="header"-->
-<table class="header webfont semibold">
-    <tbody style="padding: 0; margin: 0;">
-    <tr>
-        <!-- Left Part -->
-        <td>
-            <table style="padding: 0; margin: 0;">
-                <tr>
-                    <td class="headerCellPadding">
-                        <div class="logo"></div>
-                    </td>
-                    <td class="headerCellPadding">
-                        <a href="mainPage" class="headerSelected">Home</a>
-                    </td>
-                    <td class="headerCellPadding">
-                        <a href="discover" class="headerUnselected">Discover</a>
-                    </td>
-                    <td class="headerCellPadding">
-                        <a href="search" class="headerUnselected">Search</a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <!-- Right Part -->
-        <td style="width: 5em;">
-            <table style="padding: 0; margin: 0; align: right;">
-                <tr style="align: right;">
-                    <td class="headerCellPadding">
-                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
-                    </td>
-                    <td class="headerCellPadding">
-                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
-                    </td>
-                    <td class="headerCellPadding">
-                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
-                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
-                                   class="header-avatar-image"></image>
-                        </a>
-                    </td>
-                    <td class="headerCellPadding"></td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<div style="height: 2.75em;"></div>
-<!---------------------------------------->
-<!---------------------------------------->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; Header Banner &ndash;&gt;-->
+<!--&lt;!&ndash;div class="header"&ndash;&gt;-->
+<!--<table class="header webfont semibold">-->
+    <!--<tbody style="padding: 0; margin: 0;">-->
+    <!--<tr>-->
+        <!--&lt;!&ndash; Left Part &ndash;&gt;-->
+        <!--<td>-->
+            <!--<table style="padding: 0; margin: 0;">-->
+                <!--<tr>-->
+                    <!--<td class="headerCellPadding">-->
+                        <!--<div class="logo"></div>-->
+                    <!--</td>-->
+                    <!--<td class="headerCellPadding">-->
+                        <!--<a href="mainPage" class="headerSelected">Home</a>-->
+                    <!--</td>-->
+                    <!--<td class="headerCellPadding">-->
+                        <!--<a href="discover" class="headerUnselected">Discover</a>-->
+                    <!--</td>-->
+                    <!--<td class="headerCellPadding">-->
+                        <!--<a href="search" class="headerUnselected">Search</a>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        <!--</td>-->
+        <!--&lt;!&ndash; Right Part &ndash;&gt;-->
+        <!--<td style="width: 5em;">-->
+            <!--<table style="padding: 0; margin: 0; align: right;">-->
+                <!--<tr style="align: right;">-->
+                    <!--<td class="headerCellPadding">-->
+                        <!--<a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>-->
+                    <!--</td>-->
+                    <!--<td class="headerCellPadding">-->
+                        <!--<a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>-->
+                    <!--</td>-->
+                    <!--<td class="headerCellPadding">-->
+                        <!--<a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">-->
+                            <!--<image th:src="'data:image/png;base64,'+${User.getAvatar()}"-->
+                                   <!--class="header-avatar-image"></image>-->
+                        <!--</a>-->
+                    <!--</td>-->
+                    <!--<td class="headerCellPadding"></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        <!--</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+<!--</table>-->
+<!--<div style="height: 2.75em;"></div>-->
+<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
 
-<div style="font-size: 3em; color: #269b9b; text-align: center; padding: 4em 0;">
-    这个界面废了！<br/>用MainPage！
-</div>
+<!--<div style="font-size: 3em; color: #269b9b; text-align: center; padding: 4em 0;">-->
+    <!--这个界面废了！<br/>用MainPage！-->
+<!--</div>-->
 
-<!--<table class="mainContent webfont" style="border-spacing: 1em;">-->
-<!--<tr>-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash; Left Part &ndash;&gt;-->
-<!--<td style="vertical-align: top;">-->
-<!--<div th:each="post:${postlist}" class="home-posts-card">-->
-<!--<table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">-->
-<!--&lt;!&ndash; Header &ndash;&gt;-->
-<!--<tr>-->
-<!--<td class="post-avatar">-->
-<!--<a th:href="'view_profile?user=' + ${post.getUser().getUsername()}">-->
-<!--<image th:src="'data:image/png;base64,'+${post.getUser().getAvatar()}" class="post-avatar-image"></image>-->
-<!--</a>-->
-<!--</td>-->
-<!--<td>-->
-<!--<table width="100%">-->
-<!--<tr>-->
-<!--<td>-->
-<!--<span class="post-author" th:text="${post.getUser().getUsername()}"></span><br>-->
-<!--<span class="post-time" th:text="${post.getCreatedAt()}"></span>-->
-<!--</td>-->
-<!--<td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">-->
-<!--<a href="" th:if="${User.getUsername() == post.getUser().getUsername()}"-->
-<!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
-<!--<div class="dropdown"-->
-<!--th:unless="${User.getUsername() == post.getUser().getUsername()}">-->
-<!--<button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>-->
-<!--<div class="dropdown-content">-->
-<!--<a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>-->
-<!--<a href="#"><i class="fas fa-eye-slash"></i> Block</a>-->
-<!--</div>-->
-<!--</div>-->
-<!--</td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--</td>-->
-<!--</tr>-->
-<!--&lt;!&ndash; Text &ndash;&gt;-->
-<!--<tr>-->
-<!--<td></td>-->
-<!--<td>-->
-<!--<div th:text="${post.getPostComment()}" class="post-text"></div>-->
-<!--</td>-->
-<!--</tr>-->
-<!--&lt;!&ndash; Images &ndash;&gt;-->
-<!--<tr>-->
-<!--<td></td>-->
-<!--<td>-->
-<!--&lt;!&ndash; Repost &ndash;&gt;-->
-<!--<div th:if="${post.isRepost()}">-->
-<!--<table style="border-spacing: 0em; padding-top: 0.5em; margin-bottom: 0.5em; width:100%; border-left: 2px solid lightgrey;">-->
-<!--&lt;!&ndash; Header &ndash;&gt;-->
-<!--<tr>-->
-<!--<td class="post-avatar">-->
-<!--<a th:href="'view_profile?user=' + ${post.getUser().getUsername()}">-->
-<!--<image th:src="'data:image/png;base64,'+${post.getUser().getAvatar()}"-->
-<!--class="post-avatar-image"></image>-->
-<!--</a>-->
-<!--</td>-->
-<!--<td>-->
-<!--<table width="100%">-->
-<!--<tr>-->
-<!--<td>-->
-<!--<span class="post-author"-->
-<!--th:text="${post.getUser().getUsername()}"></span><br>-->
-<!--<span class="post-time" th:text="${post.getCreatedAt()}"></span>-->
-<!--</td>-->
-<!--<td></td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--</td>-->
-<!--</tr>-->
-<!--&lt;!&ndash; Text &ndash;&gt;-->
-<!--<tr>-->
-<!--<td></td>-->
-<!--<td>-->
-<!--<div th:text="${post.getPostComment()}" class="post-text"></div>-->
-<!--</td>-->
-<!--</tr>-->
-<!--&lt;!&ndash; Images &ndash;&gt;-->
-<!--<tr>-->
-<!--<td></td>-->
-<!--<td>-->
-<!--<div>-->
-<!--<span th:each="work:${imgsForeachPost.get(post.getPostID())}">-->
-<!--<image th:src="'data:image/png;base64,'+${work}"-->
-<!--th:class="post-image-multiple"></image>-->
-<!--</span>-->
-<!--</div>-->
-<!--</td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--</div>-->
-<!--&lt;!&ndash; Original &ndash;&gt;-->
-<!--<div th:unless="${post.isRepost()}">-->
-<!--<span th:each="work:${imgsForeachPost.get(post.getPostID())}">-->
-<!--<image th:src="'data:image/png;base64,'+${work}" th:class="${imgsForeachPost.get(post.getPostID()).size()>1} ? 'post-image-multiple': 'post-image-single'" ></image>-->
-<!--</span>-->
-<!--</div>-->
-<!--</td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--&lt;!&ndash; 转赞评 &ndash;&gt;-->
-<!--<table width="100%" class="post-action">-->
-<!--<col width="25%"/>-->
-<!--<col width="25%"/>-->
-<!--<col width="25%"/>-->
-<!--<col width="25%"/>-->
-<!--<tr>-->
-<!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-<!--<a href="">-->
-<!--<i class='fas fa-share-square'></i> <span-->
-<!--th:text="'Share ('+${repostsForeachPost.get(post.getPostID())}+')'"></span></a>-->
-<!--</td>-->
-<!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-<!--<a th:href="'singlePost?id=' + ${post.getPostID()}"><i class='far fa-comment-dots'></i>-->
-<!--Comment (1k+)</a>-->
-<!--</td>-->
-<!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-<!--<a href=""><i class='fas fa-star'></i> <span-->
-<!--th:text="'Star ('+${starsForeachPost.get(post.getPostID())}+')'"></span></a>-->
-<!--</td>-->
-<!--<td class="post-action-cell">-->
-<!--<a href=""><i class='far fa-thumbs-up'></i> <span-->
-<!--th:text="'Like ('+${likesForeachPost.get(post.getPostID())}+')'"></span></a>-->
-<!--</td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--</div>-->
-<!--</td>-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash; Right Part &ndash;&gt;-->
-<!--<td class="profileColumn-td">-->
-<!--<div class="profileColumn">-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash; Profile Info &ndash;&gt;-->
-<!--<div style="border-bottom: #f3f3f3 2px solid;">-->
-<!--<table style="width: 100%; text-align: center;">-->
-<!--<col width="33.333333%"/>-->
-<!--<col width="33.333333%"/>-->
-<!--<col width="33.333333%"/>-->
-<!--<tr>-->
-<!--<td class="button-link">-->
-<!--<a th:href="'/following?user=' + ${User.getUsername()}">-->
-<!--<div style="padding: 1em 0;">-->
-<!--<span class="semibold" style="font-size: 1.05em;">Following</span><br><span th:text="${following}" class="semibold" style="font-size: 1.05em;"></span>-->
-<!--</div>-->
-<!--</a>-->
-<!--</td>-->
-<!--<td class="button-link">-->
-<!--<a th:href="'/follower?user=' + ${User.getUsername()}">-->
-<!--<div>-->
-<!--<span class="semibold" style="font-size: 1.05em;">Follower</span><br><span th:text="${followers}" class="semibold" style="font-size: 1.05em;"></span>-->
-<!--</div>-->
-<!--</a>-->
-<!--</td>-->
-<!--<td class="button-link">-->
-<!--<a href="">-->
-<!--<div>-->
-<!--<span class="semibold" style="font-size: 1.05em;">My Post</span><br><span th:text="${postsCount}" class="semibold" style="font-size: 1.05em;"></span>-->
-<!--</div>-->
-<!--</a>-->
-<!--</td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--</div>-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash; Creation Link &ndash;&gt;-->
-<!--<div style="border-bottom: #f3f3f3 2px solid;">-->
-<!--<table style="width: 100%; text-align: center; border-spacing: 5px;">-->
-<!--<col width="33.333333%"/>-->
-<!--<col width="33.333333%"/>-->
-<!--<col width="33.333333%"/>-->
-<!--<tr>-->
-<!--<td class="button-link">-->
-<!--<a href="/createPostOption">-->
-<!--<div style="padding: 1em 0;">-->
-<!--<i class='fas fa-pen-nib button-icon'></i><br>Single-->
-<!--</div>-->
-<!--</a>-->
-<!--</td>-->
-<!--<td class="button-link">-->
-<!--<a href="createSeries">-->
-<!--<div>-->
-<!--<i class='fas fa-sticky-note button-icon'></i><br>Series-->
-<!--</div>-->
-<!--</a>-->
-<!--</td>-->
-<!--<td class="button-link">-->
-<!--<a th:href="'view_profile_star?user=' + ${User.getUsername()}">-->
-<!--<div>-->
-<!--<i class='fas fa-star button-icon'></i><br>Stars-->
-<!--</div>-->
-<!--</a>-->
-<!--</td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--</div>-->
-<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--&lt;!&ndash; Top Search &ndash;&gt;-->
-<!--<div class="top-search-block">-->
-<!--<div style="color: #9a9a9a;" class="semibold">-->
-<!--Top Search-->
-<!--</div>-->
-<!--<div class="button-link" style="line-height: 1.6; padding-left: 1em; padding-top: 0.5em">-->
-<!--<a href=""># 1 DC</a><br>-->
-<!--<a href=""># 2 batman</a><br>-->
-<!--<a href=""># 3 irony</a><br>-->
-<!--<a href=""># 4 crisis</a><br>-->
-<!--<a href=""># 5 detective</a><br>-->
-<!--<a href=""># 6 dark</a><br>-->
-<!--<a href=""># 7 who</a><br>-->
-<!--<a href=""># 8 flash</a><br>-->
-<!--<a href=""># 9 the end</a><br>-->
-<!--<a href="">#10 action</a><br>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div></div>-->
-<!--</td>-->
-<!--</tr>-->
-<!--</table>-->
+<!--&lt;!&ndash;<table class="mainContent webfont" style="border-spacing: 1em;">&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Left Part &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<td style="vertical-align: top;">&ndash;&gt;-->
+<!--&lt;!&ndash;<div th:each="post:${postlist}" class="home-posts-card">&ndash;&gt;-->
+<!--&lt;!&ndash;<table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Header &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="post-avatar">&ndash;&gt;-->
+<!--&lt;!&ndash;<a th:href="'view_profile?user=' + ${post.getUser().getUsername()}">&ndash;&gt;-->
+<!--&lt;!&ndash;<image th:src="'data:image/png;base64,'+${post.getUser().getAvatar()}" class="post-avatar-image"></image>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<table width="100%">&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="post-author" th:text="${post.getUser().getUsername()}"></span><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="post-time" th:text="${post.getCreatedAt()}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="" th:if="${User.getUsername() == post.getUser().getUsername()}"&ndash;&gt;-->
+<!--&lt;!&ndash;class="post-action-more"><i class='far fa-trash-alt'></i></a>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="dropdown"&ndash;&gt;-->
+<!--&lt;!&ndash;th:unless="${User.getUsername() == post.getUser().getUsername()}">&ndash;&gt;-->
+<!--&lt;!&ndash;<button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="dropdown-content">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="#"><i class="fas fa-eye-slash"></i> Block</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Text &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td></td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<div th:text="${post.getPostComment()}" class="post-text"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Images &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td></td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Repost &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<div th:if="${post.isRepost()}">&ndash;&gt;-->
+<!--&lt;!&ndash;<table style="border-spacing: 0em; padding-top: 0.5em; margin-bottom: 0.5em; width:100%; border-left: 2px solid lightgrey;">&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Header &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="post-avatar">&ndash;&gt;-->
+<!--&lt;!&ndash;<a th:href="'view_profile?user=' + ${post.getUser().getUsername()}">&ndash;&gt;-->
+<!--&lt;!&ndash;<image th:src="'data:image/png;base64,'+${post.getUser().getAvatar()}"&ndash;&gt;-->
+<!--&lt;!&ndash;class="post-avatar-image"></image>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<table width="100%">&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="post-author"&ndash;&gt;-->
+<!--&lt;!&ndash;th:text="${post.getUser().getUsername()}"></span><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="post-time" th:text="${post.getCreatedAt()}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td></td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Text &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td></td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<div th:text="${post.getPostComment()}" class="post-text"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Images &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td></td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<div>&ndash;&gt;-->
+<!--&lt;!&ndash;<span th:each="work:${imgsForeachPost.get(post.getPostID())}">&ndash;&gt;-->
+<!--&lt;!&ndash;<image th:src="'data:image/png;base64,'+${work}"&ndash;&gt;-->
+<!--&lt;!&ndash;th:class="post-image-multiple"></image>&ndash;&gt;-->
+<!--&lt;!&ndash;</span>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Original &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<div th:unless="${post.isRepost()}">&ndash;&gt;-->
+<!--&lt;!&ndash;<span th:each="work:${imgsForeachPost.get(post.getPostID())}">&ndash;&gt;-->
+<!--&lt;!&ndash;<image th:src="'data:image/png;base64,'+${work}" th:class="${imgsForeachPost.get(post.getPostID()).size()>1} ? 'post-image-multiple': 'post-image-single'" ></image>&ndash;&gt;-->
+<!--&lt;!&ndash;</span>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; 转赞评 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<table width="100%" class="post-action">&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="25%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="25%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="25%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="25%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="post-action-cell" style="border-right: #ccc 1px solid">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="">&ndash;&gt;-->
+<!--&lt;!&ndash;<i class='fas fa-share-square'></i> <span&ndash;&gt;-->
+<!--&lt;!&ndash;th:text="'Share ('+${repostsForeachPost.get(post.getPostID())}+')'"></span></a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="post-action-cell" style="border-right: #ccc 1px solid">&ndash;&gt;-->
+<!--&lt;!&ndash;<a th:href="'singlePost?id=' + ${post.getPostID()}"><i class='far fa-comment-dots'></i>&ndash;&gt;-->
+<!--&lt;!&ndash;Comment (1k+)</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="post-action-cell" style="border-right: #ccc 1px solid">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""><i class='fas fa-star'></i> <span&ndash;&gt;-->
+<!--&lt;!&ndash;th:text="'Star ('+${starsForeachPost.get(post.getPostID())}+')'"></span></a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="post-action-cell">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""><i class='far fa-thumbs-up'></i> <span&ndash;&gt;-->
+<!--&lt;!&ndash;th:text="'Like ('+${likesForeachPost.get(post.getPostID())}+')'"></span></a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Right Part &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="profileColumn-td">&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="profileColumn">&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Profile Info &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="border-bottom: #f3f3f3 2px solid;">&ndash;&gt;-->
+<!--&lt;!&ndash;<table style="width: 100%; text-align: center;">&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="33.333333%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="33.333333%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="33.333333%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="button-link">&ndash;&gt;-->
+<!--&lt;!&ndash;<a th:href="'/following?user=' + ${User.getUsername()}">&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="padding: 1em 0;">&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="semibold" style="font-size: 1.05em;">Following</span><br><span th:text="${following}" class="semibold" style="font-size: 1.05em;"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="button-link">&ndash;&gt;-->
+<!--&lt;!&ndash;<a th:href="'/follower?user=' + ${User.getUsername()}">&ndash;&gt;-->
+<!--&lt;!&ndash;<div>&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="semibold" style="font-size: 1.05em;">Follower</span><br><span th:text="${followers}" class="semibold" style="font-size: 1.05em;"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="button-link">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="">&ndash;&gt;-->
+<!--&lt;!&ndash;<div>&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="semibold" style="font-size: 1.05em;">My Post</span><br><span th:text="${postsCount}" class="semibold" style="font-size: 1.05em;"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Creation Link &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="border-bottom: #f3f3f3 2px solid;">&ndash;&gt;-->
+<!--&lt;!&ndash;<table style="width: 100%; text-align: center; border-spacing: 5px;">&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="33.333333%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="33.333333%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<col width="33.333333%"/>&ndash;&gt;-->
+<!--&lt;!&ndash;<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="button-link">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="/createPostOption">&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="padding: 1em 0;">&ndash;&gt;-->
+<!--&lt;!&ndash;<i class='fas fa-pen-nib button-icon'></i><br>Single&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="button-link">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="createSeries">&ndash;&gt;-->
+<!--&lt;!&ndash;<div>&ndash;&gt;-->
+<!--&lt;!&ndash;<i class='fas fa-sticky-note button-icon'></i><br>Series&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="button-link">&ndash;&gt;-->
+<!--&lt;!&ndash;<a th:href="'view_profile_star?user=' + ${User.getUsername()}">&ndash;&gt;-->
+<!--&lt;!&ndash;<div>&ndash;&gt;-->
+<!--&lt;!&ndash;<i class='fas fa-star button-icon'></i><br>Stars&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash; Top Search &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="top-search-block">&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="color: #9a9a9a;" class="semibold">&ndash;&gt;-->
+<!--&lt;!&ndash;Top Search&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="button-link" style="line-height: 1.6; padding-left: 1em; padding-top: 0.5em">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 1 DC</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 2 batman</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 3 irony</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 4 crisis</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 5 detective</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 6 dark</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 7 who</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 8 flash</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href=""># 9 the end</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="">#10 action</a><br>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;<div></div>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
 
-</body>
-</html>
+<!--</body>-->
+<!--</html>-->

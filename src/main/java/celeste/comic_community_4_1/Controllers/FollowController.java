@@ -108,8 +108,9 @@ public class FollowController {
         return "profile_follower";
     }
 
-    @GetMapping("/unfollow")
-    public String unfollow(@RequestParam(value = "value") String toBeUnfollow,
+    @ResponseBody
+    @PostMapping("/Remove")
+    public String unfollow(@RequestParam(value = "remove") String toBeUnfollow,
                            ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
@@ -125,22 +126,21 @@ public class FollowController {
         model.addAttribute("isOthersProfile", false);
 
 
-        List<Follow> following = followRepository.findByFollowIndentityUserone(user);
-        for (Follow f : following) {
-            if (f.getFollowIndentity().getUser2().getUsername().equals(toBeUnfollow)) {
-                followRepository.delete(f);
-                break;
-            }
+        List<Follow> x = followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(toBeUnfollow,user.getUsername());
+        if (x.size()!=0) {
+            followRepository.delete(x.get(0));
+            return "Remove Success!";
         }
+        return "Unexpected Error!";
 
-        // Get Following
-        following = followRepository.findByFollowIndentityUserone(user);
-        model.addAttribute("followingList", following);
-        model.addAttribute("following", following.size());
-        //Get Followers
-        List<Follow> d = followRepository.findByFollowIndentityUsertwo(user);
-        model.addAttribute("followers", d.size());
-        return "profile_following";
+//        // Get Following
+//        List<Follow> following = followRepository.findByFollowIndentityUserone(user);
+//        model.addAttribute("followingList", following);
+//        model.addAttribute("following", following.size());
+//        //Get Followers
+//        List<Follow> d = followRepository.findByFollowIndentityUsertwo(user);
+//        model.addAttribute("followers", d.size());
+//        return "profile_following";
     }
 
     private List<Boolean> crossCheckFollowing(User me, List<Follow> othersFollowing) {
@@ -180,8 +180,8 @@ public class FollowController {
                                   @RequestParam(value = "username2") String username2,
                            ModelMap model, HttpServletRequest request) throws Exception {
 
-        List<Follow> x = followRepository.findByFollowIndentityUseroneAndFollowIndentityUsertwo(username1, username2);
-        if (!x.isEmpty()) {
+        List<Follow> x = followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(username1, username2);
+        if (x.size()==0) {
             followRepository.delete(x.get(0));
             return "Unfollow Success!";
         } else {
