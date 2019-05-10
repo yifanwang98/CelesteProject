@@ -11,8 +11,6 @@
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-    <script src="http://zwibbler.com/zwibbler-demo.js"></script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -64,124 +62,157 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <table class="mainContent webfont" style="border-spacing: 1em;">
-    <div id="zwibbler" style="background-color: white; margin-left:auto;margin-right:auto;border:2px solid red;width:1024px;height:768px;"></div>
+    <div id="zwibbler" style="background-color: white; margin-left:auto;margin-right:auto;border:2px solid red;width:1024px;height:768px;"></div> 
     <zwibbler>
         <button id="save-button"> save_button</button>
         <button id="load-button"> load_button</button>
         <button id="download-button"> download button</button>
+        <button id="post-button"> post my work!</button>
     </zwibbler>
-
-    <script type="text/javascript">
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script> 
+    <script src="http://zwibbler.com/zwibbler-demo.js"></script> 
+    <script type="text/javascript"> 
         var ctx = Zwibbler.create("zwibbler", {
-            showPropertyPanel: true,
-            showPageSelector: true,
-            showShapeBrushTool: true,
-            defaultBrushWidth: 2
-        });
+        showPropertyPanel: true,
+        showPageSelector: true,
+        showShapeBrushTool: true,
+        defaultBrushWidth: 2
+    });
+    
+    loadDrawing();
+    // set autosve.   60sec 
+    setTimeout( autoSave, 1000 * 60 ); 
 
+    $('#post-button').click(function(){
+        var currentpage = ctx.getCurrentPage();
+        var numPages = ctx.getPageCount();
+        var data = [];
+        for(var i = 0; i < numPages; i++) {
+            ctx.setCurrentPage(i);
+            data.push(ctx.save("png"));
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/post_png',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                data: data
+            }),
+            success: function(res){
+                console.log(res.status)
+            },
+            error:function(err){
+                console.log(err);
+            }
+        })
+
+    })
+
+
+    $("#save-button").click(function () {
+        console.log('save-button called')
+        saveDrawing();
+        console.log('saveDrawing Done')
+    });
+
+    
+    /*
+	$("#png-button").click(function (){
+        var saved  = ctx.save('png')
+        $.ajax({
+            type: 'POST',
+            url: '/save_png',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                data: saved
+            }),
+            success: function(res){
+                console.log(res.status)
+            },
+            error:function(err){
+                console.log(err);
+            }
+        })
+    });
+	*/
+	
+    // post the data to the back end. 
+    function saveDrawing(){
+        var saved = ctx.save();
+        console.log(typeof(saved))
+        // send saved document to database.
+        // console.log(saved)
+        $.ajax({
+            type: 'POST',
+            url: '/save_drawing',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                data: saved
+            }),
+            success: function(res){
+                console.log(res.status)
+            },
+            error:function(err){
+                console.log(err);
+            }
+        })
+    }
+    
+    function autoSave() { 
+        console.log('autoSave has been called.')
+        setTimeout( autoSave, 1000 * 60 ); 
+        console.log('timeout called')
+        saveDrawing(); 
+        console.log('save drawing called.')
+    }
+    
+    $("#load-button").click(function(){
         loadDrawing();
-        // set autosve.   60sec
-        setTimeout( autoSave, 1000 * 60 );
-
-        $("#save-button").click(function () {
-            // console.log('save-button called')
-            saveDrawing();
-            alert("Your work is saved!")
-            // console.log('saveDrawing Done')
-        });
-
-        // post the data to the back end.
-        function saveDrawing(){
-            var saved = ctx.save();
-            console.log(typeof(saved))
-            // send saved document to database.
-            // console.log(saved)
-            $.ajax({
-                type: 'POST',
-                url: '/save_drawing',
-                contentType: 'application/json',
-                data: JSON.stringify({saved: saved}),
-                cache : false,
-                success: function(data){
-                    if(data == "Your work is saved!(exist)" || data == "Your work is saved!(new)" ){
-                        console.log("saved")
-                    }
-                    else {
-                        console.log(arguments[1])
-                    }
-
-                },
-                error:function(err){
-                    console.log(err);
-                }
-            })
-        }
-
-
-        function autoSave() {
-            console.log('autoSave has been called.')
-            setTimeout( autoSave, 1000 * 60 );
-            console.log('timeout called')
-            saveDrawing();
-            console.log('save drawing called.')
-        }
-
-        $("#load-button").click(function(){
-            loadDrawing();
-        });
-
-        function loadDrawing(){
-            console.log('load-button')
-            $.ajax({
-                type:'POST',
-                url: '/load_drawing',
-                // dataType:"json",
-                cache : false,
-                success: function(data){
-                    if(data!="You do not have any saved work!"){
-                        console.log('load success!')
-                        // console.log(typeof(res))
-                        // console.log(data)
-                         alert("Auto load your previous work.");
-                        ctx.load(data);
-
-                    }
-                    else {
-                        alert("You do not have any saved work! Start new!")
-                    }
-
-                }
-            });
-        }
-        $("#download-button").click(function () {
-            var filename = prompt("Please enter a filename");
-            if (filename) {
-                ctx.download("png", filename + ".png");
+    });
+    
+    function loadDrawing(){
+        console.log('load-button')
+        $.ajax({
+            type:'GET',
+            url: '/load_drawing',
+            success: function(res){
+                console.log('get success!')
+                // console.log(typeof(res))
+                var data = res.result
+                // console.log(data)
+                ctx.load(data);
             }
         });
-        function onImage() {
-            var dataUrl = ctx.save("png");
-            window.open(dataUrl, "other");
-            ctx.newDocument();
-            ctx.useLineTool({
-                arrowStyle: "solid",
-                arrowSize: 20
-            });
-            ctx.useRectangleTool({
-                fillStyle: "transparent"
-            });
-            ctx.useCircleTool({
-                fillStyle: "transparent"
-            });
-            ctx.setZoom(0.6);
-            ctx.useBrushTool({
-                lineWidth: 10,
-                strokeStyle: "erase",
-                // optional: prevents the user from being able to move the erase stroke.
-                layer: "my_eraser_layer"
-            });
+    }
+    $("#download-button").click(function () {
+        var filename = prompt("Please enter a filename");
+        if (filename) {
+            ctx.download("png", filename + ".png");
         }
-    </script>
+    });
+    function onImage() {
+        var dataUrl = ctx.save("png");
+        window.open(dataUrl, "other");
+        ctx.newDocument();
+        ctx.useLineTool({
+            arrowStyle: "solid",
+            arrowSize: 20
+        });
+        ctx.useRectangleTool({
+            fillStyle: "transparent"
+        });
+        ctx.useCircleTool({
+            fillStyle: "transparent"
+        });
+        ctx.setZoom(0.6);
+        ctx.useBrushTool({
+            lineWidth: 10,
+            strokeStyle: "erase",
+            // optional: prevents the user from being able to move the erase stroke.
+            layer: "my_eraser_layer"
+        });
+    }
+    </script> 
 </table>
 
 </body>
