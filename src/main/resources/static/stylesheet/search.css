@@ -27,6 +27,15 @@
     cursor: pointer;
 }
 
+.clearAllGenre, .clearAllGenre:link, .clearAllGenre:visited {
+    color: #9a9a9a;
+    font-style: italic;
+}
+
+.clearAllGenre:hover {
+    color: #666666;
+}
+
 .advance-search-title {
     font-size: 0.9em;
 }
@@ -89,9 +98,13 @@
 }
 
 .searchResultOuterContainer {
-    background: white;
+    background: rgba(255, 255, 255, 0.75);
     border-radius: 8px;
     margin: 0.5em 0;
+}
+
+.searchResultOuterContainer:hover {
+    background: white;
 }
 
 .searchResultInnerContainer {

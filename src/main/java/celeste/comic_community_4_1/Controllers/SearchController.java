@@ -141,6 +141,10 @@ public class SearchController {
                 results = findHashTag(searchContent);
                 searchResultList.addAll(results);
                 searchResultCount[1] = results.size();
+            } else {
+                results = findPost(searchContent, user, genres);
+                searchResultList.addAll(results);
+                searchResultCount[2] = results.size();
             }
         }
         searchResultCount[0] = searchResultCount[1] + searchResultCount[2]
@@ -178,7 +182,6 @@ public class SearchController {
             return searchResultList;
         // Full Search
         List<Series> seriesList = seriesRepository.findAll();
-        //System.out.println(seriesList.size());
         for (Series series : seriesList) {
             // Find Keyword
             if (!series.getSeriesName().toLowerCase().contains(keyword))
@@ -210,7 +213,77 @@ public class SearchController {
             searchResult.resultType = "SERIES";
             searchResultList.add(searchResult);
         }
-        //System.out.println(searchResultList.size());
+        return searchResultList;
+    }
+
+    private List<SearchResult> findPost(String keyword, User currentUser, String[] genre) {
+        List<SearchResult> searchResultList = new ArrayList<>();
+        if (genre == null)
+            return searchResultList;
+
+        keyword = TagProcessor.process(keyword).toLowerCase();
+        String lowercased = keyword.toLowerCase();
+        List<Post> allPosts = postRepository.findAll();
+        for (Post p : allPosts) {
+            // Check Genre
+            boolean valid = false;
+            double relevance = 0.0;
+            for (String g : genre) {
+                if (p.getPrimaryGenre().equals(g) || p.getSecondaryGenre().equals(g)) {
+                    valid = true;
+                    break;
+                }
+            }
+            if (!valid) continue;
+            if (!p.getPostComment().toLowerCase().contains(lowercased))
+                valid = false; // Either in comment or tag
+            else
+                relevance = (double) keyword.length() / (double) p.getPostComment().length();
+
+            List<PostTag> postTags = postTagRepository.findPostTagByPost(p);
+            for (PostTag pt : postTags) {
+                if (pt.getTag().toLowerCase().contains(keyword)) {
+                    valid = true;
+                    relevance += (double) keyword.length() / (double) pt.getTag().length();
+                    relevance /= 2;
+                    break;
+                }
+            }
+            if (!valid) continue;
+
+            Post originalPost = null;
+            if (p.isRepost()) {
+                originalPost = postRepository.findPostByPostID(p.getOriginalPostID());
+            }
+            List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(p.getOriginalPostID());
+            List<String> images = new ArrayList<>();
+
+            Set<Series> fromSeries = new HashSet<>();
+            for (int j = 0; j < postContents.size(); j++) {
+                Work work = postContents.get(j).getPostIndentity().getWork();
+                images.add(work.getThumbnail());
+                List<SeriesContent> seriesContents = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+                for (SeriesContent content : seriesContents) {
+                    fromSeries.add(content.getSeriesContentIndentity().getSeries());
+                }
+            }
+
+            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(p, currentUser);
+            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(p, currentUser);
+
+            // Tag
+            List<String> tags = new ArrayList<>();
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(p);
+            for (PostTag tag : postTagList) {
+                tags.add(tag.getTag());
+            }
+
+            SearchResult searchResult = new SearchResult();
+            searchResult.resultType = "POST";
+            searchResult.relavence = relevance;
+            searchResult.postData = new PostData(p, originalPost, images, myStar, myLike, fromSeries, tags);
+            searchResultList.add(searchResult);
+        }
         return searchResultList;
     }
 

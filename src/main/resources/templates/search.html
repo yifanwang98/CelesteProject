@@ -13,6 +13,7 @@
     <link href="../static/stylesheet/search.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/follow.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -30,14 +31,22 @@
                     document.getElementById("genre_" + i).checked = true;
                     i = i + 1;
                 }
-                document.getElementById("searchIn1").checked = true;
-                document.getElementById("searchIn2").checked = true;
-                document.getElementById("searchIn3").checked = true;
-                document.getElementById("searchIn4").checked = true;
+                // document.getElementById("searchIn1").checked = true;
+                // document.getElementById("searchIn2").checked = true;
+                // document.getElementById("searchIn3").checked = true;
+                // document.getElementById("searchIn4").checked = true;
             } else {
                 x.style.display = "none";
                 y.style.display = "none";
                 z.style.display = "block";
+            }
+        }
+
+        function clearAllGenre() {
+            var i = 0;
+            while (i < 20) {
+                document.getElementById("genre_" + i).checked = false;
+                i = i + 1;
             }
         }
 
@@ -165,6 +174,7 @@
                                        th:id="'genre_' + ${iter.index}"><span th:text="' ' + ${genre}"></span>
                             </span>
                         </span>
+                        <a href="#" class="clearAllGenre" onclick="clearAllGenre()">Clear All</a>
                     </div>
                     <div hidden style="margin-top: 0.25em">
                         <span class="semibold">Filter: </span>
@@ -377,7 +387,7 @@
                                             </div>
                                         </td>
                                         <td style="text-align: center; color: #3c3c3c">
-                                            <span class="semibold">Post(s): </span>
+                                            <span class="semibold">Post(s): </span>s
                                             <span th:text="${result.hashTagData.postCount}"></span>
                                         </td>
                                         <td style="text-align: center; color: #3c3c3c">
@@ -389,6 +399,175 @@
                             </div>
                         </div>
                     </span><!-- End Of Hash Tag -->
+                    <span th:if="${result.resultType.equals('POST')}">
+                        <div class="searchResultOuterContainer">
+                        <table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">
+                            <!-- Header -->
+                            <tr>
+                                <td class="post-avatar">
+                                    <a th:href="'view_profile?user=' + ${result.postData.post.getUser().getUsername()}">
+                                        <image th:src="'data:image/png;base64,'+${result.postData.post.getUser().getAvatar()}"
+                                               class="post-avatar-image"></image>
+                                    </a>
+                                </td>
+                                <td>
+                                    <table width="100%">
+                                        <tr>
+                                            <td>
+                                                <span class="post-author"
+                                                      th:text="${result.postData.post.getUser().getUsername()}"></span><br>
+                                                <span class="post-time"
+                                                      th:text="${result.postData.postCreatedAt()}"></span>
+                                            </td>
+                                            <td width="10%"
+                                                style="vertical-align: top; text-align: right; padding-right: 1em; min-width: 10em;">
+                                                <span th:if="${result.postData.starred}" class="post-action-stared-top">
+                                                    <i class='fas fa-star'></i>
+                                                </span>
+                                                <span th:if="${result.postData.liked}" class="post-action-liked-top">
+                                                    <i class='fas fa-thumbs-up'></i>
+                                                </span>
+                                                <a href=""
+                                                   th:if="${User.getUsername() == result.postData.post.getUser().getUsername()}"
+                                                   class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                                <div class="dropdown"
+                                                     th:unless="${User.getUsername() == result.postData.post.getUser().getUsername()}">
+                                                    <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
+                                                    <div class="dropdown-content">
+                                                        <a th:href="'javascript:reportAPost(' + ${result.postData.post.getPostID()} + ');'"><i
+                                                                class="fas fa-exclamation-triangle"></i> Report</a>
+                                                        <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- Text -->
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div th:text="${result.postData.post.getPostComment()}" class="post-text"
+                                         th:if="${!result.postData.post.getPostComment().isEmpty()}"></div>
+                                    <div class="post-genre">
+                                        <span th:if="${!result.postData.post.getPrimaryGenre().equals('None') || !result.postData.post.getSecondaryGenre().equals('None')}">
+                                            <span th:if="${!result.postData.post.getPrimaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${result.postData.post.getPrimaryGenre()} + ' '"></span>
+                                            <span th:if="${!result.postData.post.getSecondaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${result.postData.post.getSecondaryGenre()}"></span>
+                                        </span>
+                                        <span th:each="tag: ${result.postData.postTags}">
+                                            <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- From Series -->
+                            <tr th:if="${!result.postData.fromSeries.isEmpty() && !result.postData.post.isRepost()}">
+                                <td></td>
+                                <td>
+                                    <span class="post-genre semibold">From Series: </span>
+                                    <span th:each="fromSeries: ${result.postData.fromSeries}">
+                                        <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
+                                           th:href="'singleSeries?id=' + ${fromSeries.getSeriesID()} + '&index=0'"></a>
+                                    </span>
+                                </td>
+                            </tr>
+                            <!-- Images -->
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <!-- Repost -->
+                                    <div th:if="${result.postData.post.isRepost()}">
+                                        <table style="border-spacing: 0em; padding-top: 0.5em; margin-bottom: 0.5em; width:100%; border-left: 2px solid lightgrey;">
+                                            <!-- Header -->
+                                            <tr>
+                                                <td class="post-avatar">
+                                                    <a th:href="'view_profile?user=' + ${result.postData.originalPost.getUser().getUsername()}">
+                                                        <image th:src="'data:image/png;base64,'+${result.postData.originalPost.getUser().getAvatar()}"
+                                                               class="post-avatar-image"></image>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td>
+                                                                <span class="post-author"
+                                                                      th:text="${result.postData.originalPost.getUser().getUsername()}"></span><br>
+                                                                <span class="post-time"
+                                                                      th:text="${result.postData.originalPostCreatedAt()}"></span>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <!-- Text -->
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <div th:text="${result.postData.originalPost.getPostComment()}"
+                                                         th:if="${!result.postData.originalPost.getPostComment().isEmpty()}"
+                                                         class="post-text"></div>
+                                                    <div class="post-genre"
+                                                         th:if="${!result.postData.originalPost.getPrimaryGenre().equals('None') || !result.postData.originalPost.getSecondaryGenre().equals('None')}">
+                                                        <span th:if="${!result.postData.originalPost.getPrimaryGenre().equals('None')}"
+                                                              class="post-genre-text"
+                                                              th:text="'#' + ${result.postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                        <span th:if="${!result.postData.originalPost.getSecondaryGenre().equals('None')}"
+                                                              class="post-genre-text"
+                                                              th:text="'#' + ${result.postData.originalPost.getSecondaryGenre()}"></span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <!-- From Series -->
+                                            <tr th:if="${!result.postData.fromSeries.isEmpty()}">
+                                                <td></td>
+                                                <td>
+                                                    <span class="post-genre semibold">From Series: </span>
+                                                    <span th:each="fromSeries: ${result.postData.fromSeries}">
+                                                        <a class="post-genre-text"
+                                                           th:text="${fromSeries.getSeriesName()}"
+                                                           th:href="'singleSeries?id=' + ${fromSeries.getSeriesID()} + '&index=0'"></a>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <!-- Images -->
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <div>
+                                                        <span th:each="work:${result.postData.images}">
+                                                            <a th:href="'singlePost?id=' + ${result.postData.post.getPostID()}"
+                                                               class="imageLink">
+                                                                <image th:src="'data:image/png;base64,'+${work}"
+                                                                       class="post-image-multiple"></image>
+                                                            </a>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <!-- Original -->
+                                    <div th:unless="${result.postData.post.isRepost()}">
+                                        <span th:each="work:${result.postData.images}">
+                                            <a th:href="'singlePost?id=' + ${result.postData.post.getPostID()}"
+                                               class="imageLink">
+                                                <image th:src="'data:image/png;base64,'+${work}"
+                                                       th:class="${result.postData.images.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="padding: 0.1em;"></div>
+                    </div>
+                    </span><!-- End Of Post -->
                 </span><!-- End Of For Each -->
             </div>
             </span>
