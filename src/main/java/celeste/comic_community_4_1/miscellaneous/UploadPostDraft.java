@@ -5,6 +5,9 @@ import java.util.List;
 
 public class UploadPostDraft {
 
+    public boolean isWiki = false;
+    public long wikiSeriesID = -1;
+
     private List<String> imageString = new ArrayList<>(9);
     private List<String> thumbnails = new ArrayList<>(9);
 

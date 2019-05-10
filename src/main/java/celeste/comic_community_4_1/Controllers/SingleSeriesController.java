@@ -104,8 +104,6 @@ public class SingleSeriesController {
 
         // Other Info
         model.addAttribute("isOwner", username.equals(seriesToView.getUser().getUsername()));
-        model.addAttribute("canEdit",
-                username.equals(seriesToView.getUser().getUsername()) || seriesToView.isPublicEditing());
         model.addAttribute("subscribed",
                 seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(seriesToView, user));
 

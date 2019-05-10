@@ -124,6 +124,7 @@ public class MainPageController {
     @PostMapping("signOut")
     public String signOut(ModelMap model, HttpServletRequest request) throws Exception {
         request.getSession().removeAttribute("username");
+        request.getSession().removeAttribute("postDraft");
         return "index";
     }
 

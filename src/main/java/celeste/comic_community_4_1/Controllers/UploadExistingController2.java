@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class UploadExistingController2 {
@@ -69,10 +66,39 @@ public class UploadExistingController2 {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         model.addAttribute("User", user);
 
-        if (request.getSession().getAttribute("postDraft") == null) {
-            request.getSession().setAttribute("postDraft", new UploadPostDraft());
+        UploadPostDraft draft = (UploadPostDraft) request.getSession().getAttribute("postDraft");
+        if (draft == null) {
+            draft = new UploadPostDraft();
+        } else {
+            draft.isWiki = false;
         }
-        model.addAttribute("postDraft", request.getSession().getAttribute("postDraft"));
+        model.addAttribute("postDraft", draft);
+        return "uploadPost2";
+    }
+
+    @PostMapping("/wiki")
+    public String goToUploadPostPage(@RequestParam("wikiID") long seriesID,
+                                     ModelMap model,
+                                     HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Find Current User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        model.addAttribute("User", user);
+
+        UploadPostDraft draft = (UploadPostDraft) request.getSession().getAttribute("postDraft");
+        if (draft == null) {
+            draft = new UploadPostDraft();
+        }
+        draft.isWiki = true;
+        draft.wikiSeriesID = seriesID;
+
+        model.addAttribute("postDraft", draft);
+        request.getSession().setAttribute("postDraft", draft);
         return "uploadPost2";
     }
 
@@ -145,7 +171,13 @@ public class UploadExistingController2 {
         model.addAttribute("postDraft", draft);
         model.addAttribute("genreList", ComicGenre.GENRE);
 
-        List<Series> mySeries = seriesRepository.findByUser(user);
+        List<Series> mySeries;// = seriesRepository.findByUser(user);
+        if (draft.isWiki) {
+            mySeries = new ArrayList<>();
+            mySeries.add(seriesRepository.findSeriesBySeriesID(draft.wikiSeriesID));
+        } else {
+            mySeries = seriesRepository.findByUser(user);
+        }
         model.addAttribute("mySeries", mySeries);
         return "uploadPost3";
     }

@@ -199,8 +199,16 @@
             </td>
             <td>
                 <div style="padding: 0 1em; min-width: 10em;">
-                    <div th:if="${canEdit}">
+                    <div th:if="${isOwner}">
                         <a href="/uploadPost2" class="series-footer-r-btn"><i class='fas fa-marker'></i> Add Content</a>
+                    </div>
+                    <div th:if="${seriesToView.isPublicEditing() && !isOwner}">
+                        <a href="#"
+                           onclick="document.getElementById('wikiForm').submit();"
+                           class="series-footer-r-btn"><i class='fas fa-marker'></i> Add Content</a>
+                        <form method="post" action="/wiki" id="wikiForm">
+                            <input type="text" hidden name="wikiID" th:value="${seriesToView.getSeriesID()}">
+                        </form>
                     </div>
                     <div th:if="${subscribed && !isOwner}">
                         <a href="#" class="series-footer-r-btn"><i class='fas fa-minus'></i> Unsubscribe</a>
