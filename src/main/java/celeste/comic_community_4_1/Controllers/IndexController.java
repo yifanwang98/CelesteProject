@@ -45,6 +45,9 @@ public class IndexController {
     @Autowired
     SeriesContentRepository seriesContentRepository;
 
+    @Autowired
+    PostTagRepository postTagRepository;
+
     @PostMapping("/home")
     public String FirstLogin(@RequestParam(value = "username" ,required = false) String username,
                              @RequestParam(value = "password" ,required = false) String password,
@@ -113,7 +116,14 @@ public class IndexController {
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
-            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries));
+            // Tag
+            List<String> postTags = new ArrayList<>();
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            for (PostTag tag : postTagList) {
+                postTags.add(tag.getTag());
+            }
+
+            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries, postTags));
         }
 
         model.addAttribute("postDataList", postDataList);

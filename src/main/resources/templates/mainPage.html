@@ -221,13 +221,18 @@
                         <td>
                             <div th:text="${postData.post.getPostComment()}" class="post-text"
                                  th:if="${!postData.post.getPostComment().isEmpty()}"></div>
-                            <div class="post-genre"
-                                 th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
-                                <span th:if="${!postData.post.getPrimaryGenre().equals('None')}" class="post-genre-text"
-                                      th:text="'#' + ${postData.post.getPrimaryGenre()} + ' '"></span>
-                                <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
-                                      class="post-genre-text"
-                                      th:text="'#' + ${postData.post.getSecondaryGenre()}"></span>
+                            <div class="post-genre">
+                                <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
+                                    <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                                          class="post-genre-text"
+                                          th:text="'#' + ${postData.post.getPrimaryGenre()} + ' '"></span>
+                                    <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                                          class="post-genre-text"
+                                          th:text="'#' + ${postData.post.getSecondaryGenre()}"></span>
+                                </span>
+                                <span th:each="tag: ${postData.postTags}">
+                                    <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                </span>
                             </div>
                         </td>
                     </tr>

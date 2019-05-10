@@ -5,17 +5,12 @@ import java.util.List;
 
 public class UploadPostDraft {
 
-    private String description = "";
+    public boolean isWiki = false;
+    public long wikiSeriesID = -1;
+
     private List<String> imageString = new ArrayList<>(9);
     private List<String> thumbnails = new ArrayList<>(9);
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public void addImage(String string) {
         if (imageString.size() < 9)
@@ -31,7 +26,7 @@ public class UploadPostDraft {
         return imageString;
     }
 
-    public boolean isValid() {
+    public boolean valid() {
         return imageString.size() > 0;
     }
 
@@ -45,5 +40,6 @@ public class UploadPostDraft {
     public List<String> getThumbnails() {
         return thumbnails;
     }
+
 
 }
