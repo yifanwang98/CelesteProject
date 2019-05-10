@@ -242,8 +242,7 @@
                                        th:id="'TT' + ${seriesData.series.getSeriesID()} + '-' + ${iter.index}"></a>
                                 </span>
                             </span>
-                            <!--<a href="" class="series-add-tag" th:if="${seriesData.owner}">+</a>-->
-                            <span th:if="${seriesData.tags.get(4) == null}"
+                            <span th:if="${seriesData.tags.get(4) == null && seriesData.owner}"
                                   th:id="'F' + ${seriesData.series.getSeriesID()}">
                                 <form th:onsubmit="'javascript:addSeriesTag(' + ${seriesData.series.getSeriesID()} + ')'"
                                       th:id="'addSeriesTag_' + ${seriesData.series.getSeriesID()}"
