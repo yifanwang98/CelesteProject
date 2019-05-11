@@ -1,10 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.ComicGenre;
-import celeste.comic_community_4_1.miscellaneous.SeriesComparator;
-import celeste.comic_community_4_1.miscellaneous.SeriesData;
-import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
+import celeste.comic_community_4_1.miscellaneous.*;
 import celeste.comic_community_4_1.model.Series;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
@@ -127,6 +124,9 @@ public class CreateSeriesController {
         List<SeriesData> seriesDataList = new ArrayList<>();
         for (Series series : seriesList) {
             List<String> tags = new ArrayList<>();
+            while (tags.size() < TagProcessor.MAX_TAG_PER_SERIES) {
+                tags.add(null);
+            }
             long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
             boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
             boolean owner = series.getUser().getUsername().equals(username);

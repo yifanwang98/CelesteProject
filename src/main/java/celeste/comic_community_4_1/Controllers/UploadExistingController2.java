@@ -191,7 +191,7 @@ public class UploadExistingController2 {
                                  @RequestParam("tag3") String tag3,
                                  @RequestParam("tag4") String tag4,
                                  @RequestParam("tag5") String tag5,
-                                 @RequestParam("selectedSeries") long[] selectedSeries,
+                                 @RequestParam(value = "selectedSeries", required = false) long[] selectedSeries,
                                  ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
@@ -268,7 +268,7 @@ public class UploadExistingController2 {
             newpostcontent.setPostIndentity(newpostcontentid);
             postContentRepository.save(newpostcontent);
 
-            if (selectedSeries.length > 0) {
+            if (selectedSeries != null) {
                 for (long seriesID : selectedSeries) {
                     Series series = seriesRepository.findSeriesBySeriesID(seriesID);
 
