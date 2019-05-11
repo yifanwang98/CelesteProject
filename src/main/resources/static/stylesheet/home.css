@@ -15,6 +15,12 @@
     padding: 1em 2em;
 }
 
+.trendingNum {
+    text-align: right;
+    width: 2em;
+    color: #9a9a9a;
+}
+
 .button-link {
     border-radius: 10px;
 }
@@ -34,7 +40,7 @@
 }
 
 .top-search-block {
-    padding: 1em;
+    padding: 1em 1.35em;
 }
 
 .home-posts-card {
