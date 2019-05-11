@@ -72,6 +72,16 @@ public class Notification {
         }
     }
 
+    public static Date getToday() {
+        Calendar c = Calendar.getInstance();
+        // set the calendar to start of today
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 1);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTime();
+    }
+
     public static String getDateString(Date time) {
         synchronized (datetimeFormat) {
             return datetimeFormat.format(time);
