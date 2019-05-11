@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.miscellaneous.PostComparator;
 import celeste.comic_community_4_1.miscellaneous.PostData;
 import celeste.comic_community_4_1.model.*;
@@ -65,6 +66,16 @@ public class MainPageController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+
         model.addAttribute("User", user);
 
         // Get Following & Followers
@@ -153,6 +164,11 @@ public class MainPageController {
     public String signOut(ModelMap model, HttpServletRequest request) throws Exception {
         request.getSession().removeAttribute("username");
         request.getSession().removeAttribute("postDraft");
+        return "index";
+    }
+
+    @GetMapping("index")
+    public String signIn(ModelMap model, HttpServletRequest request) throws Exception {
         return "index";
     }
 

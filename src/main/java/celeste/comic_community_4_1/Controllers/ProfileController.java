@@ -64,6 +64,16 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         User profileOwner = userRepository.findById(linkedUsername)
@@ -136,6 +146,16 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         User profileOwner = userRepository.findById(linkedUsername)
@@ -190,6 +210,16 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         User profileOwner = userRepository.findById(linkedUsername)

@@ -1,10 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.ComicGenre;
-import celeste.comic_community_4_1.miscellaneous.TagProcessor;
-import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
-import celeste.comic_community_4_1.miscellaneous.UploadPostDraft;
+import celeste.comic_community_4_1.miscellaneous.*;
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostContentIndentity;
 import celeste.comic_community_4_1.model.EmbeddedClasses.SeriesContentIndentity;
 import celeste.comic_community_4_1.model.*;
@@ -64,6 +61,16 @@ public class UploadExistingController2 {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         UploadPostDraft draft = (UploadPostDraft) request.getSession().getAttribute("postDraft");
@@ -88,6 +95,16 @@ public class UploadExistingController2 {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         UploadPostDraft draft = (UploadPostDraft) request.getSession().getAttribute("postDraft");
@@ -112,6 +129,16 @@ public class UploadExistingController2 {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         if (request.getSession().getAttribute("postDraft") == null) {
@@ -140,6 +167,16 @@ public class UploadExistingController2 {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         if (request.getSession().getAttribute("postDraft") == null) {
@@ -162,6 +199,16 @@ public class UploadExistingController2 {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         if (request.getSession().getAttribute("postDraft") == null) {
@@ -200,6 +247,16 @@ public class UploadExistingController2 {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         if (request.getSession().getAttribute("postDraft") == null) {

@@ -82,6 +82,12 @@ public class Notification {
         return c.getTime();
     }
 
+    public static Date getDaysBefore(int before) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, before * -1);
+        return c.getTime();
+    }
+
     public static String getDateString(Date time) {
         synchronized (datetimeFormat) {
             return datetimeFormat.format(time);

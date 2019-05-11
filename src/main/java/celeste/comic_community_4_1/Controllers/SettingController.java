@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
@@ -55,6 +56,16 @@ public class SettingController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
 
