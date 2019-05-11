@@ -50,6 +50,24 @@
             document.getElementById("ss" + i).className = "analysis-duration-selected";
             document.getElementById("s" + i).style.display = "";
         }
+
+        function contributionNone() {
+            document.getElementById("cc7").className = "analysis-duration-not-selected";
+            document.getElementById("cc30").className = "analysis-duration-not-selected";
+            document.getElementById("cc180").className = "analysis-duration-not-selected";
+            document.getElementById("cc365").className = "analysis-duration-not-selected";
+
+            document.getElementById("c7").style.display = "None";
+            document.getElementById("c30").style.display = "None";
+            document.getElementById("c180").style.display = "None";
+            document.getElementById("c365").style.display = "None";
+        }
+
+        function contributionNum(i) {
+            contributionNone();
+            document.getElementById("cc" + i).className = "analysis-duration-selected";
+            document.getElementById("c" + i).style.display = "";
+        }
     </script>
 </head>
 <body>
@@ -190,14 +208,25 @@
                                 </div>
                                 <!-- Title -->
                                 <div class="analysis-increment">
-                                    + 1
+                                    +
+                                    <span th:text="${analysisData.getContribution()[0]}" id="c7"></span>
+                                    <span th:text="${analysisData.getContribution()[1]}" id="c30"
+                                          style="display: none"></span>
+                                    <span th:text="${analysisData.getContribution()[2]}" id="c180"
+                                          style="display: none"></span>
+                                    <span th:text="${analysisData.getContribution()[3]}" id="c365"
+                                          style="display: none"></span>
                                 </div>
                                 <!-- Title -->
                                 <div class="analysis-duration">
-                                    <a href="" class="analysis-duration-selected">7</a> |
-                                    <a href="" class="analysis-duration-not-selected">30</a> |
-                                    <a href="" class="analysis-duration-not-selected">180</a> |
-                                    <a href="" class="analysis-duration-not-selected">365</a>
+                                    <a href="#" class="analysis-duration-selected"
+                                       onclick="contributionNum(7)" id="cc7">7</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="contributionNum(30)" id="cc30">30</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="contributionNum(180)" id="cc180">180</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="contributionNum(365)" id="cc365">365</a>
                                     days
                                 </div>
                             </td>
@@ -299,7 +328,7 @@
                             <td>
                                 <!-- Title -->
                                 <div class="analysis-title">
-                                    Subscriber
+                                    Follower
                                 </div>
                                 <!-- Title -->
                                 <div class="analysis-increment">

@@ -61,6 +61,12 @@ public class AnalysisController {
 
         List<Post> postList = postRepository.findByUser(user);
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         // Analysis data
         AnalysisData analysisData = new AnalysisData();
 
@@ -68,17 +74,27 @@ public class AnalysisController {
         analysisData.setProfit(new double[4]);
 
         // Get Contribution
-        analysisData.setContribution(new long[4]);
+        long[] contribution = new long[]{0, 0, 0, 0};
+        calendar.add(Calendar.DATE, -7);
+        contribution[0] = postRepository.countPostByCreatedAtAfterAndUser(calendar.getTime(), user);
+        calendar.add(Calendar.DATE, 7);
+
+        calendar.add(Calendar.DATE, -30);
+        contribution[1] = postRepository.countPostByCreatedAtAfterAndUser(calendar.getTime(), user);
+        calendar.add(Calendar.DATE, 30);
+
+        calendar.add(Calendar.DATE, -180);
+        contribution[2] = postRepository.countPostByCreatedAtAfterAndUser(calendar.getTime(), user);
+        calendar.add(Calendar.DATE, 180);
+
+        calendar.add(Calendar.DATE, -365);
+        contribution[3] = postRepository.countPostByCreatedAtAfterAndUser(calendar.getTime(), user);
+        calendar.add(Calendar.DATE, 365);
+        analysisData.setContribution(contribution);
 
 
         // Get Views
         long[] views = new long[]{0, 0, 0, 0};
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
         for (Post p : postList) {
             calendar.add(Calendar.DATE, -7);
             views[0] += postAnalysisRepository.countPostAnalysisByViewedAtAfterAndPost(calendar.getTime(), p);
