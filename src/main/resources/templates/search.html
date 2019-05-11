@@ -31,10 +31,6 @@
                     document.getElementById("genre_" + i).checked = true;
                     i = i + 1;
                 }
-                // document.getElementById("searchIn1").checked = true;
-                // document.getElementById("searchIn2").checked = true;
-                // document.getElementById("searchIn3").checked = true;
-                // document.getElementById("searchIn4").checked = true;
             } else {
                 x.style.display = "none";
                 y.style.display = "none";
@@ -51,11 +47,11 @@
         }
 
         function unfollow_followname(e) {
-            e.preventDefault()
-            var id = e.target.id
-            var index = id.lastIndexOf('_')
-            var username1 = (id.substring(19, index))
-            var username2 = (id.substring(index + 1, e.target.id.length))
+            e.preventDefault();
+            var id = e.target.id;
+            var index = id.lastIndexOf('_');
+            var username1 = (id.substring(19, index));
+            var username2 = (id.substring(index + 1, e.target.id.length));
             $.ajax({
                 type: "POST",
                 url: 'unfollow_follow',
@@ -76,6 +72,159 @@
                     alert(arguments[1]);
                 }
             });
+        }
+
+        function switchToAll() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "";
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "";
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "";
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "";
+                }
+            }
+            if (document.getElementById("error")) {
+                if (total > 0) {
+                    document.getElementById("error").style.display = "None";
+                }
+            }
+            document.getElementById("F-A").className = "searchFilter-selected";
+            document.getElementById("F-P").className = "searchFilter";
+            document.getElementById("F-U").className = "searchFilter";
+            document.getElementById("F-S").className = "searchFilter";
+            document.getElementById("F-H").className = "searchFilter";
+        }
+
+        function switchToHashtag() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            var cc = 0;
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "None";
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "None";
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "";
+                    cc += 1;
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "None";
+                }
+            }
+            if (document.getElementById("error")) {
+                document.getElementById("error").style.display = "None";
+            }
+            if (cc === 0 && total != 0) {
+                document.getElementById("error").style.display = "";
+            }
+            document.getElementById("F-H").className = "searchFilter-selected";
+            document.getElementById("F-P").className = "searchFilter";
+            document.getElementById("F-U").className = "searchFilter";
+            document.getElementById("F-S").className = "searchFilter";
+            document.getElementById("F-A").className = "searchFilter";
+        }
+
+        function switchToPost() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            var cc = 0;
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "None";
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "";
+                    cc += 1;
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "None";
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "None";
+                }
+            }
+            if (document.getElementById("error")) {
+                document.getElementById("error").style.display = "None";
+            }
+            if (cc === 0 && total != 0) {
+                document.getElementById("error").style.display = "";
+            }
+            document.getElementById("F-P").className = "searchFilter-selected";
+            document.getElementById("F-A").className = "searchFilter";
+            document.getElementById("F-U").className = "searchFilter";
+            document.getElementById("F-S").className = "searchFilter";
+            document.getElementById("F-H").className = "searchFilter";
+        }
+
+        function switchToSeries() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            var cc = 0;
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "None";
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "None";
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "None";
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "";
+                    cc += 1;
+                }
+            }
+            if (document.getElementById("error")) {
+                document.getElementById("error").style.display = "None";
+            }
+            if (cc === 0 && total != 0) {
+                document.getElementById("error").style.display = "";
+            }
+
+            document.getElementById("F-S").className = "searchFilter-selected";
+            document.getElementById("F-P").className = "searchFilter";
+            document.getElementById("F-U").className = "searchFilter";
+            document.getElementById("F-A").className = "searchFilter";
+            document.getElementById("F-H").className = "searchFilter";
+        }
+
+        function switchToUser() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            var cc = 0;
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "";
+                    cc += 1;
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "None";
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "None";
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "None";
+                }
+            }
+            if (document.getElementById("error")) {
+                document.getElementById("error").style.display = "None";
+            }
+            if (cc === 0 && total != 0) {
+                document.getElementById("error").style.display = "";
+            }
+            document.getElementById("F-U").className = "searchFilter-selected";
+            document.getElementById("F-P").className = "searchFilter";
+            document.getElementById("F-A").className = "searchFilter";
+            document.getElementById("F-S").className = "searchFilter";
+            document.getElementById("F-H").className = "searchFilter";
         }
     </script>
 </head>
@@ -203,6 +352,7 @@
             </div>
             <!---------------------------------------->
             <!----------- Search Filter -------------->
+            <span th:if="${searched}">
             <div class="searchFilterContainer">
                 <table width="100%" style="padding: 0.25em 0;">
                     <col width="20%"/>
@@ -212,37 +362,45 @@
                     <col width="20%"/>
                     <tr>
                         <td>
-                            <div class="searchFilter-selected">
-                                <a href="#">All (<span th:text="${searchResultCount[0]}"></span>)</a>
+                            <div class="searchFilter-selected" id="F-A">
+                                <a href="#" onclick="switchToAll()">All (<span th:text="${searchResultCount[0]}"
+                                                                               id="totalNum"></span>)</a>
                             </div>
                         </td>
                         <td style="border-left: #cccccc 1px solid;">
-                            <div class="searchFilter">
-                                <a href="#">Hashtag (<span th:text="${searchResultCount[1]}"></span>)</a>
+                            <div class="searchFilter" id="F-H">
+                                <a href="#" onclick="switchToHashtag()">Hashtag (<span
+                                        th:text="${searchResultCount[1]}"></span>)</a>
                             </div>
                         </td>
                         <td style="border-left: #cccccc 1px solid;">
-                            <div class="searchFilter">
-                                <a href="#">Post (<span th:text="${searchResultCount[2]}"></span>)</a>
+                            <div class="searchFilter" id="F-P">
+                                <a href="#" onclick="switchToPost()">Post (<span
+                                        th:text="${searchResultCount[2]}"></span>)</a>
                             </div>
                         </td>
                         <td style="border-left: #cccccc 1px solid;">
-                            <div class="searchFilter">
-                                <a href="#">Series (<span th:text="${searchResultCount[3]}"></span>)</a>
+                            <div class="searchFilter" id="F-S">
+                                <a href="#" onclick="switchToSeries()">Series (<span
+                                        th:text="${searchResultCount[3]}"></span>)</a>
                             </div>
                         </td>
                         <td style="border-left: #cccccc 1px solid;">
-                            <div class="searchFilter">
-                                <a href="#">User (<span th:text="${searchResultCount[4]}"></span>)</a>
+                            <div class="searchFilter" id="F-U">
+                                <a href="#" onclick="switchToUser()">User (<span
+                                        th:text="${searchResultCount[4]}"></span>)</a>
                             </div>
                         </td>
                     </tr>
                 </table>
-            </div>
+            </div></span>
             <!---------------------------------------->
             <!------------ Search Error -------------->
             <span th:if="${searched}">
             <div th:if="${searchResultList.size() == 0}" class="searchError">
+                No Result Found
+            </div>
+            <div th:unless="${searchResultList.size() == 0}" class="searchError" id="error" style="display: none">
                 No Result Found
             </div>
                 <!---------------------------------------->
@@ -294,7 +452,7 @@
                         </div>
                     </span><!-- End Of User -->
                     <!------------- Series Result ------------->
-                    <span th:if="${result.resultType.equals('SERIES')}">
+                    <span th:if="${result.resultType.equals('SERIES')}" th:id="'S' + ${iter.index}">
                         <div class="searchResultOuterContainer">
                             <div class="searchResultInnerContainer">
                                 <table width="100%">
@@ -371,7 +529,7 @@
                         </div>
                     </span> <!-- End Of Series -->
                     <!------------- Hashtag Result ------------->
-                    <span th:if="${result.resultType.equals('HASHTAG')}">
+                    <span th:if="${result.resultType.equals('HASHTAG')}" th:id="'H' + ${iter.index}">
                         <div class="searchResultOuterContainer">
                             <div class="searchResultInnerContainer">
                                 <table width="100%">
@@ -387,7 +545,7 @@
                                             </div>
                                         </td>
                                         <td style="text-align: center; color: #3c3c3c">
-                                            <span class="semibold">Post(s): </span>s
+                                            <span class="semibold">Post(s): </span>
                                             <span th:text="${result.hashTagData.postCount}"></span>
                                         </td>
                                         <td style="text-align: center; color: #3c3c3c">
@@ -399,7 +557,7 @@
                             </div>
                         </div>
                     </span><!-- End Of Hash Tag -->
-                    <span th:if="${result.resultType.equals('POST')}">
+                    <span th:if="${result.resultType.equals('POST')}" th:id="'P' + ${iter.index}">
                         <div class="searchResultOuterContainer">
                         <table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">
                             <!-- Header -->
