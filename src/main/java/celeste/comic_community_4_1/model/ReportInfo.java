@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Table(name = "ReportInfo")
@@ -21,8 +20,13 @@ public class ReportInfo implements Serializable {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "username")
-    private User userone;
+    @JoinColumn(name = "reportee")
+    private User reportee; // 被举报的人
+
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "reporter")
+    private User reporter; // 举报者
 
 
     @ManyToOne
@@ -62,12 +66,20 @@ public class ReportInfo implements Serializable {
         this.reportID = reportID;
     }
 
-    public User getUserone() {
-        return userone;
+    public User getReportee() {
+        return reportee;
     }
 
-    public void setUserone(User userone) {
-        this.userone = userone;
+    public void setReportee(User reportee) {
+        this.reportee = reportee;
+    }
+
+    public User getReporter() {
+        return reporter;
+    }
+
+    public void setReporter(User reporter) {
+        this.reporter = reporter;
     }
 
     public Post getPost() {
@@ -78,20 +90,4 @@ public class ReportInfo implements Serializable {
         this.post = post;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ReportInfo)) return false;
-        ReportInfo that = (ReportInfo) o;
-        return getReportID() == that.getReportID() &&
-                Objects.equals(getUserone(), that.getUserone()) &&
-                Objects.equals(getPost(), that.getPost()) &&
-                Objects.equals(getReason(), that.getReason()) &&
-                Objects.equals(getCreatedAt(), that.getCreatedAt());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getReportID(), getUserone(), getPost(), getReason(), getCreatedAt());
-    }
 }

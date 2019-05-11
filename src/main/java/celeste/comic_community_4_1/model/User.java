@@ -48,7 +48,13 @@ public class User implements Serializable {
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
     private Date lastViewNotification = new Date();
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+    private Date blockedSince = new Date();
 
     public String getUsername() {
         return username;
@@ -120,5 +126,13 @@ public class User implements Serializable {
 
     public void setLastViewNotification(Date lastViewNotification) {
         this.lastViewNotification = lastViewNotification;
+    }
+
+    public Date getBlockedSince() {
+        return blockedSince;
+    }
+
+    public void setBlockedSince(Date blockedSince) {
+        this.blockedSince = blockedSince;
     }
 }

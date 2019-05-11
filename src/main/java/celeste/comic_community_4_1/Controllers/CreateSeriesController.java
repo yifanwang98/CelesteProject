@@ -63,6 +63,16 @@ public class CreateSeriesController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
         model.addAttribute("genreList", ComicGenre.GENRE);
         return "createSeries";
@@ -84,6 +94,16 @@ public class CreateSeriesController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
 
@@ -94,7 +114,7 @@ public class CreateSeriesController {
         newSeries.setPrimaryGenre(genre1);
         newSeries.setSecondaryGenre(genre2);
         newSeries.setSeriesName(title);
-        newSeries.setPublicEditing(wiki.equals("Yes") ? true : false);
+        newSeries.setPublicEditing(wiki.equals("Yes"));
         newSeries.setUser(user);
 
         String coverPath = "src/main/resources/static/images/samplePost/default-upload.png";
