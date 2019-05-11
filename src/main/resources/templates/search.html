@@ -538,7 +538,7 @@
                                     <tr>
                                         <td style="text-align: center;">
                                             <div class="searchResult-tag">
-                                                <a href="#">
+                                                <a th:href="'/hashtag?tag=' + ${result.hashTagData.hashtag}">
                                                     # <span th:text="${result.hashTagData.hashtag}"></span>
                                                 </a>
                                             </div>

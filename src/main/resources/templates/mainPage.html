@@ -227,7 +227,9 @@
                                           th:text="'#' + ${postData.post.getSecondaryGenre()}"></span>
                                 </span>
                                 <span th:each="tag: ${postData.postTags}">
-                                    <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                    <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                        <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                    </a>
                                 </span>
                             </div>
                         </td>
