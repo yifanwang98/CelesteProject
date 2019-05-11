@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,11 +54,11 @@ public class SignUpController {
         newUser.setEmail(email);
         newUser.setGender(gender);
 
-        String avatarPath = "src/main/resources/static/images/default-avatar.png";
-        File x = new File(avatarPath);
-        BufferedImage bImage = ImageIO.read(x);
+//        String avatarPath = "src/main/resources/static/images/default-avatar.png";
+//        File x = new File(avatarPath);
+//        BufferedImage bImage = ImageIO.read(x);
 
-        String base64 = ThumbnailConverter.toBase64(ThumbnailConverter.convert(bImage), "png");
+        String base64 = ThumbnailConverter.DEFAULT_AVATAR;
         newUser.setAvatar(base64);
         userRepository.save(newUser);
         model.addAttribute("User", newUser);
