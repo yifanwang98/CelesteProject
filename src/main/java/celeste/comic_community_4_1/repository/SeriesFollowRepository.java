@@ -7,11 +7,14 @@ import celeste.comic_community_4_1.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface SeriesFollowRepository extends JpaRepository<SeriesFollow, SeriesFollowIndentity> {
     List<SeriesFollow> findBySeriesFollowIndentitySeries(Series series);
+
+    List<SeriesFollow> findByCreatedAtAfterAndSeriesFollowIndentitySeries(Date after, Series series);
 
     List<SeriesFollow> findSeriesFollowBySeriesFollowIndentityUser(User user);
 
