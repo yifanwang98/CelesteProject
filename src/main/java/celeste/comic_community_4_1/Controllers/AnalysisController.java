@@ -70,9 +70,6 @@ public class AnalysisController {
         // Analysis data
         AnalysisData analysisData = new AnalysisData();
 
-        // Get Profit
-        analysisData.setProfit(new double[4]);
-
         // Get Contribution
         long[] contribution = new long[]{0, 0, 0, 0};
         calendar.add(Calendar.DATE, -7);
@@ -133,6 +130,14 @@ public class AnalysisController {
         calendar.add(Calendar.DATE, 365);
         analysisData.setSubscriber(followCount);
 
+        // Get Profit
+        analysisData.setProfit(new String[]{
+                String.format("%.2f", getProfit(contribution[0], views[0])),
+                String.format("%.2f", getProfit(contribution[1], views[1])),
+                String.format("%.2f", getProfit(contribution[2], views[2])),
+                String.format("%.2f", getProfit(contribution[3], views[3])),
+        });
+
         model.addAttribute("analysisData", analysisData);
 
         //Get Follows
@@ -148,6 +153,10 @@ public class AnalysisController {
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
 
         return "profile_analysis";
+    }
+
+    private double getProfit(long contribution, long view) {
+        return contribution * view * Math.PI / 100.0;
     }
 
 }

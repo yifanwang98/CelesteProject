@@ -68,6 +68,24 @@
             document.getElementById("cc" + i).className = "analysis-duration-selected";
             document.getElementById("c" + i).style.display = "";
         }
+
+        function profitNone() {
+            document.getElementById("pp7").className = "analysis-duration-not-selected";
+            document.getElementById("pp30").className = "analysis-duration-not-selected";
+            document.getElementById("pp180").className = "analysis-duration-not-selected";
+            document.getElementById("pp365").className = "analysis-duration-not-selected";
+
+            document.getElementById("p7").style.display = "None";
+            document.getElementById("p30").style.display = "None";
+            document.getElementById("p180").style.display = "None";
+            document.getElementById("p365").style.display = "None";
+        }
+
+        function profitNum(i) {
+            profitNone();
+            document.getElementById("pp" + i).className = "analysis-duration-selected";
+            document.getElementById("p" + i).style.display = "";
+        }
     </script>
 </head>
 <body>
@@ -252,14 +270,25 @@
                                 </div>
                                 <!-- Title -->
                                 <div class="analysis-increment">
-                                    $10.00
+                                    $
+                                    <span th:text="${analysisData.getProfit()[0]}" id="p7"></span>
+                                    <span th:text="${analysisData.getProfit()[1]}" id="p30"
+                                          style="display: none"></span>
+                                    <span th:text="${analysisData.getProfit()[2]}" id="p180"
+                                          style="display: none"></span>
+                                    <span th:text="${analysisData.getProfit()[3]}" id="p365"
+                                          style="display: none"></span>
                                 </div>
                                 <!-- Title -->
                                 <div class="analysis-duration">
-                                    <a href="" class="analysis-duration-selected">7</a> |
-                                    <a href="" class="analysis-duration-not-selected">30</a> |
-                                    <a href="" class="analysis-duration-not-selected">180</a> |
-                                    <a href="" class="analysis-duration-not-selected">365</a>
+                                    <a href="#" class="analysis-duration-selected"
+                                       onclick="profitNum(7)" id="pp7">7</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="profitNum(30)" id="pp30">30</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="profitNum(180)" id="pp180">180</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="profitNum(365)" id="pp365">365</a>
                                     days
                                 </div>
                             </td>
