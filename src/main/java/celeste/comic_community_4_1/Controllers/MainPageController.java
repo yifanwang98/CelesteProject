@@ -55,7 +55,7 @@ public class MainPageController {
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
 
-    @GetMapping(value = {"/mainPage", "/"})
+    @GetMapping(value = {"/mainPage", "/", "home"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
 
         if (request.getSession().getAttribute("username") == null) {

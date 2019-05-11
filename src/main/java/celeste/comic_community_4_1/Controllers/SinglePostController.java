@@ -206,12 +206,45 @@ public class SinglePostController {
             reportee.setBlockStatus("1");
             reportee.setBlockedSince(new Date());
             userRepository.save(reportee);
+
+            List<Post> postList = postRepository.findByUser(reportee);
+            for (Post p : postList) {
+                List<ReportInfo> reportInfoList = reportInfoRepository.findReportInfoByPost(p);
+                if (reportInfoList.size() > 5) {
+                    for (ReportInfo ri : reportInfoList) {
+                        reportInfoRepository.delete(ri);
+                    }
+                    if (p.isRepost()) {
+                        postRepository.delete(p);
+                    } else {
+                        List<PostContent> postContentList = postContentRepository.findByPostIndentityPostPostID(p.getPostID());
+                        for (PostContent postContent : postContentList) {
+                            Work work = postContent.getPostIndentity().getWork();
+                            postContentRepository.delete(postContent);
+                            workRepository.delete(work);
+                        }
+                        List<Post> repostList = postRepository.findByOriginalPostIDAndIsRepost(p.getPostID(), true);
+                        for (Post repost : repostList) {
+                            postRepository.delete(repost);
+                        }
+                        List<Like> likeList = likeRepository.findByPostIndentityPost(p);
+                        for (Like like : likeList) {
+                            likeRepository.delete(like);
+                        }
+                        List<Star> starList = starRepository.findByPostIndentityPost(p);
+                        for (Star star : starList) {
+                            starRepository.delete(star);
+                        }
+                        postRepository.delete(p);
+                    }
+                }
+            }
+
         }
 
         return "Report has been sent. Please wait for our reply.";
-
-
     }
+
     @ResponseBody
     @PostMapping("/singlepostStar")
     public String singlepostReport(@RequestParam(value = "postID") long postID,
