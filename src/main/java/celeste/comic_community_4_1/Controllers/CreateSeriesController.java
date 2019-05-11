@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -117,9 +114,9 @@ public class CreateSeriesController {
         newSeries.setPublicEditing(wiki.equals("Yes"));
         newSeries.setUser(user);
 
-        String coverPath = "src/main/resources/static/images/samplePost/default-upload.png";
-        BufferedImage bImage = ImageIO.read(new File(coverPath));
-        String base64 = ThumbnailConverter.toBase64(ThumbnailConverter.convertSquare(bImage), "png");
+//        String coverPath = "src/main/resources/static/images/samplePost/default-upload.png";
+//        BufferedImage bImage = ImageIO.read(new File(coverPath));
+        String base64 = ThumbnailConverter.DEFAULT_SERIES_COVER;
         newSeries.setCover(base64);
 
         seriesRepository.save(newSeries);
