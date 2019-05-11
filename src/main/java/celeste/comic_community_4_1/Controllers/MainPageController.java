@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -46,6 +47,12 @@ public class MainPageController {
 
     @Autowired
     PostTagRepository postTagRepository;
+
+    @Autowired
+    SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
 
     @GetMapping(value = {"/mainPage", "/"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
@@ -97,12 +104,6 @@ public class MainPageController {
                 }
             }
 
-            // Count
-//            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-//            long commentCount = commentRepository.countCommentByPost(post);
-//            long starCount = starRepository.countStarByPostIndentityPost(post);
-//            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
-//
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
@@ -117,8 +118,36 @@ public class MainPageController {
         }
 
         model.addAttribute("postDataList", postDataList);
-        return "mainPage";
 
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+//        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+        return "mainPage";
+    }
+
+    @PostMapping("/home")
+    public String FirstLogin(@RequestParam(value = "username", required = false) String username,
+                             @RequestParam(value = "password", required = false) String password,
+                             ModelMap model, HttpServletRequest request) throws Exception {
+        if (password != null && password.length() > 0) {
+            if (!userRepository.existsById(username)) {
+                model.addAttribute("errors", "This username doesn't exist.");
+                return "index";
+            }
+            User user = userRepository.findById(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+            if (!password.equals(user.getPassword())) {
+                model.addAttribute("errors", "Your password is incorrect.");
+                return "index";
+            }
+            request.getSession().setAttribute("username", username);
+            request.getSession().setAttribute("password", password);
+        }
+
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        return mainPage(model, request);
     }
 
     @PostMapping("signOut")

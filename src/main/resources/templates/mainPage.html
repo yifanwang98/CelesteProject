@@ -387,17 +387,20 @@
         <!-- Right Part -->
         <td class="profileColumn-td">
             <div class="profileColumn">
+                <div style="text-align: center; padding: 1.618em 0 0.25em 0;">
+                    <img th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                         style="width: 38.2%; border-radius: 100%; border: #cccccc 1px solid;">
+                </div>
                 <!------------------------------------>
                 <!-- Profile Info -->
                 <div style="border-bottom: #f3f3f3 2px solid;">
-                    <table style="width: 100%; text-align: center;">
-                        <col width="33.333333%"/>
-                        <col width="33.333333%"/>
-                        <col width="33.333333%"/>
+                    <table style="width: 100%; text-align: center; padding: 0.61803em 0;">
+                        <col width="50%"/>
+                        <col width="50%"/>
                         <tr>
                             <td class="button-link">
                                 <a th:href="'/following?user=' + ${User.getUsername()}">
-                                    <div style="padding: 1em 0;">
+                                    <div>
                                         <span class="semibold" style="font-size: 1.05em;">Following</span><br><span
                                             th:text="${following}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
@@ -411,11 +414,36 @@
                                     </div>
                                 </a>
                             </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="border-bottom: #f3f3f3 2px solid;">
+                    <table style="width: 100%; text-align: center; border-spacing: 5px; padding: 0.61803em 0;">
+                        <col width="33.333333%"/>
+                        <col width="33.333333%"/>
+                        <col width="33.333333%"/>
+                        <tr>
                             <td class="button-link">
                                 <a th:href="'view_profile?user=' + ${User.getUsername()}">
                                     <div>
-                                        <span class="semibold" style="font-size: 1.05em;">My Post</span><br><span
+                                        <span class="semibold" style="font-size: 1.05em;">Posts</span><br><span
                                             th:text="${postsCount}" class="semibold" style="font-size: 1.05em;"></span>
+                                    </div>
+                                </a>
+                            </td>
+                            <td class="button-link">
+                                <a th:href="'view_profile_series?user=' + ${User.getUsername()}">
+                                    <div>
+                                        <span class="semibold" style="font-size: 1.05em;">Series</span><br><span
+                                            th:text="${seriesCount}" class="semibold" style="font-size: 1.05em;"></span>
+                                    </div>
+                                </a>
+                            </td>
+                            <td class="button-link">
+                                <a th:href="'view_profile_subscription?user=' + ${User.getUsername()}">
+                                    <div>
+                                        <span class="semibold" style="font-size: 1.05em;">Stars</span><br><span
+                                            th:text="${starCount}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
                                 </a>
                             </td>
@@ -425,6 +453,10 @@
                 <!------------------------------------>
                 <!-- Creation Link -->
                 <div style="border-bottom: #f3f3f3 2px solid;">
+                    <div style="margin: 1em 1em -0.4em 1.35em; color: #9a9a9a;"
+                         class="semibold">
+                        <i class='fas fa-feather'></i> Creation Center
+                    </div>
                     <table style="width: 100%; text-align: center; border-spacing: 5px;">
                         <col width="33.333333%"/>
                         <col width="33.333333%"/>
@@ -445,9 +477,9 @@
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
+                                <a href="/profile_analysis">
                                     <div>
-                                        <i class='fas fa-star button-icon'></i><br>Stars
+                                        <i class='fas fa-chart-line button-icon'></i><br>Analysis
                                     </div>
                                 </a>
                             </td>
@@ -458,20 +490,80 @@
                 <!-- Top Search -->
                 <div class="top-search-block">
                     <div style="color: #9a9a9a;" class="semibold">
-                        Top Search
+                        <i class='fas fa-fire'></i> Top Search
                     </div>
-                    <div class="button-link" style="line-height: 1.6; padding-left: 1em; padding-top: 0.5em">
-                        <a href=""># 1 DC</a><br>
-                        <a href=""># 2 batman</a><br>
-                        <a href=""># 3 irony</a><br>
-                        <a href=""># 4 crisis</a><br>
-                        <a href=""># 5 detective</a><br>
-                        <a href=""># 6 dark</a><br>
-                        <a href=""># 7 who</a><br>
-                        <a href=""># 8 flash</a><br>
-                        <a href=""># 9 the end</a><br>
-                        <a href="">#10 action</a><br>
-                    </div>
+                    <table width="100%" style="padding-top: 0.5em">
+                        <tr>
+                            <td class="trendingNum semibold">1</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">DC</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">2</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">Batman</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">3</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">Superman</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">4</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">Cat</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">5</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">asd</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">6</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">2</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">7</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">light</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">8</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">fun</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">9</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">aw</a></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="trendingNum semibold">10</td>
+                            <td>
+                                <div style="margin-left: 1em;" class="button-link">
+                                    <a href="">pen</a></div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div></div>
