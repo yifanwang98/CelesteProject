@@ -241,13 +241,13 @@
                         <div class="logo"></div>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="/mainPage" class="headerSelected">Home</a>
+                        <a href="/mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="discover" class="headerUnselected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="search" class="headerUnselected">Search</a>
+                        <a href="search" class="headerSelected">Search</a>
                     </td>
                 </tr>
             </table>
@@ -736,8 +736,10 @@
         <td class="profileColumn-td">
             <div class="profileColumn">
                 <div style="text-align: center; padding: 1.618em 0 0.25em 0;">
-                    <img th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                    <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                        <img th:src="'data:image/png;base64,'+${User.getAvatar()}"
                          style="width: 38.2%; border-radius: 100%; border: #cccccc 1px solid;">
+                    </a>
                 </div>
                 <!------------------------------------>
                 <!-- Profile Info -->

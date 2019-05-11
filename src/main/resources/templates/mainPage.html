@@ -344,8 +344,10 @@
         <td class="profileColumn-td">
             <div class="profileColumn">
                 <div style="text-align: center; padding: 1.618em 0 0.25em 0;">
-                    <img th:src="'data:image/png;base64,'+${User.getAvatar()}"
-                         style="width: 38.2%; border-radius: 100%; border: #cccccc 1px solid;">
+                    <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                        <img th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                             style="width: 38.2%; border-radius: 100%; border: #cccccc 1px solid;">
+                    </a>
                 </div>
                 <!------------------------------------>
                 <!-- Profile Info -->
