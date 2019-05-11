@@ -13,6 +13,37 @@
     <link href="../static/stylesheet/follow.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        function remove_fan(username) {
+            // alert(username)
+            $.ajax({
+                type : "POST",
+                url : 'Remove',
+                data:{remove:username},
+                cache : false,
+                success : function(data) {
+                    if(data == "Remove Success!"  ){
+                        alert(data)
+                        // ( $('#'+id).text("  Follow"))
+                        // ( $('#'+id).prepend("<i class='fas fa-plus'></i>"))
+                         location.reload();
+                    }
+                    else  {
+                        alert(data)
+                    }
+                },
+                error: function(){
+                    alert(arguments[1]);
+                }
+            });
+        }
+        $(document).ready(function(){
+
+        });
+
+    </script>
+
 </head>
 <body>
 <!-- Header Banner -->
@@ -31,7 +62,7 @@
                         <a href="mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected">Discover</a>
+                        <a href="discover" class="headerUnselected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="search" class="headerUnselected">Search</a>
@@ -176,8 +207,8 @@
                         </span>
                         <span th:unless="${isOthersProfile}">
                             <div class="subscription-series-unsubscribe">
-                                <a th:href="'/unfollow?value=' + ${follow.getFollowIndentity().getUser1().getUsername()}"><i
-                                        class='fas fa-minus'></i> Unfollow</a>
+                                <a th:href="'javascript:remove_fan(' + ${follow.getFollowIndentity().getUser1().getUsername()} + ');'"><i
+                                        class='fas fa-minus'></i> Remove</a>
                             </div>
                         </span>
                     </td>

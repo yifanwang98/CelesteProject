@@ -20,6 +20,6 @@ public interface FollowRepository extends JpaRepository<Follow, FollowIndentity>
 
     boolean existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(User user1, User user2);
 
-    List<Follow> findByFollowIndentityUseroneAndFollowIndentityUsertwo(String user1, String user2);
+    List<Follow> findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(String user1, String user2);
 }
 

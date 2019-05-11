@@ -20,6 +20,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByPostID(long postId);
 
+    List<Post> findByPrimaryGenre(String PrimaryGenre);
+
+    List<Post> findBySecondaryGenre(String SecondaryGenre);
+
     long countPostByUser(User user);
 }
 
