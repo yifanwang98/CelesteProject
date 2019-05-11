@@ -75,7 +75,9 @@
         <!-- Left Part -->
         <td style="vertical-align: top;">
             <div style="width: 100%; background: white; border-radius: 8px;">
-                <div class="notification-title semibold">Notification</div>
+                <div class="notification-title semibold">Notification (<span
+                        th:text="${notificationList.size()}"></span>)
+                </div>
                 <span th:each="notification, iter: ${notificationList}">
                     <div th:class="${iter.index == 0 ? 'notification-container' : 'notification-container notification-separator'}">
                         <table width="100%">
@@ -135,6 +137,9 @@
                     </div>
                 </span>
                 <div style="padding: 0.25em;"></div>
+            </div>
+            <div style="text-align: center; color: #9a9a9a; font-style: italic; margin: 0.5em;">
+                - Last viewd: <span th:text="${lastView}"></span> -
             </div>
         </td>
         <!---------------------------------------->

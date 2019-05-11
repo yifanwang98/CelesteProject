@@ -17,6 +17,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByOriginalPostIDAndIsRepost(long postid, Boolean b);
 
+    List<Post> findByCreatedAtAfterAndOriginalPostIDAndIsRepost(Date date, long postid, Boolean b);
+
     Post findPostByPostID(long postid);
 
     List<Post> findByPostID(long postId);
