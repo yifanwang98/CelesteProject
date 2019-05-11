@@ -3,7 +3,7 @@ package celeste.comic_community_4_1.miscellaneous;
 public class AnalysisData {
 
     private long[] contribution = new long[4];
-    private double[] profit = new double[4];
+    private String[] profit = new String[4];
     private long[] view = new long[4];
     private long[] subscriber = new long[4];
 
@@ -15,11 +15,11 @@ public class AnalysisData {
         this.contribution = contribution;
     }
 
-    public double[] getProfit() {
+    public String[] getProfit() {
         return profit;
     }
 
-    public void setProfit(double[] profit) {
+    public void setProfit(String[] profit) {
         this.profit = profit;
     }
 

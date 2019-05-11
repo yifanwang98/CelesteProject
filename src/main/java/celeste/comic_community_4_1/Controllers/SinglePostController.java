@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostIndentity;
 import celeste.comic_community_4_1.repository.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -46,6 +48,9 @@ public class SinglePostController {
 
     @Autowired
     ReportInfoRepository reportInfoRepository;
+
+    @Autowired
+    PostAnalysisRepository postAnalysisRepository;
 
 
     @GetMapping("/singlePost")
@@ -95,6 +100,17 @@ public class SinglePostController {
 
         model.addAttribute("myStar", starRepository.existsStarByPostIndentityPostAndPostIndentityUser(postToDisplay, user));
         model.addAttribute("myLike", likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(postToDisplay, user));
+
+        // Analysis
+        Date today = Notification.getToday();
+        if (!postAnalysisRepository.existsPostAnalysisByPostAndUserAndViewedAt(postToDisplay, user, today)
+                && !user.getUsername().equals(postToDisplay.getUser().getUsername())) {
+            PostAnalysis pa = new PostAnalysis();
+            pa.setPost(postToDisplay);
+            pa.setUser(user);
+            pa.setViewedAt(today);
+            postAnalysisRepository.save(pa);
+        }
 
         return "singlePost";
     }
