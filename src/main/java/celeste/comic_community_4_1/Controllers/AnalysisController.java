@@ -99,7 +99,23 @@ public class AnalysisController {
         analysisData.setView(views);
 
         // Get Subscribers
-        analysisData.setSubscriber(new long[4]);
+        long[] followCount = new long[]{0, 0, 0, 0};
+        calendar.add(Calendar.DATE, -7);
+        followCount[0] = followRepository.countFollowByCreatedAtAfterAndAndFollowIndentityUsertwo(calendar.getTime(), user);
+        calendar.add(Calendar.DATE, 7);
+
+        calendar.add(Calendar.DATE, -30);
+        followCount[1] = followRepository.countFollowByCreatedAtAfterAndAndFollowIndentityUsertwo(calendar.getTime(), user);
+        calendar.add(Calendar.DATE, 30);
+
+        calendar.add(Calendar.DATE, -180);
+        followCount[2] = followRepository.countFollowByCreatedAtAfterAndAndFollowIndentityUsertwo(calendar.getTime(), user);
+        calendar.add(Calendar.DATE, 180);
+
+        calendar.add(Calendar.DATE, -365);
+        followCount[3] = followRepository.countFollowByCreatedAtAfterAndAndFollowIndentityUsertwo(calendar.getTime(), user);
+        calendar.add(Calendar.DATE, 365);
+        analysisData.setSubscriber(followCount);
 
         model.addAttribute("analysisData", analysisData);
 

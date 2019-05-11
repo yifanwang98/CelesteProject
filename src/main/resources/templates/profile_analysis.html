@@ -32,6 +32,24 @@
             document.getElementById("vv" + i).className = "analysis-duration-selected";
             document.getElementById("v" + i).style.display = "";
         }
+
+        function subscriberNone() {
+            document.getElementById("ss7").className = "analysis-duration-not-selected";
+            document.getElementById("ss30").className = "analysis-duration-not-selected";
+            document.getElementById("ss180").className = "analysis-duration-not-selected";
+            document.getElementById("ss365").className = "analysis-duration-not-selected";
+
+            document.getElementById("s7").style.display = "None";
+            document.getElementById("s30").style.display = "None";
+            document.getElementById("s180").style.display = "None";
+            document.getElementById("s365").style.display = "None";
+        }
+
+        function subscriberNum(i) {
+            subscriberNone();
+            document.getElementById("ss" + i).className = "analysis-duration-selected";
+            document.getElementById("s" + i).style.display = "";
+        }
     </script>
 </head>
 <body>
@@ -285,14 +303,25 @@
                                 </div>
                                 <!-- Title -->
                                 <div class="analysis-increment">
-                                    + 15
+                                    +
+                                    <span th:text="${analysisData.getSubscriber()[0]}" id="s7"></span>
+                                    <span th:text="${analysisData.getSubscriber()[1]}" id="s30"
+                                          style="display: none"></span>
+                                    <span th:text="${analysisData.getSubscriber()[2]}" id="s180"
+                                          style="display: none"></span>
+                                    <span th:text="${analysisData.getSubscriber()[3]}" id="s365"
+                                          style="display: none"></span>
                                 </div>
                                 <!-- Title -->
                                 <div class="analysis-duration">
-                                    <a href="" class="analysis-duration-selected">7</a> |
-                                    <a href="" class="analysis-duration-not-selected">30</a> |
-                                    <a href="" class="analysis-duration-not-selected">180</a> |
-                                    <a href="" class="analysis-duration-not-selected">365</a>
+                                    <a href="#" class="analysis-duration-selected"
+                                       onclick="subscriberNum(7)" id="ss7">7</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="subscriberNum(30)" id="ss30">30</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="subscriberNum(180)" id="ss180">180</a> |
+                                    <a href="#" class="analysis-duration-not-selected"
+                                       onclick="subscriberNum(365)" id="ss365">365</a>
                                     days
                                 </div>
                             </td>
