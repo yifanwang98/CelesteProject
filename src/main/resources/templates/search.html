@@ -11,8 +11,12 @@
     <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/search.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/follow.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         function hideAndShow() {
             var x = document.getElementById("searchFilter");
@@ -24,18 +28,203 @@
                 z.style.display = "none";
                 var i = 0;
                 while (i < 20) {
-                    document.getElementById("genre_" + i).checked = false;
+                    document.getElementById("genre_" + i).checked = true;
                     i = i + 1;
                 }
-                document.getElementById("searchIn1").checked = false;
-                document.getElementById("searchIn2").checked = false;
-                document.getElementById("searchIn3").checked = false;
-                document.getElementById("searchIn4").checked = false;
             } else {
                 x.style.display = "none";
                 y.style.display = "none";
                 z.style.display = "block";
             }
+        }
+
+        function clearAllGenre() {
+            var i = 0;
+            while (i < 20) {
+                document.getElementById("genre_" + i).checked = false;
+                i = i + 1;
+            }
+        }
+
+        function unfollow_followname(e) {
+            e.preventDefault();
+            var id = e.target.id;
+            var index = id.lastIndexOf('_');
+            var username1 = (id.substring(19, index));
+            var username2 = (id.substring(index + 1, e.target.id.length));
+            $.ajax({
+                type: "POST",
+                url: 'unfollow_follow',
+                data: {username1: username1, username2: username2},
+                cache: false,
+                success: function (data) {
+                    if (data == "Unfollow Success!") {
+                        ($('#' + id).text("  Follow"))
+                        ($('#' + id).prepend("<i class='fas fa-plus'></i>"))
+                        // location.reload();
+                    }
+                    else if (data == "Follow Success!") {
+                        ($('#' + id).text("  Unfollow"))
+                        ($('#' + id).prepend("<i class='fas fa-minus'></i>"))
+                    }
+                },
+                error: function () {
+                    alert(arguments[1]);
+                }
+            });
+        }
+
+        function switchToAll() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "";
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "";
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "";
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "";
+                }
+            }
+            if (document.getElementById("error")) {
+                if (total > 0) {
+                    document.getElementById("error").style.display = "None";
+                }
+            }
+            document.getElementById("F-A").className = "searchFilter-selected";
+            document.getElementById("F-P").className = "searchFilter";
+            document.getElementById("F-U").className = "searchFilter";
+            document.getElementById("F-S").className = "searchFilter";
+            document.getElementById("F-H").className = "searchFilter";
+        }
+
+        function switchToHashtag() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            var cc = 0;
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "None";
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "None";
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "";
+                    cc += 1;
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "None";
+                }
+            }
+            if (document.getElementById("error")) {
+                document.getElementById("error").style.display = "None";
+            }
+            if (cc === 0 && total != 0) {
+                document.getElementById("error").style.display = "";
+            }
+            document.getElementById("F-H").className = "searchFilter-selected";
+            document.getElementById("F-P").className = "searchFilter";
+            document.getElementById("F-U").className = "searchFilter";
+            document.getElementById("F-S").className = "searchFilter";
+            document.getElementById("F-A").className = "searchFilter";
+        }
+
+        function switchToPost() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            var cc = 0;
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "None";
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "";
+                    cc += 1;
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "None";
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "None";
+                }
+            }
+            if (document.getElementById("error")) {
+                document.getElementById("error").style.display = "None";
+            }
+            if (cc === 0 && total != 0) {
+                document.getElementById("error").style.display = "";
+            }
+            document.getElementById("F-P").className = "searchFilter-selected";
+            document.getElementById("F-A").className = "searchFilter";
+            document.getElementById("F-U").className = "searchFilter";
+            document.getElementById("F-S").className = "searchFilter";
+            document.getElementById("F-H").className = "searchFilter";
+        }
+
+        function switchToSeries() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            var cc = 0;
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "None";
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "None";
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "None";
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "";
+                    cc += 1;
+                }
+            }
+            if (document.getElementById("error")) {
+                document.getElementById("error").style.display = "None";
+            }
+            if (cc === 0 && total != 0) {
+                document.getElementById("error").style.display = "";
+            }
+
+            document.getElementById("F-S").className = "searchFilter-selected";
+            document.getElementById("F-P").className = "searchFilter";
+            document.getElementById("F-U").className = "searchFilter";
+            document.getElementById("F-A").className = "searchFilter";
+            document.getElementById("F-H").className = "searchFilter";
+        }
+
+        function switchToUser() {
+            var total = parseInt(document.getElementById("totalNum").innerHTML, 10);
+            var cc = 0;
+            for (var i = 0; i < total; i += 1) {
+                if (document.getElementById("U" + i)) {
+                    document.getElementById("U" + i).style.display = "";
+                    cc += 1;
+                }
+                if (document.getElementById("P" + i)) {
+                    document.getElementById("P" + i).style.display = "None";
+                }
+                if (document.getElementById("H" + i)) {
+                    document.getElementById("H" + i).style.display = "None";
+                }
+                if (document.getElementById("S" + i)) {
+                    document.getElementById("S" + i).style.display = "None";
+                }
+            }
+            if (document.getElementById("error")) {
+                document.getElementById("error").style.display = "None";
+            }
+            if (cc === 0 && total != 0) {
+                document.getElementById("error").style.display = "";
+            }
+            document.getElementById("F-U").className = "searchFilter-selected";
+            document.getElementById("F-P").className = "searchFilter";
+            document.getElementById("F-A").className = "searchFilter";
+            document.getElementById("F-S").className = "searchFilter";
+            document.getElementById("F-H").className = "searchFilter";
         }
     </script>
 </head>
@@ -99,11 +288,24 @@
         <!-- Left Part -->
         <td style="vertical-align: top;">
             <form id="searchForm" method="post" action="searchForm"></form>
+            <table width="100%" style="margin-bottom: 0.5em;" cellpadding="0.5em" cellspacing="0">
+                <col width="80%"/>
+                <col width="1%"/>
+                <col width="19%"/>
+                <tr>
+                    <td>
+                        <input type="text" placeholder="Boom" name="searchContent"
+                               class="searchTextfield" form="searchForm"
+                               th:value="${searchContent}"
+                               required>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Search" class="button" form="searchForm">
+                    </td>
+                </tr>
+            </table>
             <div style="width: 100%;">
-                <input type="text" placeholder="Boom" name="searchContent" class="searchTextfield" form="searchForm"
-                       required>
-                <input type="submit" value="Search" class="button" form="searchForm">
-
                 <div style="margin-top: -0.75em;" id="advanceToShow">
                     <a class="advance-search-title" href="#" onclick="hideAndShow()">Advance Search <i
                             class='fas fa-caret-down' style="text-decoration: underline;"></i></a>
@@ -117,33 +319,416 @@
                         <span class="semibold">Genre: </span>
                         <span th:each="genre, iter: ${genreList}">
                             <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                                <input type="checkbox" name="genre" th:value="${genre}" form="searchForm"
+                                <input type="checkbox" name="genre" th:value="${genre}" form="searchForm" checked
                                        th:id="'genre_' + ${iter.index}"><span th:text="' ' + ${genre}"></span>
                             </span>
                         </span>
+                        <a href="#" class="clearAllGenre" onclick="clearAllGenre()">Clear All</a>
                     </div>
-                    <br><br>
-                    <div>
-                        <span class="semibold">Search Only In: </span>
+                    <div hidden style="margin-top: 0.25em">
+                        <span class="semibold">Filter: </span>
                         <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                            <input type="checkbox" name="filter" value="search_author" form="searchForm" id="searchIn1"
-                                   selected> Author
+                            <input type="checkbox" name="filter" value="hashtag" checked
+                                   form="searchForm" id="searchIn1"
+                                   selected> Hashtag
                         </span>
                         <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                            <input type="checkbox" name="filter" value="search_post" form="searchForm" id="searchIn2"
+                            <input type="checkbox" name="filter" value="post" checked
+                                   form="searchForm" id="searchIn2"
                                    selected> Post
                         </span>
                         <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                            <input type="checkbox" name="filter" value="search_series" form="searchForm" id="searchIn3"
+                            <input type="checkbox" name="filter" value="series" checked
+                                   form="searchForm" id="searchIn3"
                                    selected> Series
                         </span>
                         <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                            <input type="checkbox" name="filter" value="search_hashtag" form="searchForm" id="searchIn4"
-                                   selected> Hashtag
+                            <input type="checkbox" name="filter" value="user" checked
+                                   form="searchForm" id="searchIn4"
+                                   selected> User
                         </span>
                     </div>
                 </div>
             </div>
+            <!---------------------------------------->
+            <!----------- Search Filter -------------->
+            <span th:if="${searched}">
+            <div class="searchFilterContainer">
+                <table width="100%" style="padding: 0.25em 0;">
+                    <col width="20%"/>
+                    <col width="20%"/>
+                    <col width="20%"/>
+                    <col width="20%"/>
+                    <col width="20%"/>
+                    <tr>
+                        <td>
+                            <div class="searchFilter-selected" id="F-A">
+                                <a href="#" onclick="switchToAll()">All (<span th:text="${searchResultCount[0]}"
+                                                                               id="totalNum"></span>)</a>
+                            </div>
+                        </td>
+                        <td style="border-left: #cccccc 1px solid;">
+                            <div class="searchFilter" id="F-H">
+                                <a href="#" onclick="switchToHashtag()">Hashtag (<span
+                                        th:text="${searchResultCount[1]}"></span>)</a>
+                            </div>
+                        </td>
+                        <td style="border-left: #cccccc 1px solid;">
+                            <div class="searchFilter" id="F-P">
+                                <a href="#" onclick="switchToPost()">Post (<span
+                                        th:text="${searchResultCount[2]}"></span>)</a>
+                            </div>
+                        </td>
+                        <td style="border-left: #cccccc 1px solid;">
+                            <div class="searchFilter" id="F-S">
+                                <a href="#" onclick="switchToSeries()">Series (<span
+                                        th:text="${searchResultCount[3]}"></span>)</a>
+                            </div>
+                        </td>
+                        <td style="border-left: #cccccc 1px solid;">
+                            <div class="searchFilter" id="F-U">
+                                <a href="#" onclick="switchToUser()">User (<span
+                                        th:text="${searchResultCount[4]}"></span>)</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div></span>
+            <!---------------------------------------->
+            <!------------ Search Error -------------->
+            <span th:if="${searched}">
+            <div th:if="${searchResultList.size() == 0}" class="searchError">
+                No Result Found
+            </div>
+            <div th:unless="${searchResultList.size() == 0}" class="searchError" id="error" style="display: none">
+                No Result Found
+            </div>
+                <!---------------------------------------->
+                <!----------- Search Result -------------->
+            <div th:unless="${searchResultList.size() == 0}">
+                <span th:each="result, iter:${searchResultList}">
+                    <!------------- User Result ------------->
+                    <span th:if="${result.resultType.equals('USER')}" th:id="'U' + ${iter.index}">
+                        <div class="searchResultOuterContainer">
+                            <div class="searchResultInnerContainer">
+                                <table width="100%">
+                                    <col width="15%"/>
+                                    <col width="65%"/>
+                                    <col width="20%"/>
+                                    <tr>
+                                        <td style="text-align: center;">
+                                            <a th:href="'view_profile?user=' + ${result.userData.user.getUsername()}">
+                                                <image th:src="'data:image/png;base64,'+${result.userData.user.getAvatar()}"
+                                                       class="follow-avatar-image"></image>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a class="follow-username"
+                                               th:href="'view_profile?user=' + ${result.userData.user.getUsername()}"
+                                               th:text="${result.userData.user.getUsername()}"></a>
+                                            <span th:if="${result.userData.user.getGender() == 'male'}"
+                                                  class="follow-male"><i class='fas fa-mars'></i></span>
+                                            <span th:unless="${result.userData.user.getGender() == 'male'}"
+                                                  class="follow-female"><i class='fas fa-venus'></i></span>
+                                        </td>
+                                        <td>
+                                            <div class="subscription-series-unsubscribe"
+                                                 th:if="${result.userData.followed}">
+                                                <a href="#"
+                                                   onclick="unfollow_followname(event)"
+                                                   th:id="'unfollow_followname'+ ${User.getUsername()}+'_'+${result.userData.user.getUsername()}"
+                                                ><i class='fas fa-minus'></i> Unfollow</a>
+                                            </div>
+                                            <div class="subscription-series-unsubscribe"
+                                                 th:unless="${result.userData.followed}">
+                                                <a href="#"
+                                                   th:name="'unfollow_followname'+ ${User.getUsername()}+'_'+${result.userData.user.getUsername()}">
+                                                    <i class='fas fa-plus'></i> Follow</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </span><!-- End Of User -->
+                    <!------------- Series Result ------------->
+                    <span th:if="${result.resultType.equals('SERIES')}" th:id="'S' + ${iter.index}">
+                        <div class="searchResultOuterContainer">
+                            <div class="searchResultInnerContainer">
+                                <table width="100%">
+                                    <col width="12em;"/><col width="65%"/><col width="20%;"/>
+                                    <tr>
+                                        <td style="text-align: center;">
+                                            <a style="text-decoration: none"
+                                               th:href="'singleSeries?id=' + ${result.seriesData.series.getSeriesID()} + '&index=0'">
+                                                <img th:src="'data:image/png;base64,'+${result.seriesData.series.getCover()}"
+                                                     class="series-cover-image">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div style="padding: 0 1.5em">
+                                                <div class="subscription-series-title">
+                                                    <a th:href="'singleSeries?id=' + ${result.seriesData.series.getSeriesID()} + '&index=0'"><span
+                                                            th:text="${result.seriesData.series.getSeriesName()}"></span></a>
+                                                </div>
+                                                <div class="subscription-series-date">
+                                                    <span th:text="${result.seriesData.series.getDescription()}"></span>
+                                                </div>
+                                                <div class="subscription-series-date">
+                                                    <span class="semibold">Created On: </span><span
+                                                        th:text="${result.seriesData.creationDate()}"></span>
+                                                </div>
+                                                <div class="subscription-series-date">
+                                                    <span class="semibold">Subscribers: </span><span
+                                                        th:text="${result.seriesData.subscriptionCount}"></span>
+                                                </div>
+                                                <div class="subscription-series-date">
+                                                    <span class="semibold">Open For Wiki: </span>
+                                                    <span th:if="${result.seriesData.series.isPublicEditing()}"
+                                                          th:text="'Yes'"></span>
+                                                    <span th:unless="${result.seriesData.series.isPublicEditing()}"
+                                                          th:text="'No'"></span>
+                                                </div>
+                                                <div class="subscription-series-tag">
+                                                    <span th:if="${!result.seriesData.series.getPrimaryGenre().equals('None')}">
+                                                        <a href="#">#<span
+                                                                th:text="${result.seriesData.series.getPrimaryGenre()}"></span></a>
+                                                    </span>
+                                                    <span th:if="${!result.seriesData.series.getSecondaryGenre().equals('None')}">
+                                                        <a href="#">#<span
+                                                                th:text="${result.seriesData.series.getSecondaryGenre()}"></span></a>
+                                                    </span>
+                                                    <span th:each="tag, iter: ${result.seriesData.tags}">
+                                                        <span th:if="${tag != null}">
+                                                            <a href="#">#<span th:text="${tag}"></span></a>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="margin: 0.75em 0;">
+                                                <div th:if="${result.seriesData.owner}"
+                                                     class="subscription-series-unsubscribe">
+                                                    <a th:href="'/editSeries?id=' + ${result.seriesData.series.getSeriesID()}"><i
+                                                            class='far fa-edit'></i> Edit</a>
+                                                </div>
+                                            </div>
+                                            <div th:if="${result.seriesData.subscribed}"
+                                                 class="subscription-series-unsubscribe">
+                                                <a href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
+                                            </div>
+                                            <div th:if="${!result.seriesData.subscribed && !result.seriesData.owner}"
+                                                 class="subscription-series-unsubscribe">
+                                                <a href="#"><i class='fas fa-plus'></i> Subscribe</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </span> <!-- End Of Series -->
+                    <!------------- Hashtag Result ------------->
+                    <span th:if="${result.resultType.equals('HASHTAG')}" th:id="'H' + ${iter.index}">
+                        <div class="searchResultOuterContainer">
+                            <div class="searchResultInnerContainer">
+                                <table width="100%">
+                                    <col width="50%"/>
+                                    <col width="25%"/>
+                                    <col width="25%"/>
+                                    <tr>
+                                        <td style="text-align: center;">
+                                            <div class="searchResult-tag">
+                                                <a href="#">
+                                                    # <span th:text="${result.hashTagData.hashtag}"></span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center; color: #3c3c3c">
+                                            <span class="semibold">Post(s): </span>
+                                            <span th:text="${result.hashTagData.postCount}"></span>
+                                        </td>
+                                        <td style="text-align: center; color: #3c3c3c">
+                                            <span class="semibold">Series: </span>
+                                            <span th:text="${result.hashTagData.seriesCount}"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </span><!-- End Of Hash Tag -->
+                    <span th:if="${result.resultType.equals('POST')}" th:id="'P' + ${iter.index}">
+                        <div class="searchResultOuterContainer">
+                        <table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">
+                            <!-- Header -->
+                            <tr>
+                                <td class="post-avatar">
+                                    <a th:href="'view_profile?user=' + ${result.postData.post.getUser().getUsername()}">
+                                        <image th:src="'data:image/png;base64,'+${result.postData.post.getUser().getAvatar()}"
+                                               class="post-avatar-image"></image>
+                                    </a>
+                                </td>
+                                <td>
+                                    <table width="100%">
+                                        <tr>
+                                            <td>
+                                                <span class="post-author"
+                                                      th:text="${result.postData.post.getUser().getUsername()}"></span><br>
+                                                <span class="post-time"
+                                                      th:text="${result.postData.postCreatedAt()}"></span>
+                                            </td>
+                                            <td width="10%"
+                                                style="vertical-align: top; text-align: right; padding-right: 1em; min-width: 10em;">
+                                                <span th:if="${result.postData.starred}" class="post-action-stared-top">
+                                                    <i class='fas fa-star'></i>
+                                                </span>
+                                                <span th:if="${result.postData.liked}" class="post-action-liked-top">
+                                                    <i class='fas fa-thumbs-up'></i>
+                                                </span>
+                                                <a href=""
+                                                   th:if="${User.getUsername() == result.postData.post.getUser().getUsername()}"
+                                                   class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                                <div class="dropdown"
+                                                     th:unless="${User.getUsername() == result.postData.post.getUser().getUsername()}">
+                                                    <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
+                                                    <div class="dropdown-content">
+                                                        <a th:href="'javascript:reportAPost(' + ${result.postData.post.getPostID()} + ');'"><i
+                                                                class="fas fa-exclamation-triangle"></i> Report</a>
+                                                        <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- Text -->
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div th:text="${result.postData.post.getPostComment()}" class="post-text"
+                                         th:if="${!result.postData.post.getPostComment().isEmpty()}"></div>
+                                    <div class="post-genre">
+                                        <span th:if="${!result.postData.post.getPrimaryGenre().equals('None') || !result.postData.post.getSecondaryGenre().equals('None')}">
+                                            <span th:if="${!result.postData.post.getPrimaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${result.postData.post.getPrimaryGenre()} + ' '"></span>
+                                            <span th:if="${!result.postData.post.getSecondaryGenre().equals('None')}"
+                                                  class="post-genre-text"
+                                                  th:text="'#' + ${result.postData.post.getSecondaryGenre()}"></span>
+                                        </span>
+                                        <span th:each="tag: ${result.postData.postTags}">
+                                            <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- From Series -->
+                            <tr th:if="${!result.postData.fromSeries.isEmpty() && !result.postData.post.isRepost()}">
+                                <td></td>
+                                <td>
+                                    <span class="post-genre semibold">From Series: </span>
+                                    <span th:each="fromSeries: ${result.postData.fromSeries}">
+                                        <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
+                                           th:href="'singleSeries?id=' + ${fromSeries.getSeriesID()} + '&index=0'"></a>
+                                    </span>
+                                </td>
+                            </tr>
+                            <!-- Images -->
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <!-- Repost -->
+                                    <div th:if="${result.postData.post.isRepost()}">
+                                        <table style="border-spacing: 0em; padding-top: 0.5em; margin-bottom: 0.5em; width:100%; border-left: 2px solid lightgrey;">
+                                            <!-- Header -->
+                                            <tr>
+                                                <td class="post-avatar">
+                                                    <a th:href="'view_profile?user=' + ${result.postData.originalPost.getUser().getUsername()}">
+                                                        <image th:src="'data:image/png;base64,'+${result.postData.originalPost.getUser().getAvatar()}"
+                                                               class="post-avatar-image"></image>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td>
+                                                                <span class="post-author"
+                                                                      th:text="${result.postData.originalPost.getUser().getUsername()}"></span><br>
+                                                                <span class="post-time"
+                                                                      th:text="${result.postData.originalPostCreatedAt()}"></span>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <!-- Text -->
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <div th:text="${result.postData.originalPost.getPostComment()}"
+                                                         th:if="${!result.postData.originalPost.getPostComment().isEmpty()}"
+                                                         class="post-text"></div>
+                                                    <div class="post-genre"
+                                                         th:if="${!result.postData.originalPost.getPrimaryGenre().equals('None') || !result.postData.originalPost.getSecondaryGenre().equals('None')}">
+                                                        <span th:if="${!result.postData.originalPost.getPrimaryGenre().equals('None')}"
+                                                              class="post-genre-text"
+                                                              th:text="'#' + ${result.postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                        <span th:if="${!result.postData.originalPost.getSecondaryGenre().equals('None')}"
+                                                              class="post-genre-text"
+                                                              th:text="'#' + ${result.postData.originalPost.getSecondaryGenre()}"></span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <!-- From Series -->
+                                            <tr th:if="${!result.postData.fromSeries.isEmpty()}">
+                                                <td></td>
+                                                <td>
+                                                    <span class="post-genre semibold">From Series: </span>
+                                                    <span th:each="fromSeries: ${result.postData.fromSeries}">
+                                                        <a class="post-genre-text"
+                                                           th:text="${fromSeries.getSeriesName()}"
+                                                           th:href="'singleSeries?id=' + ${fromSeries.getSeriesID()} + '&index=0'"></a>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <!-- Images -->
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <div>
+                                                        <span th:each="work:${result.postData.images}">
+                                                            <a th:href="'singlePost?id=' + ${result.postData.post.getPostID()}"
+                                                               class="imageLink">
+                                                                <image th:src="'data:image/png;base64,'+${work}"
+                                                                       class="post-image-multiple"></image>
+                                                            </a>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <!-- Original -->
+                                    <div th:unless="${result.postData.post.isRepost()}">
+                                        <span th:each="work:${result.postData.images}">
+                                            <a th:href="'singlePost?id=' + ${result.postData.post.getPostID()}"
+                                               class="imageLink">
+                                                <image th:src="'data:image/png;base64,'+${work}"
+                                                       th:class="${result.postData.images.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="padding: 0.1em;"></div>
+                    </div>
+                    </span><!-- End Of Post -->
+                </span><!-- End Of For Each -->
+            </div>
+            </span>
         </td>
         <!---------------------------------------->
         <!---------------------------------------->

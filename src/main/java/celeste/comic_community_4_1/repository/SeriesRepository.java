@@ -16,4 +16,6 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     Series findSeriesBySeriesID(long id);
 
     long countSeriesByUser(User user);
+
+    List<Series> findSeriesBySeriesNameContains(String key);
 }
