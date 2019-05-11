@@ -138,6 +138,9 @@ public class NotificationController {
 
         request.getSession().setAttribute("username", username);
 
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
         return "notification";
     }
 

@@ -120,7 +120,6 @@ public class MainPageController {
         model.addAttribute("postDataList", postDataList);
 
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
-//        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
         return "mainPage";
     }

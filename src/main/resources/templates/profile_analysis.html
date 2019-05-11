@@ -90,7 +90,6 @@
 </head>
 <body>
 <!-- Header Banner -->
-<!--div class="header"-->
 <table class="header webfont semibold">
     <tbody style="padding: 0; margin: 0;">
     <tr>
@@ -102,7 +101,7 @@
                         <div class="logo"></div>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="mainPage" class="headerUnselected">Home</a>
+                        <a href="/mainPage" class="headerSelected">Home</a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="discover" class="headerUnselected">Discover</a>
@@ -116,7 +115,7 @@
         <!-- Right Part -->
         <td style="width: 5em;">
             <table style="padding: 0; margin: 0; align: right;">
-                <tr style="align: right; vertical-align: center">
+                <tr style="align: right;">
                     <td class="headerCellPadding">
                         <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
@@ -124,7 +123,7 @@
                         <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected">
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
                             <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
                                    class="header-avatar-image"></image>
                         </a>

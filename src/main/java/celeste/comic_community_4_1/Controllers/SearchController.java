@@ -84,6 +84,11 @@ public class SearchController {
         int[] searchResultCount = {0, 0, 0, 0, 0}; // All, Hashtag, Post, Series, User
         model.addAttribute("searchResultCount", searchResultCount);
 
+
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+//        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
         return "search";
     }
 
@@ -155,6 +160,10 @@ public class SearchController {
         model.addAttribute("searchResultList", searchResultList);
         model.addAttribute("searchResultCount", searchResultCount);
         model.addAttribute("searched", true);
+
+
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
 
         return "search";
     }
