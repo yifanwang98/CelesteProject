@@ -16,4 +16,6 @@ public interface SeriesTagRepository extends JpaRepository<SeriesTag, Long> {
     List<SeriesTag> findSeriesTagBySeries(Series series);
 
     long countSeriesTagByTag(String tag);
+
+    List<SeriesTag> findSeriesTagByTag(String tag);
 }
