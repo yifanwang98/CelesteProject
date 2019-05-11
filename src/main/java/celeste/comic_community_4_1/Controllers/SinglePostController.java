@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -183,11 +184,30 @@ public class SinglePostController {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
+        Post postToReport = postRepository.findPostByPostID(postID);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
+
+        if (reportInfoRepository.existsReportInfoByCreatedAtAfterAndReporteeAndReporter(
+                calendar.getTime(), postToReport.getUser(), user)) {
+            return "Please do not report the same user in one day.";
+        }
+
         ReportInfo newReport = new ReportInfo();
-        newReport.setPost(postRepository.findById(postID).get());
-        newReport.setUserone(user);
+        newReport.setPost(postToReport);
+        newReport.setReportee(postToReport.getUser());
+        newReport.setReporter(user);
         newReport.setReason(reason);
         reportInfoRepository.save(newReport);
+
+        if (reportInfoRepository.countReportInfoByReporteeAndCreatedAtAfter(postToReport.getUser(), calendar.getTime()) >= 3) {
+            User reportee = postToReport.getUser();
+            reportee.setBlockStatus("1");
+            reportee.setBlockedSince(new Date());
+            userRepository.save(reportee);
+        }
+
         return "Report has been sent. Please wait for our reply.";
 
 
