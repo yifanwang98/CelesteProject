@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class EditSeriesController {
@@ -122,6 +120,17 @@ public class EditSeriesController {
         // Series Info
         model.addAttribute("seriesToBeEdited", seriesToBeEdited);
         model.addAttribute("genreList", ComicGenre.GENRE);
+
+        List<String> tags = new ArrayList<>();
+        List<SeriesTag> seriesTags = seriesTagRepository.findSeriesTagBySeries(seriesToBeEdited);
+        for (SeriesTag tag : seriesTags) {
+            tags.add(tag.getTag());
+        }
+        while (tags.size() < TagProcessor.MAX_TAG_PER_SERIES) {
+            tags.add(null);
+        }
+        model.addAttribute("tags", tags);
+
         return "editSeries";
     }
 
@@ -153,6 +162,11 @@ public class EditSeriesController {
                                  @RequestParam(value = "genre1") String genre1,
                                  @RequestParam(value = "genre2") String genre2,
                                  @RequestParam(value = "wiki") String wiki,
+                                 @RequestParam("tag1") String tag1,
+                                 @RequestParam("tag2") String tag2,
+                                 @RequestParam("tag3") String tag3,
+                                 @RequestParam("tag4") String tag4,
+                                 @RequestParam("tag5") String tag5,
                                  ModelMap model,
                                  HttpServletRequest request) throws Exception {
 
@@ -167,8 +181,49 @@ public class EditSeriesController {
         model.addAttribute("User", user);
 
         if (seriesRepository.existsSeriesBySeriesID(seriesId)) {
+            Set<String> set = new HashSet<>();
+            if (!(tag1 == null || tag1.length() <= 0)) {
+                set.add(TagProcessor.process(tag1));
+            }
+            if (!(tag2 == null || tag2.length() <= 0)) {
+                set.add(TagProcessor.process(tag2));
+            }
+            if (!(tag3 == null || tag3.length() <= 0)) {
+                set.add(TagProcessor.process(tag3));
+            }
+            if (!(tag4 == null || tag4.length() <= 0)) {
+                set.add(TagProcessor.process(tag4));
+            }
+            if (!(tag5 == null || tag5.length() <= 0)) {
+                set.add(TagProcessor.process(tag5));
+            }
+
+            if (genre1.equals(genre2) && !genre1.equals("None")) {
+                genre2 = "None"; // Prevent Duplicate Genre
+            }
+
+            if (!genre1.equals("None")) {
+                set.remove(TagProcessor.process(genre1));
+            }
+            if (!genre2.equals("None")) {
+                set.remove(TagProcessor.process(genre2));
+            }
+
             // Update Info
             Series seriesToBeEdited = seriesRepository.findSeriesBySeriesID(seriesId);
+
+            List<SeriesTag> seriesTags = seriesTagRepository.findSeriesTagBySeries(seriesToBeEdited);
+            for (SeriesTag tag : seriesTags) {
+                seriesTagRepository.delete(tag);
+            }
+
+            for (String tag : set) {
+                SeriesTag seriesTag = new SeriesTag();
+                seriesTag.setSeries(seriesToBeEdited);
+                seriesTag.setTag(tag);
+                seriesTagRepository.save(seriesTag);
+            }
+
             if (!file.isEmpty())
                 seriesToBeEdited.setCover(ThumbnailConverter.toBase64Square(file));
             seriesToBeEdited.setSeriesName(title);
@@ -233,6 +288,12 @@ public class EditSeriesController {
 
         if (seriesRepository.existsSeriesBySeriesID(seriesId)) {
             Series seriesToBeDeleted = seriesRepository.findSeriesBySeriesID(seriesId);
+
+            List<SeriesTag> seriesTags = seriesTagRepository.findSeriesTagBySeries(seriesToBeDeleted);
+            for (SeriesTag tag : seriesTags) {
+                seriesTagRepository.delete(tag);
+            }
+
             // Remove Subscription
             List<SeriesFollow> seriesFollowList = seriesFollowRepository.findBySeriesFollowIndentitySeries(seriesToBeDeleted);
             for (SeriesFollow seriesFollow : seriesFollowList) {

@@ -52,12 +52,13 @@
                         if (i >= 4) {
                             document.getElementById("F" + seriesID).style.display = "None";
                         }
-                        location.reload();
+                        window.location.replace("view_profile_series?user=" + form.get("username"));
                     }
                 }, error: function () {
                     alert(arguments[1]);
                 }
             });
+            form.reset();
         }
     </script>
 </head>
@@ -224,15 +225,17 @@
                         </div>
                         <div class="subscription-series-tag">
                             <span th:if="${!seriesData.series.getPrimaryGenre().equals('None')}">
-                                <a href="">#<span th:text="${seriesData.series.getPrimaryGenre()}"></span></a>
+                                <a href=""><i class='far fa-bookmark'></i> <span
+                                        th:text="${seriesData.series.getPrimaryGenre()}"></span></a>
                             </span>
                             <span th:if="${!seriesData.series.getSecondaryGenre().equals('None')}">
-                                <a href="">#<span th:text="${seriesData.series.getSecondaryGenre()}"></span></a>
+                                <a href=""><i class='far fa-bookmark'></i> <span
+                                        th:text="${seriesData.series.getSecondaryGenre()}"></span></a>
                             </span>
                             <span th:each="tag, iter: ${seriesData.tags}">
                                 <span th:if="${tag != null}"
                                       th:id="'T' + ${seriesData.series.getSeriesID()} + '-' + ${iter.index}">
-                                    <a href=""
+                                    <a th:href="'/hashtag?tag=' + ${tag}"
                                        th:id="'TT' + ${seriesData.series.getSeriesID()} + '-' + ${iter.index}">#<span
                                             th:text="${tag}"></span></a>
                                 </span>
