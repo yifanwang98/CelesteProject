@@ -103,6 +103,9 @@ public class CreateSeriesController {
         }
         model.addAttribute("User", user);
 
+        if (genre1.equals(genre2) && !genre1.equals("None")) {
+            genre2 = "None"; // Prevent Duplicate Genre
+        }
 
         Series newSeries = new Series();
         if (description != null) {

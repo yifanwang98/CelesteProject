@@ -15,6 +15,7 @@
     <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/createSeries.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/createPost.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <!-- Script -->
@@ -108,7 +109,9 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<form method="post" id="editSeriesInfo" action="editSeriesInfo" enctype="multipart/form-data"></form>
+<form method="post" id="editSeriesInfo" action="editSeriesInfo"
+      onsubmit="this.submit(); this.reset(); return false;" enctype="multipart/form-data"></form>
+
 <input name="sid" hidden th:value="${seriesToBeEdited.getSeriesID()}" form="editSeriesInfo">
 <div class="single-container webfont">
     <div class="single-inner-container">
@@ -142,13 +145,13 @@
                             <input type="text" name="title" placeholder="Enter Title Here" form="editSeriesInfo"
                                    th:value="${seriesToBeEdited.getSeriesName()}"
                                    class="create-series-textfield" maxlength="24" required>
-                            <div style="padding: 0.25em;"></div>
+                            <div style="padding: 0.618em;"></div>
                             <!-- Description -->
                             <div class="series-title semibold">Description</div>
                             <textarea type="text" name="description" placeholder="Enter Description Here (Optional)"
                                       form="editSeriesInfo" th:text="${seriesToBeEdited.getDescription()}"
                                       maxlength="100" class="create-series-textfield"></textarea>
-                            <div style="padding: 0.25em;"></div>
+                            <div style="padding: 0.618em;"></div>
 
                             <div class="series-title semibold">Genre</div>
                             <table style="border-spacing: 0; width: 100%">
@@ -195,7 +198,34 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="padding: 0.5em;"></div>
+                            <div style="padding: 0.618em;"></div>
+                            <div class="series-title semibold">Tags</div>
+                            <table class="webfont" style="border-spacing: 0; width: 100%">
+                                <col width="20%"/>
+                                <col width="20%"/>
+                                <col width="20%"/>
+                                <col width="20%"/>
+                                <col width="20%"/>
+                                <tr>
+                                    <td><input type="text" placeholder="#Tag1" name="tag1" form="editSeriesInfo"
+                                               th:value="${tags.get(0)}"
+                                               maxlength="15" class="tag-tf"/></td>
+                                    <td><input type="text" placeholder="#Tag2" name="tag2" form="editSeriesInfo"
+                                               th:value="${tags.get(1)}"
+                                               maxlength="15" class="tag-tf"/></td>
+                                    <td><input type="text" placeholder="#Tag3" name="tag3" form="editSeriesInfo"
+                                               th:value="${tags.get(2)}"
+                                               maxlength="15" class="tag-tf"/></td>
+                                    <td><input type="text" placeholder="#Tag4" name="tag4" form="editSeriesInfo"
+                                               th:value="${tags.get(3)}"
+                                               maxlength="15" class="tag-tf"/></td>
+                                    <td><input type="text" placeholder="#Tag5" name="tag5" form="editSeriesInfo"
+                                               th:value="${tags.get(4)}"
+                                               maxlength="15" class="tag-tf"/></td>
+                                </tr>
+                            </table>
+
+                            <div style="padding: 0.618em;"></div>
                             <table style="border-spacing: 0; width: 100%">
                                 <col width="34%"/>
                                 <col width="33%"/>
@@ -261,7 +291,8 @@
                     <td></td>
                     <td></td>
                     <td>
-                        <form method="post" id="deleteSeries" action="deleteSeries"></form>
+                        <form method="post" id="deleteSeries" action="deleteSeries"
+                              onsubmit="this.submit(); this.reset(); return false;"></form>
                         <input name="sid" hidden th:value="${seriesToBeEdited.getSeriesID()}" form="deleteSeries">
                         <input type="submit" class="delete-series-btn" value="Delete" name="submit"
                                id="deleteSeriesBTN" form="deleteSeries">
