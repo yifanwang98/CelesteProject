@@ -11,7 +11,7 @@
     <groupId>Celeste</groupId>
     <artifactId>comic_community_4_1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>comic_community_4_1</name>
+    <name>comic_community_4_1</name>repositories
     <description>Demo project for Spring Boot</description>
     <packaging>war</packaging>
 
@@ -68,6 +68,12 @@
             <!--打包的时候可以不用包进去，别的设施会提供。事实上该依赖理论上可以参与编译，测试，运行等周期。
                 相当于compile，但是打包阶段做了exclude操作-->
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>rest-api-sdk</artifactId>
+            <version>1.4.2</version>
         </dependency>
 
         <!--<dependency>-->
