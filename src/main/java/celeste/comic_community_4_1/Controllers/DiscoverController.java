@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.miscellaneous.PostComparator;
 import celeste.comic_community_4_1.miscellaneous.PostData;
 import celeste.comic_community_4_1.model.*;
@@ -43,6 +44,9 @@ public class DiscoverController {
     StarRepository starRepository;
 
     @Autowired
+    SeriesRepository seriesRepository;
+
+    @Autowired
     SeriesContentRepository seriesContentRepository;
 
     @Autowired
@@ -61,6 +65,14 @@ public class DiscoverController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+
         model.addAttribute("User", user);
 
         // Get Following & Followers
@@ -71,10 +83,11 @@ public class DiscoverController {
         List<Post> postList = postRepository.findByUser(user);
         model.addAttribute("postsCount", postList.size());
 
+        postList.clear();
 
         List<SearchWords> wordslist = searchWordsRepository.findTop5ByOrderByHeatDesc();
         Collections.reverse(wordslist);
-        for(int i =0;i<5;i++){
+        for(int i =0;i<wordslist.size();i++){
             String word= wordslist.get(i).getSearchWord();
             List<Post> pg = postRepository.findByPrimaryGenre(word);
             List<Post> sg = postRepository.findBySecondaryGenre(word);
@@ -156,6 +169,9 @@ public class DiscoverController {
         }
 
         model.addAttribute("postDataList", postDataList);
+
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
 
         return "discover";
 

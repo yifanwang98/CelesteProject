@@ -57,7 +57,6 @@ public class MainPageController {
 
     @GetMapping(value = {"/mainPage", "/", "home"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
-
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }

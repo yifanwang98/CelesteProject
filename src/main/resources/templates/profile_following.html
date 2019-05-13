@@ -16,12 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript" th:inline="javascript">
-        function unfollow_followname(e) {
-            e.preventDefault()
-            var id = e.target.id
-            var index = id.lastIndexOf('_')
-            var username1 = (id.substring(19,index))
-            var username2 = (id.substring(index+1,e.target.id.length))
+        function unfollow_followname(username1,username2) {
             $.ajax({
                 type : "POST",
                 url : 'unfollow_follow',
@@ -29,13 +24,12 @@
                 cache : false,
                 success : function(data) {
                     if(data == "Unfollow Success!"  ){
-                        ( $('#'+id).text("  Follow"))
-                        ( $('#'+id).prepend("<i class='fas fa-plus'></i>"))
-                        // location.reload();
+                        $('#'+username1+'__'+username2).text(" Follow")
+                        $('#'+username1+'__'+username2).prepend("<i class='fas fa-plus'></i>")
                     }
                     else if(data == "Follow Success!") {
-                        ( $('#'+id).text("  Unfollow"))
-                        ( $('#'+id).prepend("<i class='fas fa-minus'></i>"))
+                        $('#'+username1+'__'+username2).text(" Unfollow")
+                        $('#'+username1+'__'+username2).prepend("<i class='fas fa-minus'></i>")
                     }
                 },
                 error: function(){
@@ -197,8 +191,8 @@
                             <span th:if="${crossCheckedFollowList.get(iter.index) == false}">
                                 <span th:if="${!follow.getFollowIndentity().getUser2().getUsername().equals(User.getUsername())}">
                                     <div class="subscription-series-unsubscribe">
-                                        <a href=""th:name="'unfollow_followname'+ ${User.getUsername()}+'_'+${follow.getFollowIndentity().getUser2().getUsername()}">
-                                            <i class='fas fa-plus'></i> Follow</a>
+                                        <a th:id="${User.getUsername()}+'__'+${follow.getFollowIndentity().getUser2().getUsername()}"th:href="'javascript:unfollow_followname(' + ${User.getUsername()}+','+${follow.getFollowIndentity().getUser2().getUsername()} + ');'">
+                                            <i th:id="${User.getUsername()}+'_'+${follow.getFollowIndentity().getUser2().getUsername()}" class='fas fa-plus'></i> Follow</a>
                                     </div>
                                 </span>
                             </span>
@@ -213,8 +207,8 @@
                         <span th:unless="${isOthersProfile}">
                             <div class="subscription-series-unsubscribe">
                                 <!--"'/unfollow?value=' + ${follow.getFollowIndentity().getUser2().getUsername()}"-->
-                                <a th:href="a" onclick="unfollow_followname(event)" th:id="'unfollow_followname'+ ${User.getUsername()}+'_'+${follow.getFollowIndentity().getUser2().getUsername()}">
-                                    <i class='fas fa-minus'></i> Unfollow</a>
+                                        <a th:id="${User.getUsername()}+'__'+${follow.getFollowIndentity().getUser2().getUsername()}"th:href="'javascript:unfollow_followname(' + ${User.getUsername()}+','+${follow.getFollowIndentity().getUser2().getUsername()} + ');'">
+                                    <i th:id="${User.getUsername()}+'_'+${follow.getFollowIndentity().getUser2().getUsername()}" class='fas fa-minus'></i> Unfollow</a>
                             </div>
                         </span>
                     </td>
