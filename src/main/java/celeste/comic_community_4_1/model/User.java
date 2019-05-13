@@ -2,11 +2,11 @@ package celeste.comic_community_4_1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -45,6 +45,16 @@ public class User implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdAt=new Date();
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+    private Date lastViewNotification = new Date();
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+    private Date blockedSince = new Date();
 
     public String getUsername() {
         return username;
@@ -108,5 +118,21 @@ public class User implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Date getLastViewNotification() {
+        return lastViewNotification;
+    }
+
+    public void setLastViewNotification(Date lastViewNotification) {
+        this.lastViewNotification = lastViewNotification;
+    }
+
+    public Date getBlockedSince() {
+        return blockedSince;
+    }
+
+    public void setBlockedSince(Date blockedSince) {
+        this.blockedSince = blockedSince;
     }
 }

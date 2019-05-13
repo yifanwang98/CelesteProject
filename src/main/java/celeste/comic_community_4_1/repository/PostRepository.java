@@ -6,6 +6,7 @@ import celeste.comic_community_4_1.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -16,6 +17,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByOriginalPostIDAndIsRepost(long postid, Boolean b);
 
+    List<Post> findByCreatedAtAfterAndOriginalPostIDAndIsRepost(Date date, long postid, Boolean b);
+
     Post findPostByPostID(long postid);
 
     List<Post> findByPostID(long postId);
@@ -25,5 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findBySecondaryGenre(String SecondaryGenre);
 
     long countPostByUser(User user);
+
+    long countPostByCreatedAtAfterAndUser(Date after, User user);
 }
 

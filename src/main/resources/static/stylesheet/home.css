@@ -15,6 +15,12 @@
     padding: 1em 2em;
 }
 
+.trendingNum {
+    text-align: right;
+    width: 2em;
+    color: #9a9a9a;
+}
+
 .button-link {
     border-radius: 10px;
 }
@@ -34,7 +40,7 @@
 }
 
 .top-search-block {
-    padding: 1em;
+    padding: 1em 1.35em;
 }
 
 .home-posts-card {
@@ -93,14 +99,15 @@
 
 .post-genre {
     color: #9a9a9a;
-    font-size: 0.9em;
-    padding: 0.15em 0 0.2em 0;
+    font-size: 0.95em;
+    margin: 0.1em 0 0.25em 0;
 }
 
 .post-genre-text, .post-genre-text:link, .post-genre-text:visited {
     color: #9a9a9a;
     font-size: 0.95em;
     text-decoration: none;
+    margin: 0.1em 0 0.25em 0;
 }
 
 .post-genre-text:hover {

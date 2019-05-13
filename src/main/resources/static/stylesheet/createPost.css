@@ -131,3 +131,11 @@
     text-decoration: none;
 }
 
+.tag-tf {
+    font-size: 0.98em;
+    border: 1px #9a9a9a solid;
+    border-radius: 3px;
+    width: 90%;
+    padding: 0.25em 3%;
+    margin: 0 2%;
+}

@@ -20,8 +20,6 @@ import java.util.TreeSet;
 @Controller
 public class StarController {
 
-
-
     @Autowired
     UserRepository userRepository;
 
@@ -51,6 +49,9 @@ public class StarController {
 
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
+
+    @Autowired
+    PostTagRepository postTagRepository;
 
     @GetMapping("/view_profile_star")
     public String viewProfileStar(@RequestParam(value = "user") String linkedUsername,
@@ -110,7 +111,14 @@ public class StarController {
 
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
-            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount, true, myLike, fromSeries));
+            List<String> postTags = new ArrayList<>();
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            for (PostTag tag : postTagList) {
+                postTags.add(tag.getTag());
+            }
+
+            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount,
+                    true, myLike, fromSeries, postTags));
 
             if (linkedUsername.equals(post.getUser().getUsername())) {
                 followingStatus.add(FollowStatus.SELF);

@@ -185,17 +185,63 @@
     </tr>
     <tr>
         <td>
-            <div style="padding: 0.25em;"></div>
+            <div style="padding: 0.5em;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td class="semibold upload-post-subtitle">Tags (Optional)</td>
+    </tr>
+    <tr>
+        <td>
+            <table class="webfont">
+                <col width="20%"/>
+                <col width="20%"/>
+                <col width="20%"/>
+                <col width="20%"/>
+                <col width="20%"/>
+                <tr>
+                    <td><input type="text" placeholder="#Tag1" name="tag1" form="uploadPostInfo"
+                               maxlength="15" class="tag-tf"/></td>
+                    <td><input type="text" placeholder="#Tag2" name="tag2" form="uploadPostInfo"
+                               maxlength="15" class="tag-tf"/></td>
+                    <td><input type="text" placeholder="#Tag3" name="tag3" form="uploadPostInfo"
+                               maxlength="15" class="tag-tf"/></td>
+                    <td><input type="text" placeholder="#Tag4" name="tag4" form="uploadPostInfo"
+                               maxlength="15" class="tag-tf"/></td>
+                    <td><input type="text" placeholder="#Tag5" name="tag5" form="uploadPostInfo"
+                               maxlength="15" class="tag-tf"/></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div style="padding: 0.5em;"></div>
         </td>
     </tr>
     <!-- Add To My Series -->
-    <tr>
-        <td class="semibold upload-post-subtitle">Append To Series (Optional)</td>
-    </tr>
-    <tr th:each="series: ${mySeries}">
-        <td><input type="checkbox" name="selectedSeries" th:value="${series.getSeriesID()}" form="uploadPostInfo"/>
-            <span th:text="${series.getSeriesName()}"></span></td>
-    </tr>
+    <span th:if="${postDraft.isWiki}">
+        <tr>
+            <td class="semibold upload-post-subtitle">Append To A Wiki Series</td>
+        </tr>
+        <tr th:each="series: ${mySeries}">
+            <td><input type="checkbox" name="selectedSeries" checked disabled
+                       th:value="${series.getSeriesID()}" form="uploadPostInfo"/>
+                <span th:text="${series.getSeriesName()}"></span>
+                <input type="checkbox" name="selectedSeries" checked hidden
+                       th:value="${series.getSeriesID()}" form="uploadPostInfo"/>
+            </td>
+        </tr>
+    </span>
+    <span th:unless="${postDraft.isWiki}">
+        <tr>
+            <td class="semibold upload-post-subtitle">Append To Series (Optional)</td>
+        </tr>
+        <tr th:each="series: ${mySeries}">
+            <td><input type="checkbox" name="selectedSeries" th:value="${series.getSeriesID()}" form="uploadPostInfo"/>
+                <span th:text="${series.getSeriesName()}"></span></td>
+        </tr>
+    </span>
 </table>
 <div style="padding: 2em;"></div>
 <!-- Footer Banner -->
@@ -212,10 +258,10 @@
         <td style="width: 6em;">
         </td>
         <td style="width: 6em;">
-            <span th:if="${postDraft.isValid()}">
+            <span th:if="${postDraft.valid()}">
                 <input type="submit" value="Next" class="add-img-button" form="uploadPostInfo"/>
             </span>
-            <span th:unless="${postDraft.isValid()}">
+            <span th:unless="${postDraft.valid()}">
                 <input type="submit" value="Next" class="add-img-button" disabled style="color: #949494"/>
             </span>
         </td>

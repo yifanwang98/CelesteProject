@@ -7,6 +7,7 @@ import celeste.comic_community_4_1.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -21,5 +22,7 @@ public interface FollowRepository extends JpaRepository<Follow, FollowIndentity>
     boolean existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(User user1, User user2);
 
     List<Follow> findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(String user1, String user2);
+
+    long countFollowByCreatedAtAfterAndAndFollowIndentityUsertwo(Date after, User user);
 }
 

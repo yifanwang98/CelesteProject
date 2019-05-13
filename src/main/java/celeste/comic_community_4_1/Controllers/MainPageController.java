@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.miscellaneous.PostComparator;
 import celeste.comic_community_4_1.miscellaneous.PostData;
 import celeste.comic_community_4_1.model.*;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -44,7 +46,16 @@ public class MainPageController {
     @Autowired
     SeriesContentRepository seriesContentRepository;
 
-    @GetMapping(value = {"/mainPage", "/"})
+    @Autowired
+    PostTagRepository postTagRepository;
+
+    @Autowired
+    SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
+
+    @GetMapping(value = {"/mainPage", "/", "home"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
 
         if (request.getSession().getAttribute("username") == null) {
@@ -55,6 +66,16 @@ public class MainPageController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+
         model.addAttribute("User", user);
 
         // Get Following & Followers
@@ -94,26 +115,60 @@ public class MainPageController {
                 }
             }
 
-            // Count
-//            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-//            long commentCount = commentRepository.countCommentByPost(post);
-//            long starCount = starRepository.countStarByPostIndentityPost(post);
-//            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
-//
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
-            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries));
+            // Tag
+            List<String> postTags = new ArrayList<>();
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            for (PostTag tag : postTagList) {
+                postTags.add(tag.getTag());
+            }
+
+            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries, postTags));
         }
 
         model.addAttribute("postDataList", postDataList);
-        return "mainPage";
 
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+        return "mainPage";
+    }
+
+    @PostMapping("/home")
+    public String FirstLogin(@RequestParam(value = "username", required = false) String username,
+                             @RequestParam(value = "password", required = false) String password,
+                             ModelMap model, HttpServletRequest request) throws Exception {
+        if (password != null && password.length() > 0) {
+            if (!userRepository.existsById(username)) {
+                model.addAttribute("errors", "This username doesn't exist.");
+                return "index";
+            }
+            User user = userRepository.findById(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+            if (!password.equals(user.getPassword())) {
+                model.addAttribute("errors", "Your password is incorrect.");
+                return "index";
+            }
+            request.getSession().setAttribute("username", username);
+            request.getSession().setAttribute("password", password);
+        }
+
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        return mainPage(model, request);
     }
 
     @PostMapping("signOut")
     public String signOut(ModelMap model, HttpServletRequest request) throws Exception {
         request.getSession().removeAttribute("username");
+        request.getSession().removeAttribute("postDraft");
+        return "index";
+    }
+
+    @GetMapping("index")
+    public String signIn(ModelMap model, HttpServletRequest request) throws Exception {
         return "index";
     }
 

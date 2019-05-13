@@ -1,10 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.ComicGenre;
-import celeste.comic_community_4_1.miscellaneous.SeriesComparator;
-import celeste.comic_community_4_1.miscellaneous.SeriesData;
-import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
+import celeste.comic_community_4_1.miscellaneous.*;
 import celeste.comic_community_4_1.model.Series;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
@@ -15,10 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,6 +60,16 @@ public class CreateSeriesController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
         model.addAttribute("genreList", ComicGenre.GENRE);
         return "createSeries";
@@ -87,8 +91,21 @@ public class CreateSeriesController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
+        if (genre1.equals(genre2) && !genre1.equals("None")) {
+            genre2 = "None"; // Prevent Duplicate Genre
+        }
 
         Series newSeries = new Series();
         if (description != null) {
@@ -97,12 +114,12 @@ public class CreateSeriesController {
         newSeries.setPrimaryGenre(genre1);
         newSeries.setSecondaryGenre(genre2);
         newSeries.setSeriesName(title);
-        newSeries.setPublicEditing(wiki.equals("Yes") ? true : false);
+        newSeries.setPublicEditing(wiki.equals("Yes"));
         newSeries.setUser(user);
 
-        String coverPath = "src/main/resources/static/images/samplePost/default-upload.png";
-        BufferedImage bImage = ImageIO.read(new File(coverPath));
-        String base64 = ThumbnailConverter.toBase64(ThumbnailConverter.convertSquare(bImage), "png");
+//        String coverPath = "src/main/resources/static/images/samplePost/default-upload.png";
+//        BufferedImage bImage = ImageIO.read(new File(coverPath));
+        String base64 = ThumbnailConverter.DEFAULT_SERIES_COVER;
         newSeries.setCover(base64);
 
         seriesRepository.save(newSeries);
@@ -127,6 +144,9 @@ public class CreateSeriesController {
         List<SeriesData> seriesDataList = new ArrayList<>();
         for (Series series : seriesList) {
             List<String> tags = new ArrayList<>();
+            while (tags.size() < TagProcessor.MAX_TAG_PER_SERIES) {
+                tags.add(null);
+            }
             long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
             boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
             boolean owner = series.getUser().getUsername().equals(username);

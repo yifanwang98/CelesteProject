@@ -1,21 +1,19 @@
 
 .searchTextfield {
     align: center;
-    width: 80%;
+    width: 96%;
     font-size: 1em;
     letter-spacing: 1px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-bottom: 15px;
+    padding: 7px 2%;
+    border: #cccccc 1px solid;
+    border-radius: 3px;
 }
 
 .button {
     color: white;
     background: #30c5c5;;
     border: none;
-    width: 15%;
+    width: 100%;
     letter-spacing: 1px;
     font-size: 1em;
     font-weight: 500;
@@ -27,6 +25,15 @@
     background: #269b9b;
     text-decoration: none;
     cursor: pointer;
+}
+
+.clearAllGenre, .clearAllGenre:link, .clearAllGenre:visited {
+    color: #9a9a9a;
+    font-style: italic;
+}
+
+.clearAllGenre:hover {
+    color: #666666;
 }
 
 .advance-search-title {
@@ -53,4 +60,66 @@
 .advance-search-title-hide:hover {
     color: #9a9a9a;
     cursor: pointer;
+}
+
+.searchError {
+    color: #269b9b;
+    font-size: 1.5em;
+    text-align: center;
+    padding: 1em;
+}
+
+.searchFilterContainer {
+    background: white;
+    border-radius: 5px;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.searchFilter, .searchFilter a:link, .searchFilter a:visited {
+    color: #666666;
+    text-align: center;
+    text-decoration: none;
+}
+
+.searchFilter-selected a, searchFilter-selected a:link, .searchFilter-selected a:visited {
+    font-weight: 500;
+    color: #269b9b;
+    text-align: center;
+    text-decoration: none;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.searchFilter a:hover, .searchFilter-selected a:hover {
+    cursor: pointer;
+    color: #269b9b;
+    font-weight: 500;
+}
+
+.searchResultOuterContainer {
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 8px;
+    margin: 0.5em 0;
+}
+
+.searchResultOuterContainer:hover {
+    background: white;
+}
+
+.searchResultInnerContainer {
+    padding: 1em;
+}
+
+.searchResult-tag, .searchResult-tag a:link, .searchResult-tag a:visited {
+    font-size: 1.05em;
+    text-decoration: none;
+    text-align: left;
+    margin: 0 1em;
+    color: #269b9b;
+    font-weight: 500;
+}
+
+.searchResult-tag a:hover {
+    font-style: italic;
 }
