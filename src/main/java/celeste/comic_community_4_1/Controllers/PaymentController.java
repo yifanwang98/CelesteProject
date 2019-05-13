@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import celeste.comic_community_4_1.config.PaypalPaymentIntent;
@@ -41,7 +42,7 @@ public class PaymentController {
 		String successUrl = URLUtils.getBaseURl(request) + "/" + PAYPAL_SUCCESS_URL;
 		try {
 			Payment payment = paypalService.createPayment(
-					4.00, 
+					3.00,
 					"USD", 
 					PaypalPaymentMethod.paypal, 
 					PaypalPaymentIntent.sale,
@@ -64,7 +65,7 @@ public class PaymentController {
 		return "pay_cancel";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = PAYPAL_SUCCESS_URL)
+	@GetMapping("/pay/pay_success")
 	public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId){
 		try {
 			Payment payment = paypalService.executePayment(paymentId, payerId);
@@ -74,7 +75,7 @@ public class PaymentController {
 		} catch (PayPalRESTException e) {
 			log.error(e.getMessage());
 		}
-		return "redirect:/";
+		return "index";
 	}
 	
 }
