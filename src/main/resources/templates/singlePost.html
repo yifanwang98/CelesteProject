@@ -42,7 +42,31 @@
                 x.style.display = "none";
             }
         }
+        function showBigImage(a,b){
+            var srcc = ""
+            $.ajax({
+                type : "POST",
+                url : 'getoriginalImageSrc',
+                data:{postID:a,index:b},
+                cache : false,
+                success : function(data) {
+                    srcc =  "data:image/png;base64,"+data.toString();
+                    var imgHtml = '<div id = "abcd" style="width: 100%;height: 100vh;overflow: auto;background: rgba(0,0,0,0.5);text-align: center;position: fixed;top: 0;left: 0;z-index: 1000;"><img id="abcde" style="margin-top: 100px;width: 70%;margin-bottom: 100px;" src='+srcc+' /><p style="font-size: 50px;position: fixed;top: 30px;right: 30px;color: white;cursor: pointer;" onclick="$(\'#abcd\').remove();">×</p></div>'
+                    $('body').append(imgHtml);
+                },
+                error: function(){
+                    alert(arguments[1]);
+                }
+            });
+
+
+
+            // window.show(event.target.src, null, "dialogHeight:500px; dialogWidth:600px; resizable:yes");
+        }
+
         $(document).ready(function(){
+
+
             $('#like1,#like2').click(function (event) {
                 event.preventDefault();
                 var postID = [[${postToDisplay.getPostID()}]]
@@ -311,8 +335,8 @@
                         </div>
                         <!-- Original -->
                         <div th:unless="${postToDisplay.isRepost()}">
-                            <span th:each="work:${postImages}">
-                                <image th:src="'data:image/png;base64,'+${work}"
+                            <span th:each="work, iter:${postImages}">
+                                <image  th:onclick="'javascript:showBigImage(' + ${postToDisplay.getOriginalPostID()} +','+ ${iter.index} +');'" th:src="'data:image/png;base64,'+${work}"
                                        th:class="${postImages.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
                             </span>
                         </div>
