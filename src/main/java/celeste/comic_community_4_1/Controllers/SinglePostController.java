@@ -207,6 +207,16 @@ public class SinglePostController {
 
     }
     @ResponseBody
+    @PostMapping("/getoriginalImageSrc")
+    public String getoriginalImageSrc(@RequestParam(value = "postID") long postID,
+                                      @RequestParam(value = "index") int index,
+                                   ModelMap model, HttpServletRequest request) throws Exception {
+        List<PostContent> temp = postContentRepository.findByPostIndentityPostPostID(postID);
+        String src = temp.get(index).getPostIndentity().getWork().getContent();
+        return src;
+
+    }
+    @ResponseBody
     @PostMapping("/singlepostRepost")
     public String singlepostRepost(@RequestParam(value = "postID") long postID,
                                    @RequestParam(value = "comment") String comment,
