@@ -192,7 +192,7 @@
                                 <span th:if="${!follow.getFollowIndentity().getUser2().getUsername().equals(User.getUsername())}">
                                     <div class="subscription-series-unsubscribe">
                                         <a th:id="${User.getUsername()}+'__'+${follow.getFollowIndentity().getUser2().getUsername()}"th:href="'javascript:unfollow_followname(' + ${User.getUsername()}+','+${follow.getFollowIndentity().getUser2().getUsername()} + ');'">
-                                            <i th:id="${User.getUsername()}+'_'+${follow.getFollowIndentity().getUser2().getUsername()}" class='fas fa-plus'></i> Follow</a>
+                                            <i class='fas fa-plus'></i> Follow</a>
                                     </div>
                                 </span>
                             </span>
@@ -208,7 +208,7 @@
                             <div class="subscription-series-unsubscribe">
                                 <!--"'/unfollow?value=' + ${follow.getFollowIndentity().getUser2().getUsername()}"-->
                                         <a th:id="${User.getUsername()}+'__'+${follow.getFollowIndentity().getUser2().getUsername()}"th:href="'javascript:unfollow_followname(' + ${User.getUsername()}+','+${follow.getFollowIndentity().getUser2().getUsername()} + ');'">
-                                    <i th:id="${User.getUsername()}+'_'+${follow.getFollowIndentity().getUser2().getUsername()}" class='fas fa-minus'></i> Unfollow</a>
+                                    <i class='fas fa-minus'></i> Unfollow</a>
                             </div>
                         </span>
                     </td>
