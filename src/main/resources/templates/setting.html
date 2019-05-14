@@ -330,7 +330,7 @@
                 <input type="submit" class="setting-save-btn" value="Sign Out" name="submit" style="padding: 0.5em 0;">
             </form>
         </div>
-        <div class="setting-inner-container" th:if="${!User.getMembership().equals('None')}">
+        <div class="setting-inner-container" th:if="${!User.getMembership().equalsIgnoreCase('none')}">
             <a id="Reset_Account" class="setting-reset-account-btn" style="cursor: pointer;" href="#">Reset Account</a>
         </div>
         <div class="setting-inner-container">
