@@ -58,10 +58,28 @@
                     alert(arguments[1]);
                 }
             });
+        }
 
-
-
-            // window.show(event.target.src, null, "dialogHeight:500px; dialogWidth:600px; resizable:yes");
+        function deleteComment(link) {
+            var commentID = link.id.substring(2);
+            var postID = [[${postToDisplay.getPostID()}]];
+            $.ajax({
+                type: "POST",
+                url: 'deleteComment',
+                data: {postID: postID, commentID: commentID},
+                cache: false,
+                success: function (data) {
+                    if (data == "Success") {
+                        alert(data);
+                        location.reload();
+                    } else {
+                        alert(data);
+                    }
+                },
+                error: function () {
+                    alert(arguments[1]);
+                }
+            });
         }
 
         $(document).ready(function(){
@@ -364,22 +382,26 @@
                     </td>
                     <span th:if="${myStar}">
                         <td class="post-action-stared" style="border-right: #ccc 1px solid">
-                            <a id ="star1"href=""><i class='fas fa-star'></i> Star (<span th:text="${starCount}"></span>)</a>
+                            <a id="star1" href="#"><i class='fas fa-star'></i> Star (<span
+                                    th:text="${starCount}"></span>)</a>
                         </td>
                     </span>
                     <span th:unless="${myStar}">
                         <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                            <a id ="star2"href=""><i class='fas fa-star'></i> Star (<span th:text="${starCount}"></span>)</a>
+                            <a id="star2" href="#"><i class='fas fa-star'></i> Star (<span
+                                    th:text="${starCount}"></span>)</a>
                         </td>
                     </span>
                     <span th:if="${myLike}">
                         <td class="post-action-liked">
-                            <a id ="like1"href=""><i class='fas fa-thumbs-up'></i> Like (<span th:text="${likeCount}"></span>)</a>
+                            <a id="like1" href="#"><i class='fas fa-thumbs-up'></i> Like (<span
+                                    th:text="${likeCount}"></span>)</a>
                         </td>
                     </span>
                     <span th:unless="${myLike}">
                         <td class="post-action-cell">
-                            <a id ="like2"href=""><i class='far fa-thumbs-up'></i> Like (<span th:text="${likeCount}"></span>)</a>
+                            <a id="like2" href="#"><i class='far fa-thumbs-up'></i> Like (<span
+                                    th:text="${likeCount}"></span>)</a>
                         </td>
                     </span>
                 </tr>
@@ -451,7 +473,8 @@
                                         <span class="post-time" th:text="${comment.getCreatedAt()}"></span>
                                     </td>
                                     <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
-                                        <a href=""
+                                        <a href="#" onclick="deleteComment(this)"
+                                           th:id="'DC' + ${comment.getCommentID()}"
                                            th:if="${User.getUsername() == comment.getUser().getUsername()}"
                                            class="post-action-more"><i class='far fa-trash-alt'></i></a>
                                         <div class="dropdown"
@@ -461,7 +484,9 @@
                                                 <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
                                                 <span th:if="${User.getUsername() == postToDisplay.getUser().getUsername()}">
                                                     <!-- If I am the post owner-->
-                                                    <a href="#"><i class='fas fa-trash-alt'></i> Delete</a>
+                                                    <a href="#" onclick="deleteComment(this)"
+                                                       th:id="'DC' + ${comment.getCommentID()}"><i
+                                                            class='fas fa-trash-alt'></i> Delete</a>
                                                 </span>
                                             </div>
                                         </div>

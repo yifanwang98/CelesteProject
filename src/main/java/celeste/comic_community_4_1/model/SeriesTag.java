@@ -62,14 +62,13 @@ public class SeriesTag implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SeriesTag seriesTag = (SeriesTag) o;
-        return Objects.equals(series, seriesTag.series) &&
-                Objects.equals(tag, seriesTag.tag);
+        return tagId == seriesTag.tagId;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(series, tag);
+        return Objects.hash(tagId);
     }
 }
 
