@@ -18,7 +18,6 @@ import java.util.Objects;
         allowGetters = true)
 public class User implements Serializable {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotBlank
     private String username;
 
