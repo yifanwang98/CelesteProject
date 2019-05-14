@@ -346,9 +346,10 @@
                                     <td></td>
                                     <td>
                                         <div>
-                                            <span th:each="work:${postImages}">
-                                                <image th:src="'data:image/png;base64,'+${work}"
-                                                       th:class="post-image-multiple"></image>
+                                            <span th:each="work, iter:${postImages}">
+                                                <image th:onclick="'javascript:showBigImage(' + ${postToDisplay.getOriginalPostID()} +','+ ${iter.index} +');'"
+                                                       th:src="'data:image/png;base64,'+${work}"
+                                                       class="post-image-multiple"></image>
                                             </span>
                                         </div>
                                     </td>
@@ -358,8 +359,9 @@
                         <!-- Original -->
                         <div th:unless="${postToDisplay.isRepost()}">
                             <span th:each="work, iter:${postImages}">
-                                <image  th:onclick="'javascript:showBigImage(' + ${postToDisplay.getOriginalPostID()} +','+ ${iter.index} +');'" th:src="'data:image/png;base64,'+${work}"
-                                       th:class="${postImages.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
+                                <image th:onclick="'javascript:showBigImage(' + ${postToDisplay.getOriginalPostID()} +','+ ${iter.index} +');'"
+                                       th:src="'data:image/png;base64,'+${work}"
+                                       class="post-image-multiple"></image>
                             </span>
                         </div>
                     </td>
