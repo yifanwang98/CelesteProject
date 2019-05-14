@@ -234,7 +234,7 @@
         </tr>
     </span>
     <span th:unless="${postDraft.isWiki}">
-        <tr>
+        <tr th:if="${!mySeries.isEmpty()}">
             <td class="semibold upload-post-subtitle">Append To Series (Optional)</td>
         </tr>
         <tr th:each="series: ${mySeries}">
