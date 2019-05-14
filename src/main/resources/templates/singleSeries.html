@@ -17,7 +17,32 @@
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <!-- Script -->
     <script src="http://code.jquery.com/jquery-1.5.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
+        function subscribe_Unsubscribe_Series(seriesID) {
+            $.ajax({
+                type: "POST",
+                url: 'subscribe_Unsubscribe_Series',
+                data: {seriesID: seriesID},
+                cache: false,
+                success: function (data) {
+                    if (data == "Unsubscribe Success!") {
+                        alert(data);
+                        $('#A-' + seriesID).text(" Subscribe");
+                        $('#A-' + seriesID).prepend("<i class='fas fa-plus'></i>")
+                    }
+                    else if (data == "Subscribe Success!") {
+                        alert(data)
+                        $('#A-' + seriesID).text(" Unsubscribe");
+                        $('#A-' + seriesID).prepend("<i class='fas fa-minus'></i>")
+                    }
+                },
+                error: function () {
+                    alert(arguments[1]);
+                }
+            });
+        }
+
         function toggleSeriesInfo() {
             var x = document.getElementById("series-info-float-left");
             var y = document.getElementById("series-info-collapse-icon");
@@ -123,10 +148,24 @@
         </div>
         <div class="series-info-float-left-inner-margin"><span class="semibold">Posts: </span><span
                 th:text="${seriesTotalContent}"></span></div>
-        <div class="series-info-float-left-inner-margin"><span class="semibold">Subscribers: </span><span
-                th:text="${numSubscribers}"></span></div>
+        <div class="series-info-float-left-inner-margin">
+            <span class="semibold">Subscribers: </span>
+            <span th:text="${numSubscribers}"></span>
+        </div>
+        <!-- Tag -->
+        <div class="series-info-float-left-inner-margin" th:if="${!seriesTags.isEmpty()}">
+            <span class="semibold">Tags: </span>
+            <span th:each="seriesTag:${seriesTags}" style="white-space: nowrap;">
+                <a th:href="'/hashtag?tag=' + ${seriesTag.getTag()}"
+                   class="post-genre-text">
+                    #<span th:text="${seriesTag.getTag()}"></span>
+                </a>
+            </span>
+        </div>
     </div>
 </div>
+
+<!-- Toggle -->
 <div class="series-info-expand" id="series-info-expand">
     <a href="#" class="series-info-expand-icon" onclick="toggleSeriesInfo()"
        style="margin-left: -7.5em; "
@@ -135,20 +174,49 @@
        style="display: none;"
        id="series-info-collapse-icon"><i class='fas fa-angle-double-left'></i></a>
 </div>
-<div th:if="${selectedSubIndex < 3 || User.getMembership().equals('1')}">
-    <div class="series-image">
-        <img th:src="'data:image/png;base64,'+${selectedImage}" style="border-radius: 5px;">
-    </div>
-</div>
-<div th:unless="${selectedSubIndex < 3 || User.getMembership().equals('1')}">
-    <div class="series-image webfont semibold">
+
+<!-- Image -->
+<span th:if="${thumbnails.isEmpty()}">
+    <div>
+        <div class="series-image webfont semibold">
         <div style="padding: 10% 0;">
-            <a href="/setting" class="series-upgrade-link">Upgrade to premium to enjoy entire series <i
-                    class='far fa-arrow-alt-circle-right'></i></a>
+            <a href="#" class="series-upgrade-link">
+                The series is empty
+            </a>
         </div>
     </div>
-</div>
-
+    </div>
+</span>
+<span th:unless="${thumbnails.isEmpty()}">
+    <div th:if="${selectedSubIndex < 3 || User.getMembership().equals('1')}">
+        <div class="series-image webfont" style="padding: 1em 0;">
+            <!-- Title -->
+            <div th:text="${seriesToView.getSeriesName()} + ' (' + ${selectedSubIndex + 1} + ')'"
+                 style="font-size: 1.2em;" class="semibold">-</div>
+            <!-- Title -->
+            <div style="padding: 0.5em 0 ;">
+                <a th:text="'By: ' + ${postContainsTheWork.getUser().getUsername()}"
+                   th:href="'view_profile?user=' + ${postContainsTheWork.getUser().getUsername()}"
+                   class="single-author-link"></a>
+            </div>
+            <div th:text="${postContainsTheWork.getPostComment()}"
+                 style="font-style: italic;">
+            </div>
+        </div>
+        <div class="series-image">
+            <img th:src="'data:image/png;base64,'+${selectedImage}"
+                 style="border-radius: 5px; width: 100%">
+        </div>
+    </div>
+    <div th:unless="${selectedSubIndex < 3 || User.getMembership().equals('1')}">
+        <div class="series-image webfont semibold">
+            <div style="padding: 10% 0;">
+                <a href="/upgradeAccount" class="series-upgrade-link">Upgrade to premium to enjoy entire series <i
+                        class='far fa-arrow-alt-circle-right'></i></a>
+            </div>
+        </div>
+    </div>
+</span>
 <!---------------------------------------->
 <!---------------------------------------->
 <!---------------------------------------->
@@ -170,15 +238,19 @@
                 <div class="series-footer-left-info">
                     <div>
                         <span th:text="${seriesToView.getSeriesName()}"
-                              class="series-footer-left-title semibold"></span><br/>
-                        <span th:text="'(' + ${selectedSubIndex + 1} + '/' + ${seriesTotalContent} + ')'"></span>
+                              class="series-footer-left-title semibold"></span>
+                        <!-- Index -->
+                        <span th:if="${!thumbnails.isEmpty()}">
+                            <br/>
+                            <span th:text="'(' + ${selectedSubIndex + 1} + '/' + ${seriesTotalContent} + ')'"></span>
+                        </span>
                     </div>
                 </div>
             </td>
             <!-- Thumbnails -->
             <td>
                 <div th:if="${thumbnails.isEmpty()}" style="text-align: center; color: #cccccc; font-size: 1.2em;">
-                    No content. Try to add your art to the series.
+                    The series is empty.
                 </div>
                 <div th:unless="${thumbnails.isEmpty()}" style="padding: 0.5em; overflow: hidden; float: none;">
                     <span th:each="thumb, iter : ${thumbnails}">
@@ -211,10 +283,16 @@
                         </form>
                     </div>
                     <div th:if="${subscribed && !isOwner}">
-                        <a href="#" class="series-footer-r-btn"><i class='fas fa-minus'></i> Unsubscribe</a>
+                        <a th:id="'A-' + ${seriesToView.getSeriesID()}"
+                           th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesToView.getSeriesID()} + ');'"
+                           class="series-footer-r-btn"><i class='fas fa-minus'></i> Unsubscribe</a>
                     </div>
                     <div th:if="${!subscribed && !isOwner}">
-                        <a href="#" class="series-footer-r-btn"><i class='fas fa-plus'></i> Subscribe</a>
+                        <a th:id="'A-' + ${seriesToView.getSeriesID()}"
+                           th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesToView.getSeriesID()} + ');'"
+                           class="series-footer-r-btn">
+                            <i class='fas fa-plus'></i> Subscribe
+                        </a>
                     </div>
                 </div>
             </td>

@@ -2,9 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.Notification;
-import celeste.comic_community_4_1.model.Series;
-import celeste.comic_community_4_1.model.SeriesContent;
-import celeste.comic_community_4_1.model.User;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,6 +50,9 @@ public class SingleSeriesController {
     @Autowired
     SeriesContentRepository seriesContentRepository;
 
+    @Autowired
+    SeriesTagRepository seriesTagRepository;
+
     @GetMapping("/singleSeries")
     public String singleSeries(@RequestParam(value = "id") long seriesId,
                                @RequestParam(value = "index") int index,
@@ -87,9 +88,16 @@ public class SingleSeriesController {
             thumbnails.add(workRepository.findWorkByWorkID(seriesContent.getSeriesContentIndentity().getWork().getWorkID()).getThumbnail());
         }
         String selectedImage = null;
-        if (!thumbnails.isEmpty())
-            selectedImage = workRepository.findWorkByWorkID(subContent.get(selectedIndex - fromIndex).getSeriesContentIndentity().getWork().getWorkID()).getContent();
+        Post postContainsTheWork = null;
+        if (!thumbnails.isEmpty()) {
+            Work work = workRepository.findWorkByWorkID(subContent.get(selectedIndex - fromIndex).getSeriesContentIndentity().getWork().getWorkID());
+            selectedImage = work.getContent();
 
+            // Get Post info
+            PostContent postContent = postContentRepository.findByPostIndentityWork(work);
+            if (postContent != null)
+                postContainsTheWork = postContent.getPostIndentity().getPost();
+        }
         model.addAttribute("thumbnails", thumbnails);
         model.addAttribute("selectedImage", selectedImage);
         model.addAttribute("selectedSubIndex", selectedIndex);
@@ -106,6 +114,12 @@ public class SingleSeriesController {
         model.addAttribute("isOwner", username.equals(seriesToView.getUser().getUsername()));
         model.addAttribute("subscribed",
                 seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(seriesToView, user));
+
+        // Series tags
+        model.addAttribute("seriesTags", seriesTagRepository.findSeriesTagBySeries(seriesToView));
+
+        // Post Info
+        model.addAttribute("postContainsTheWork", postContainsTheWork);
 
         return "singleSeries";
     }
