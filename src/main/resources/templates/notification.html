@@ -121,8 +121,8 @@
                                         </span>
                                     </span>
                                     <span th:if="${notification.type == T(celeste.comic_community_4_1.miscellaneous.NotificationType).SUBSCRIBE}">
-                                        <a th:href="'viewSeries?id=' + ${notification.postOrSeriesID}"
-                                           class="notification-link">[Single Series Link Placeholder]</a>
+                                        <a th:href="'singleSeries?id=' + ${notification.postOrSeriesID} + '&index=0'"
+                                           class="notification-link"><i class="fas fa-external-link-alt"></i></a>
                                     </span>
                                 </td>
                                 <td style="text-align: right">

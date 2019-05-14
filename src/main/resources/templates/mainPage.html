@@ -224,7 +224,7 @@
                         <td>
                             <div th:text="${postData.post.getPostComment()}" class="post-text"
                                  th:if="${!postData.post.getPostComment().isEmpty()}"></div>
-                            <div class="post-genre">
+                            <div class="post-genre" th:if="${!postData.post.isRepost()}">
                                 <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
                                     <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
                                           class="post-genre-text">
@@ -304,6 +304,11 @@
                                                       class="post-genre-text">
                                                     <i class='far fa-bookmark'></i>
                                                     <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
+                                                </span>
+                                                <span th:each="tag: ${postData.postTags}">
+                                                    <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                                        <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                                    </a>
                                                 </span>
                                             </div>
                                         </td>

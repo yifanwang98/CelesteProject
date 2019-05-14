@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class SinglePostController {
@@ -37,6 +34,12 @@ public class SinglePostController {
 
     @Autowired
     PostContentRepository postContentRepository;
+
+    @Autowired
+    PostTagRepository postTagRepository;
+
+    @Autowired
+    SeriesContentRepository seriesContentRepository;
 
     @Autowired
     CommentRepository commentRepository;
@@ -77,8 +80,9 @@ public class SinglePostController {
         Post postToDisplay = postList.get(0);
         model.addAttribute("postToDisplay", postToDisplay);
 
+        Post originalPost = postToDisplay;
         if (postToDisplay.isRepost()) {
-            Post originalPost = postRepository.findByPostID(postToDisplay.getOriginalPostID()).get(0);
+            originalPost = postRepository.findByPostID(postToDisplay.getOriginalPostID()).get(0);
             model.addAttribute("originalPost", originalPost);
         }
 
@@ -108,14 +112,51 @@ public class SinglePostController {
                 && !user.getUsername().equals(postToDisplay.getUser().getUsername())) {
             PostAnalysis pa = new PostAnalysis();
             if (postToDisplay.isRepost()) {
-                Post originalPost = postRepository.findPostByPostID(postToDisplay.getOriginalPostID());
-                pa.setPost(originalPost);
+                Post originalPost1 = postRepository.findPostByPostID(postToDisplay.getOriginalPostID());
+                pa.setPost(originalPost1);
             } else {
                 pa.setPost(postToDisplay);
             }
             pa.setUser(user);
             pa.setViewedAt(today);
             postAnalysisRepository.save(pa);
+        }
+
+        Set<Series> fromSeries = new HashSet<>();
+        for (int j = 0; j < temp.size(); j++) {
+            Work work = temp.get(j).getPostIndentity().getWork();
+            List<SeriesContent> seriesContents = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+            for (SeriesContent content : seriesContents) {
+                fromSeries.add(content.getSeriesContentIndentity().getSeries());
+            }
+        }
+        model.addAttribute("fromSeries", fromSeries);
+
+        // Tag
+        List<String> postTags = new ArrayList<>();
+        List<PostTag> postTagList = postTagRepository.findPostTagByPost(originalPost);
+        for (PostTag tag : postTagList) {
+            postTags.add(tag.getTag());
+        }
+        model.addAttribute("postTags", postTags);
+
+        if (user.getMembership().equalsIgnoreCase("None")
+                && !originalPost.getUser().getUsername().equals(user.getUsername())) {
+            for (Series series : fromSeries) {
+                List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentitySeriesOrderByCreatedAtAsc(series);
+                for (int i = 0; i < seriesContentList.size(); i++) {
+                    for (int j = 0; j < temp.size(); j++) {
+                        long workid = temp.get(j).getPostIndentity().getWork().getWorkID();
+                        if (seriesContentList.get(i).getSeriesContentIndentity().getWork().getWorkID() == workid) {
+                            if (i < 3) {
+                                break;
+                            } else {
+                                return "singlePost_Error";
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         return "singlePost";

@@ -201,6 +201,7 @@
 .series-upgrade-link:hover {
     color: #30c5c5;
     font-size: 2em;
+    cursor: pointer;
 }
 
 .single-author-link, .single-author-link:link, .single-author-link:visited {
