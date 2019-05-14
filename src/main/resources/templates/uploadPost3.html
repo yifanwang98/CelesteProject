@@ -77,8 +77,9 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<form id="uploadPostInfo" method="post" action="uploadPostInfo"></form>
-<table style="width: 100%; padding: 2em 25%;" class="webfont">
+<form id="uploadPostInfo" method="post" action="uploadPostInfo"
+      onsubmit="document.getElementById('uploading').style.display = ''; document.getElementById('infoTable').style.display = 'None'; document.getElementById('footer').style.display = 'None';"></form>
+<table style="width: 100%; padding: 2em 25%;" class="webfont" id="infoTable">
     <!-- Title -->
     <tr>
         <td>
@@ -243,9 +244,52 @@
         </tr>
     </span>
 </table>
+
+<div id="uploading" style="display: none;">
+    <table style="width: 100%; padding: 2em 25%;" class="webfont">
+        <!-- Title -->
+        <tr>
+            <td>
+                <div class="semibold create-post-title">Create Post</div>
+            </td>
+        </tr>
+        <!-- Title -->
+        <tr>
+            <td style="font-size: 1.25em">
+            <span class="pending-steps">
+                Choose Image
+                <i class='fas fa-chevron-right'></i><i class='fas fa-chevron-right'></i><i
+                    class='fas fa-chevron-right'></i>
+                Add Information
+                <i class='fas fa-chevron-right'></i><i class='fas fa-chevron-right'></i><i
+                    class='fas fa-chevron-right'></i>
+            </span>
+                <span class="semibold current-step">
+                Upload
+            </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div style="padding: 1em;"></div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; font-size: 2em; ">
+                Uploading...
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; font-size: 5em; color:#9a9a9a;">
+                <i class="fa fa-spinner fa-spin"></i>
+            </td>
+        </tr>
+    </table>
+</div>
+
 <div style="padding: 2em;"></div>
 <!-- Footer Banner -->
-<table class="footer webfont semibold">
+<table class="footer webfont semibold" id="footer">
     <tbody style="padding: 0; margin: 0;">
     <tr>
         <td style="width: 6em;">

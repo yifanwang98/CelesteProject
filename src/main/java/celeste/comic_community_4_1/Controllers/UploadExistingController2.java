@@ -20,6 +20,8 @@ import java.util.*;
 @Controller
 public class UploadExistingController2 {
 
+    private static final double MAX_FILE_SIZE = 2.5;
+
 
     @Autowired
     UserRepository userRepository;
@@ -146,12 +148,28 @@ public class UploadExistingController2 {
         }
 
         UploadPostDraft upd = (UploadPostDraft) request.getSession().getAttribute("postDraft");
+        boolean error = false;
         for (MultipartFile f : file) {
             if (f.isEmpty())
                 continue;
+
+            double size = f.getSize() * Math.pow(10, -6);
+            if (size > UploadExistingController2.MAX_FILE_SIZE) {
+                error = true;
+            }
+
+            if (upd.getThumbnails().size() >= 9) {
+                request.getSession().setAttribute("postDraft", upd);
+                model.addAttribute("postDraft", upd);
+                model.addAttribute("error1", true);
+                return "uploadPost2";
+            }
+
             upd.addImage(ThumbnailConverter.toBase64Only(f));
             upd.addThumbnail(ThumbnailConverter.toBase64Square(f, 200.0));
         }
+        model.addAttribute("error", error);
+        model.addAttribute("error1", false);
         request.getSession().setAttribute("postDraft", upd);
         model.addAttribute("postDraft", upd);
         return "uploadPost2";
