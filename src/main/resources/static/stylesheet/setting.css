@@ -141,7 +141,7 @@
     color: #007174;
 }
 
-.setting-save-btn {
+.setting-save-btn, .setting-save-btn:link, .setting-save-btn:visited {
     padding: 0.5em 0;
     font-size: 0.95em;
     border: #218787 1px solid;
@@ -153,6 +153,7 @@
     width: 100%;
     color: #218787;
     font-weight: normal;
+    text-decoration: none;
 }
 
 .setting-save-btn:hover {
