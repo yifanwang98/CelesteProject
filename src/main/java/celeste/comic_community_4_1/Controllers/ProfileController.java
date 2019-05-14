@@ -2,8 +2,8 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.*;
-import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.model.EmbeddedClasses.SeriesFollowIndentity;
+import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -47,6 +45,9 @@ public class ProfileController {
 
     @Autowired
     SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesContentRepository seriesContentRepository;
 
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
@@ -287,9 +288,53 @@ public class ProfileController {
             seriesFollowRepository.delete(x.get(0));
             return "Unsubscribe Success!";
         }
-
-
     }
+
+    @PostMapping("/deletePost")
+    public String deletePost(@RequestParam(value = "postID") long postID,
+                             ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        Post postToBeDeleted = postRepository.findPostByPostID(postID);
+        if (postToBeDeleted == null)
+            return viewProfile(username, model, request);
+
+        if (!postToBeDeleted.isRepost()) {
+            List<PostContent> postContentList = postContentRepository.findByPostIndentityPostPostID(postToBeDeleted.getPostID());
+            for (PostContent postContent : postContentList) {
+                Work work = postContent.getPostIndentity().getWork();
+                postContentRepository.delete(postContent);
+                List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+                for (SeriesContent sc : seriesContentList)
+                    seriesContentRepository.delete(sc);
+                workRepository.delete(work);
+            }
+
+            List<Post> repostList = postRepository.findByOriginalPostIDAndIsRepost(postToBeDeleted.getPostID(), true);
+            for (Post repost : repostList) {
+                postRepository.delete(repost);
+            }
+            List<Like> likeList = likeRepository.findByPostIndentityPost(postToBeDeleted);
+            for (Like like : likeList) {
+                likeRepository.delete(like);
+            }
+            List<Star> starList = starRepository.findByPostIndentityPost(postToBeDeleted);
+            for (Star star : starList) {
+                starRepository.delete(star);
+            }
+        }
+        postRepository.delete(postToBeDeleted);
+
+        return viewProfile(username, model, request);
+    }
+
 
 }
 

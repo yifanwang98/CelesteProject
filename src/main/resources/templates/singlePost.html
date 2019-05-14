@@ -242,14 +242,18 @@
                                     <span class="post-time" th:text="${postToDisplay.getCreatedAt()}"></span>
                                 </td>
                                 <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
-                                    <a href="" th:if="${User.getUsername() == postToDisplay.getUser().getUsername()}"
+                                    <form action="/deletePost" method="post" id="deletePost">
+                                        <input hidden name="postID" th:value="${postToDisplay.getPostID()}">
+                                    </form>
+                                    <a href="#" th:if="${User.getUsername() == postToDisplay.getUser().getUsername()}"
+                                       onclick="document.getElementById('deletePost').submit();"
                                        class="post-action-more"><i class='far fa-trash-alt'></i></a>
                                     <div class="dropdown"
                                          th:unless="${User.getUsername() == postToDisplay.getUser().getUsername()}">
                                         <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                         <div class="dropdown-content">
                                             <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
-                                            <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
+                                            <!--<a href="#"><i class="fas fa-eye-slash"></i> Block</a>-->
                                         </div>
                                     </div>
                                 </td>
