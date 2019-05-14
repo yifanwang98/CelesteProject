@@ -24,4 +24,10 @@ public class ComicGenre {
             "War",
             "Western"
     };
+
+    public static final String[] FILTER = new String[]{
+            "User", "Hashtag", "Series", "Post"
+    };
+
+
 }

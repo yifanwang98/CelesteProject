@@ -18,8 +18,12 @@
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function(){
 
-        })
+        });
 
+        function linkForTopSearch(link) {
+            var keyword = link.id.substring(2);
+            document.getElementById('TSForm' + keyword).submit();
+        }
 
         function starAPost(postID) {
             $.ajax({
@@ -462,76 +466,25 @@
                         <i class='fas fa-fire'></i> Top Search
                     </div>
                     <table width="100%" style="padding-top: 0.5em">
-                        <tr>
-                            <td class="trendingNum semibold">1</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">DC</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">2</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Batman</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">3</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Superman</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">4</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Cat</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">5</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">asd</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">6</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">2</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">7</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">light</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">8</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">fun</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">9</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">aw</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">10</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">pen</a></div>
-                            </td>
-                        </tr>
+                        <span th:each="searchWord, iter:${top10Searches}">
+                            <tr>
+                                <td class="trendingNum semibold"><span th:text="${iter.count}"></span></td>
+                                <td>
+                                    <div style="margin-left: 1em;" class="button-link">
+                                        <form method="post"
+                                              th:id="'TSForm' + ${searchWord.getWord()}"
+                                              action="/topSearchForm">
+                                            <input hidden th:value="${searchWord.getWord()}"
+                                                   name="searchContent">
+                                        </form>
+                                        <a href="#" th:id="'TS' + ${searchWord.getWord()}"
+                                           onclick="linkForTopSearch(this);">
+                                            <span th:text="${searchWord.getWord()}"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </span>
                     </table>
                 </div>
             </div>

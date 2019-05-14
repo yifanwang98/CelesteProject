@@ -55,6 +55,9 @@ public class MainPageController {
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
 
+    @Autowired
+    SearchWordsRepository searchWordsRepository;
+
     @GetMapping(value = {"/mainPage", "/", "home"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -137,6 +140,11 @@ public class MainPageController {
 
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
+
         return "mainPage";
     }
 
