@@ -58,7 +58,8 @@
                 }
             });
 
-            $('#upgrade,#downgrade').click(function () {
+            //$('#upgrade,#downgrade').click(function () {
+            $('#downgrade').click(function () {
                 $.ajax({
                     type : "GET",
                     url : 'upgrade_downgrade',
@@ -309,7 +310,8 @@
                         <div>Basic</div>
                     </td>
                     <td>
-                        <a id="upgrade" class="setting-upgrade-btn" style="cursor: pointer;">Upgrade</a>
+                        <a id="upgrade" class="setting-upgrade-btn"
+                           style="cursor: pointer;" href="/upgradeAccount">Upgrade</a>
                     </td>
                 </tr>
                 <tr th:unless="${User.getMembership()} == 'none'">
@@ -318,7 +320,7 @@
                         <div>Premium</div>
                     </td>
                     <td>
-                        <a id="downgrade" class="setting-cancel-btn" style="cursor: pointer;">Downgrade</a>
+                        <a id="downgrade" class="setting-cancel-btn" style="cursor: pointer;" href="#">Downgrade</a>
                     </td>
                 </tr>
             </table>
@@ -328,11 +330,11 @@
                 <input type="submit" class="setting-save-btn" value="Sign Out" name="submit" style="padding: 0.5em 0;">
             </form>
         </div>
-        <div class="setting-inner-container">
-            <a id="Reset_Account" class="setting-reset-account-btn" style="cursor: pointer;">Reset Account</a>
+        <div class="setting-inner-container" th:if="${!User.getMembership().equals('None')}">
+            <a id="Reset_Account" class="setting-reset-account-btn" style="cursor: pointer;" href="#">Reset Account</a>
         </div>
         <div class="setting-inner-container">
-            <a id = "Close_Account" class="setting-close-account-btn" style="cursor: pointer;">Close Account</a>
+            <a id="Close_Account" class="setting-close-account-btn" style="cursor: pointer;" href="#">Close Account</a>
         </div>
     </div>
 </div>

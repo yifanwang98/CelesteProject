@@ -68,8 +68,14 @@ public class MainPageController {
 
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
-                return "blocked";
+            if (user.getMembership().equals("None")) {
+                if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                    return "blocked";
+                }
+            } else {
+                if (user.getBlockedSince().after(Notification.getDaysBefore(1))) {
+                    return "blocked";
+                }
             }
             user.setBlockStatus("none");
             userRepository.save(user);
