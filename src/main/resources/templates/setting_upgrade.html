@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Setting</title>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Style Sheet -->
+    <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/setting.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- Header Banner -->
+<table class="header webfont semibold">
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/mainPage" class="headerUnselected">Home</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="discover" class="headerUnselected">Discover</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="search" class="headerUnselected">Search</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- Right Part -->
+        <td style="width: 5em;">
+            <table style="padding: 0; margin: 0; align: right;">
+                <tr style="align: right;">
+                    <td class="headerCellPadding">
+                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/setting" class="headerSelected"><i class='fas fa-cog headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
+                    </td>
+                    <td class="headerCellPadding"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div style="height: 2.75em;"></div>
+<!---------------------------------------->
+<!---------------------------------------->
+
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 3em 20%;" class="webfont">
+    <div class="setting-outer-container">
+        <!-- Title -->
+        <div class="setting-title semibold">Upgrade Account</div>
+        <!-- Content -->
+        <div class="setting-inner-container">
+            <table style="border-spacing: 5px; width: 100%; text-align: center">
+                <col width="40%"/>
+                <col width="30%"/>
+                <col width="30%"/>
+                <tr>
+                    <th></th>
+                    <th>Basic</th>
+                    <th>Premium</th>
+                </tr>
+                <tr>
+                    <td style="text-align: right">Reset Account</td>
+                    <td><i class='fas fa-times'></i></td>
+                    <td><i class='fas fa-check'></i></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right">View all comics in a series</td>
+                    <td><i class='fas fa-times'></i></td>
+                    <td><i class='fas fa-check'></i></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right">Faster account recovery time if blocked</td>
+                    <td><i class='fas fa-times'></i></td>
+                    <td><i class='fas fa-check'></i></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right" class="semibold">Pricing</td>
+                    <td>Free</td>
+                    <td>$ 9.99 / mo.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="setting-inner-container">
+            <table style="border-spacing: 0; width: 100%;">
+                <col width="25%"/>
+                <col width="75%"/>
+                <tr style="height: 0.5em">
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/setting" class="setting-cancel-btn" style="font-size: 1em">Cancel</a></td>
+                    <td>
+                        <form method="post" action="paypal_checkout/pay" id="upgradeWithPaypal">
+                            <!--<button type="submit"> Process Payment </button>-->
+                            <a href="#" onclick="document.getElementById('upgradeWithPaypal').submit();"
+                               class="setting-save-btn semibold" style="font-size: 1em">
+                                <span class="semibold"> Upgrade </span> <i class='fas fa-caret-right'></i>
+                                <i class='fab fa-paypal'></i> <span class="semibold"
+                                                                    style="font-style: italic">PayPal</span>
+                            </a>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 5em"></div>
+</body>
+</html>

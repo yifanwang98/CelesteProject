@@ -148,6 +148,32 @@ public class SettingController {
         return returnstring;
     }
 
+    @GetMapping({"upgradeAccount", "/pay/pay_cancel"})
+    public String upgrade(ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+
+        model.addAttribute("User", user);
+
+        return "setting_upgrade";
+    }
+
 
 
     @GetMapping("/resetAccount")
