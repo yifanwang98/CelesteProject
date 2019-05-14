@@ -584,9 +584,9 @@
                                                 <span th:if="${result.postData.liked}" class="post-action-liked-top">
                                                     <i class='fas fa-thumbs-up'></i>
                                                 </span>
-                                                <a href=""
-                                                   th:if="${User.getUsername() == result.postData.post.getUser().getUsername()}"
-                                                   class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                                <!--<a href=""-->
+                                                <!--th:if="{User.getUsername() == result.postData.post.getUser().getUsername()}"-->
+                                                <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
                                                 <div class="dropdown"
                                                      th:unless="${User.getUsername() == result.postData.post.getUser().getUsername()}">
                                                     <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>

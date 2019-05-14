@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class PostData {
+public class PostData implements Comparable<PostData> {
     public final Post post;
     public final Post originalPost;
     public final List<String> images;
@@ -75,5 +75,10 @@ public class PostData {
 
     public String originalPostCreatedAt() {
         return Notification.getDateString(originalPost.getCreatedAt());
+    }
+
+    @Override
+    public int compareTo(PostData o) {
+        return -1 * this.post.getCreatedAt().compareTo(o.post.getCreatedAt());
     }
 }

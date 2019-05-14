@@ -196,7 +196,11 @@
     text-decoration: none;
 }
 
-.post-action-more:link, .post-action-more:visited {
+.post-action-more, .post-action-more:link, .post-action-more:visited {
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
     color: #666666;
     text-decoration: none;
 }
@@ -204,6 +208,7 @@
 .post-action-more:hover {
     color: #218787;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .post-action-follow {

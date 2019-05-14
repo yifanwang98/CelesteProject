@@ -15,6 +15,11 @@
     <link href="../static/stylesheet/single.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script>
+        function deletePost(post) {
+            document.getElementById('deletePost' + post.id.substring(2)).submit();
+        }
+    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -157,7 +162,12 @@
                                 <span class="post-time" th:text="${postData.post.getCreatedAt()}"></span>
                             </td>
                             <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
-                                <a href=""
+                                <form action="/deletePost" method="post"
+                                      th:id="'deletePost' + ${postData.post.getPostID()}">
+                                    <input hidden name="postID" th:value="${postData.post.getPostID()}">
+                                </form>
+                                <a href="#" th:id="'P-' + ${postData.post.getPostID()}"
+                                   onclick="deletePost(this)"
                                    th:if="${User.getUsername() == postData.post.getUser().getUsername()}"
                                    class="post-action-more"><i class='far fa-trash-alt'></i></a>
                                 <div class="dropdown"
