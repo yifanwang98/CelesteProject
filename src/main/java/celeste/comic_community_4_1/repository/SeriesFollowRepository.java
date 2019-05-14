@@ -18,6 +18,8 @@ public interface SeriesFollowRepository extends JpaRepository<SeriesFollow, Seri
 
     List<SeriesFollow> findSeriesFollowBySeriesFollowIndentityUser(User user);
 
+    List<SeriesFollow> findSeriesFollowBySeriesFollowIndentityUserAndSeriesFollowIndentitySeriesSeriesID(User user,Long id);
+
     long countSeriesFollowBySeriesFollowIndentityUser(User user);
 
     long countSeriesFollowBySeriesFollowIndentitySeries(Series series);

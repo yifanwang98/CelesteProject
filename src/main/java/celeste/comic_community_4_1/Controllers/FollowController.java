@@ -181,7 +181,7 @@ public class FollowController {
                            ModelMap model, HttpServletRequest request) throws Exception {
 
         List<Follow> x = followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(username1, username2);
-        if (x.size()==0) {
+        if (x.size()==1) {
             followRepository.delete(x.get(0));
             return "Unfollow Success!";
         } else {

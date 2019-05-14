@@ -17,6 +17,29 @@
     <!-- Script -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" th:inline="javascript">
+        function subscribe_Unsubscribe_Series(seriesID) {
+            $.ajax({
+                type : "POST",
+                url : 'subscribe_Unsubscribe_Series',
+                data:{seriesID:seriesID},
+                cache : false,
+                success : function(data) {
+                    if(data == "Unsubscribe Success!"  ){
+                        alert(data)
+                        $('#'+seriesID).text(" Subscribe")
+                        $('#'+seriesID).prepend("<i class='fas fa-plus'></i>")
+                    }
+                    else if(data == "Subscribe Success!") {
+                        alert(data)
+                        $('#'+seriesID).text(" Unsubscribe")
+                        $('#'+seriesID).prepend("<i class='fas fa-plus'></i>")
+                    }
+                },
+                error: function(){
+                    alert(arguments[1]);
+                }
+            });
+        }
         function addSeriesTag(seriesID) {
             event.preventDefault();
             var form = new FormData(document.getElementById("addSeriesTag_" + seriesID));
@@ -269,10 +292,10 @@
                         </div>
                     </div>
                     <div th:if="${seriesData.subscribed}" class="subscription-series-unsubscribe">
-                        <a href=""><i class='fas fa-minus'></i> Unsubscribe</a>
+                        <a th:id="${seriesData.series.getSeriesID()}"th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesData.series.getSeriesID()} + ');'"><i class='fas fa-minus'></i> Unsubscribe</a>
                     </div>
                     <div th:if="${!seriesData.subscribed && !seriesData.owner}" class="subscription-series-unsubscribe">
-                        <a href=""><i class='fas fa-plus'></i> Subscribe</a>
+                        <a th:id="${seriesData.series.getSeriesID()}"th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesData.series.getSeriesID()} + ');'"><i class='fas fa-plus'></i> Subscribe</a>
                     </div>
                 </td>
             </tr>
