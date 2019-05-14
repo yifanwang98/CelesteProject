@@ -32,7 +32,7 @@
                     else if(data == "Subscribe Success!") {
                         alert(data)
                         $('#'+seriesID).text(" Unsubscribe")
-                        $('#'+seriesID).prepend("<i class='fas fa-plus'></i>")
+                        $('#' + seriesID).prepend("<i class='fas fa-minus'></i>")
                     }
                 },
                 error: function(){
@@ -292,7 +292,9 @@
                         </div>
                     </div>
                     <div th:if="${seriesData.subscribed}" class="subscription-series-unsubscribe">
-                        <a th:id="${seriesData.series.getSeriesID()}"th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesData.series.getSeriesID()} + ');'"><i class='fas fa-minus'></i> Unsubscribe</a>
+                        <a th:id="${seriesData.series.getSeriesID()}"
+                           th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesData.series.getSeriesID()} + ');'"><i
+                                class='fas fa-minus'></i> Unsubscribe</a>
                     </div>
                     <div th:if="${!seriesData.subscribed && !seriesData.owner}" class="subscription-series-unsubscribe">
                         <a th:id="${seriesData.series.getSeriesID()}"th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesData.series.getSeriesID()} + ');'"><i class='fas fa-plus'></i> Subscribe</a>
