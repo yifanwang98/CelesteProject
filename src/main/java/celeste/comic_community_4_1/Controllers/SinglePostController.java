@@ -107,7 +107,12 @@ public class SinglePostController {
         if (!postAnalysisRepository.existsPostAnalysisByPostAndUserAndViewedAt(postToDisplay, user, today)
                 && !user.getUsername().equals(postToDisplay.getUser().getUsername())) {
             PostAnalysis pa = new PostAnalysis();
-            pa.setPost(postToDisplay);
+            if (postToDisplay.isRepost()) {
+                Post originalPost = postRepository.findPostByPostID(postToDisplay.getOriginalPostID());
+                pa.setPost(originalPost);
+            } else {
+                pa.setPost(postToDisplay);
+            }
             pa.setUser(user);
             pa.setViewedAt(today);
             postAnalysisRepository.save(pa);

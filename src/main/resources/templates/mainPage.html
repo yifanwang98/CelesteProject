@@ -184,8 +184,9 @@
                             <table width="100%">
                                 <tr>
                                     <td>
-                                        <span class="post-author"
-                                              th:text="${postData.post.getUser().getUsername()}"></span><br>
+                                        <a class="post-author"
+                                           th:href="'view_profile?user=' + ${postData.post.getUser().getUsername()}"
+                                           th:text="${postData.post.getUser().getUsername()}"></a><br>
                                         <span class="post-time" th:text="${postData.postCreatedAt()}"></span>
                                     </td>
                                     <td width="10%"
@@ -196,16 +197,16 @@
                                         <span th:if="${postData.liked}" class="post-action-liked-top">
                                             <i class='fas fa-thumbs-up'></i>
                                         </span>
-                                        <a href=""
-                                           th:if="${User.getUsername() == postData.post.getUser().getUsername()}"
-                                           class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                        <!--<a href=""-->
+                                        <!--th:if="${User.getUsername() == postData.post.getUser().getUsername()}"-->
+                                        <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
                                         <div class="dropdown" hidden
                                              th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                             <div class="dropdown-content">
                                                 <a th:href="'javascript:reportAPost(' + ${postData.post.getPostID()} + ');'">
                                                     <i class="fas fa-exclamation-triangle"></i> Report</a>
-                                                <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
+                                                <!--<a href="#"><i class="fas fa-eye-slash"></i> Block</a>-->
                                             </div>
                                         </div>
                                     </td>
@@ -266,8 +267,9 @@
                                             <table width="100%">
                                                 <tr>
                                                     <td>
-                                                        <span class="post-author"
-                                                              th:text="${postData.originalPost.getUser().getUsername()}"></span><br>
+                                                        <a class="post-author"
+                                                           th:href="'view_profile?user=' + ${postData.originalPost.getUser().getUsername()}"
+                                                           th:text="${postData.originalPost.getUser().getUsername()}"></a><br>
                                                         <span class="post-time"
                                                               th:text="${postData.originalPostCreatedAt()}"></span>
                                                     </td>

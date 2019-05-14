@@ -29,6 +29,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     long countPostByUser(User user);
 
-    long countPostByCreatedAtAfterAndUser(Date after, User user);
+    long countPostByCreatedAtAfterAndUserAndIsRepost(Date after, User user, boolean isRepost);
 }
 
