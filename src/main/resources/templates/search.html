@@ -490,11 +490,11 @@
                                                 </div>
                                                 <div class="subscription-series-tag">
                                                     <span th:if="${!result.seriesData.series.getPrimaryGenre().equals('None')}">
-                                                        <a href="#">#<span
+                                                        <a href="#"><i class='far fa-bookmark'></i> <span
                                                                 th:text="${result.seriesData.series.getPrimaryGenre()}"></span></a>
                                                     </span>
                                                     <span th:if="${!result.seriesData.series.getSecondaryGenre().equals('None')}">
-                                                        <a href="#">#<span
+                                                        <a href="#"><i class='far fa-bookmark'></i> <span
                                                                 th:text="${result.seriesData.series.getSecondaryGenre()}"></span></a>
                                                     </span>
                                                     <span th:each="tag, iter: ${result.seriesData.tags}">
@@ -584,9 +584,9 @@
                                                 <span th:if="${result.postData.liked}" class="post-action-liked-top">
                                                     <i class='fas fa-thumbs-up'></i>
                                                 </span>
-                                                <a href=""
-                                                   th:if="${User.getUsername() == result.postData.post.getUser().getUsername()}"
-                                                   class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                                <!--<a href=""-->
+                                                <!--th:if="{User.getUsername() == result.postData.post.getUser().getUsername()}"-->
+                                                <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
                                                 <div class="dropdown"
                                                      th:unless="${User.getUsername() == result.postData.post.getUser().getUsername()}">
                                                     <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
@@ -610,11 +610,15 @@
                                     <div class="post-genre">
                                         <span th:if="${!result.postData.post.getPrimaryGenre().equals('None') || !result.postData.post.getSecondaryGenre().equals('None')}">
                                             <span th:if="${!result.postData.post.getPrimaryGenre().equals('None')}"
-                                                  class="post-genre-text"
-                                                  th:text="'#' + ${result.postData.post.getPrimaryGenre()} + ' '"></span>
+                                                  class="post-genre-text">
+                                                <i class='far fa-bookmark'></i>
+                                                <span th:text="${result.postData.post.getPrimaryGenre()} + ' '"></span>
+                                            </span>
                                             <span th:if="${!result.postData.post.getSecondaryGenre().equals('None')}"
-                                                  class="post-genre-text"
-                                                  th:text="'#' + ${result.postData.post.getSecondaryGenre()}"></span>
+                                                  class="post-genre-text">
+                                                <i class='far fa-bookmark'></i>
+                                                <span th:text="${result.postData.post.getSecondaryGenre()} + ' '"></span>
+                                            </span>
                                         </span>
                                         <span th:each="tag: ${result.postData.postTags}">
                                             <span th:text="'#' + ${tag}" class="post-genre-text"></span>
@@ -672,11 +676,15 @@
                                                     <div class="post-genre"
                                                          th:if="${!result.postData.originalPost.getPrimaryGenre().equals('None') || !result.postData.originalPost.getSecondaryGenre().equals('None')}">
                                                         <span th:if="${!result.postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                              class="post-genre-text"
-                                                              th:text="'#' + ${result.postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                              class="post-genre-text">
+                                                            <i class='far fa-bookmark'></i>
+                                                            <span th:text="${result.postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                        </span>
                                                         <span th:if="${!result.postData.originalPost.getSecondaryGenre().equals('None')}"
-                                                              class="post-genre-text"
-                                                              th:text="'#' + ${result.postData.originalPost.getSecondaryGenre()}"></span>
+                                                              class="post-genre-text">
+                                                            <i class='far fa-bookmark'></i>
+                                                            <span th:text="'#' + ${result.postData.originalPost.getSecondaryGenre()}"></span>
+                                                        </span>
                                                     </div>
                                                 </td>
                                             </tr>

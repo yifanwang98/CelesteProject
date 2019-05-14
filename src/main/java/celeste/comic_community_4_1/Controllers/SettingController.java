@@ -38,6 +38,9 @@ public class SettingController {
     PostContentRepository postContentRepository;
 
     @Autowired
+    SeriesContentRepository seriesContentRepository;
+
+    @Autowired
     LikeRepository likeRepository;
 
     @Autowired
@@ -190,6 +193,9 @@ public class SettingController {
                 for (PostContent postContent : postContentList) {
                     Work work = postContent.getPostIndentity().getWork();
                     postContentRepository.delete(postContent);
+                    List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+                    for (SeriesContent sc : seriesContentList)
+                        seriesContentRepository.delete(sc);
                     workRepository.delete(work);
                 }
                 List<Post> repostList = postRepository.findByOriginalPostIDAndIsRepost(post.getPostID(), true);
