@@ -184,8 +184,9 @@
                             <table width="100%">
                                 <tr>
                                     <td>
-                                        <span class="post-author"
-                                              th:text="${postData.post.getUser().getUsername()}"></span><br>
+                                        <a class="post-author"
+                                           th:href="'view_profile?user=' + ${postData.post.getUser().getUsername()}"
+                                           th:text="${postData.post.getUser().getUsername()}"></a><br>
                                         <span class="post-time" th:text="${postData.postCreatedAt()}"></span>
                                     </td>
                                     <td width="10%"
@@ -266,8 +267,9 @@
                                             <table width="100%">
                                                 <tr>
                                                     <td>
-                                                        <span class="post-author"
-                                                              th:text="${postData.originalPost.getUser().getUsername()}"></span><br>
+                                                        <a class="post-author"
+                                                           th:href="'view_profile?user=' + ${postData.originalPost.getUser().getUsername()}"
+                                                           th:text="${postData.originalPost.getUser().getUsername()}"></a><br>
                                                         <span class="post-time"
                                                               th:text="${postData.originalPostCreatedAt()}"></span>
                                                     </td>

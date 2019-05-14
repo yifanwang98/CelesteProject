@@ -55,9 +55,16 @@
     width: 1.7em;
 }
 
-.post-author {
+.post-author, .post-author:link, .post-author:visited {
     font-size: 1em;
     font-weight: 500;
+    text-decoration: none;
+    color: #218787;
+}
+
+.post-author:hover {
+    color: #269b9b;
+    font-style: italic;
 }
 
 .post-time {
@@ -147,7 +154,7 @@
 .post-action-liked-top {
     padding-right: 0.5em;
     text-decoration: none;
-    color: #bfd3e3;
+    color: #cccccc;
 }
 
 .post-action-liked-top:hover {
@@ -172,7 +179,7 @@
 
 .post-action-stared-top {
     padding-right: 0.5em;
-    color: #e7e1a5
+    color: #cccccc;
 }
 
 .post-action-stared-top:hover {
