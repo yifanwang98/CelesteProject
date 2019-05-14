@@ -147,6 +147,10 @@
 .post-action-liked-top {
     padding-right: 0.5em;
     text-decoration: none;
+    color: #bfd3e3;
+}
+
+.post-action-liked-top:hover {
     color: #3973a0;
 }
 
@@ -168,6 +172,10 @@
 
 .post-action-stared-top {
     padding-right: 0.5em;
+    color: #e7e1a5
+}
+
+.post-action-stared-top:hover {
     color: goldenrod;
 }
 
