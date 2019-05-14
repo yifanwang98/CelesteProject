@@ -188,7 +188,7 @@
     </div>
 </span>
 <span th:unless="${thumbnails.isEmpty()}">
-    <div th:if="${selectedSubIndex < 3 || User.getMembership().equals('1')}">
+    <div th:if="${selectedSubIndex < 3 || User.getMembership().equals('1') || isOwner}">
         <div class="series-image webfont" style="padding: 1em 0;">
             <!-- Title -->
             <div th:text="${seriesToView.getSeriesName()} + ' (' + ${selectedSubIndex + 1} + ')'"
@@ -208,7 +208,7 @@
                  style="border-radius: 5px; width: 100%">
         </div>
     </div>
-    <div th:unless="${selectedSubIndex < 3 || User.getMembership().equals('1')}">
+    <div th:unless="${selectedSubIndex < 3 || User.getMembership().equals('1') || isOwner}">
         <div class="series-image webfont semibold">
             <div style="padding: 10% 0;">
                 <a href="/upgradeAccount" class="series-upgrade-link">Upgrade to premium to enjoy entire series <i
