@@ -88,7 +88,7 @@ public class DiscoverController {
         List<SearchWords> wordslist = searchWordsRepository.findTop5ByOrderByHeatDesc();
         Collections.reverse(wordslist);
         for(int i =0;i<wordslist.size();i++){
-            String word= wordslist.get(i).getSearchWord();
+            String word = wordslist.get(i).getWord();
             List<Post> pg = postRepository.findByPrimaryGenre(word);
             List<Post> sg = postRepository.findBySecondaryGenre(word);
             pg.removeAll(sg);
@@ -111,18 +111,6 @@ public class DiscoverController {
         }
 
         postList = postList.stream().distinct().collect(Collectors.toList());
-//        for(int i = 0;i<postList.size();i++){
-//            System.out.println(postList.get(i).getPostID());
-//        }
-//        for(int i = 0;i<wordslist.size();i++){
-//            System.out.println(wordslist.get(i).getSearchWord());
-//        }
-
-        //All the post by this user's follows
-//        List<Follow> followList = followRepository.findByFollowIndentityUserone(user);
-//        for (int i = 0; i < followList.size(); i++) {
-//            postList.addAll(postRepository.findByUser(followList.get(i).getFollowIndentity().getUser2()));
-//        }
 
         // Sort
         Collections.sort(postList, new PostComparator());
@@ -149,12 +137,6 @@ public class DiscoverController {
                 }
             }
 
-            // Count
-//            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-//            long commentCount = commentRepository.countCommentByPost(post);
-//            long starCount = starRepository.countStarByPostIndentityPost(post);
-//            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
-//
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
@@ -172,6 +154,10 @@ public class DiscoverController {
 
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
 
         return "discover";
 

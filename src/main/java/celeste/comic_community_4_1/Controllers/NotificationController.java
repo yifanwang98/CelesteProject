@@ -51,6 +51,9 @@ public class NotificationController {
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
 
+    @Autowired
+    SearchWordsRepository searchWordsRepository;
+
     @GetMapping("/notification")
     public String goToNotification(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -165,6 +168,10 @@ public class NotificationController {
 
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
 
         return "notification";
     }

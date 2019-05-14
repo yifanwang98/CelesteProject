@@ -13,6 +13,12 @@
     <link href="../static/stylesheet/notification.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script>
+        function linkForTopSearch(link) {
+            var keyword = link.id.substring(2);
+            document.getElementById('TSForm' + keyword).submit();
+        }
+    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -151,7 +157,8 @@
                 <div style="text-align: center; padding: 1.618em 0 0.25em 0;">
                     <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
                         <img th:src="'data:image/png;base64,'+${User.getAvatar()}"
-                             style="width: 38.2%; border-radius: 100%; border: #cccccc 1px solid;"></a>
+                             style="width: 38.2%; border-radius: 100%; border: #cccccc 1px solid;">
+                    </a>
                 </div>
                 <!------------------------------------>
                 <!-- Profile Info -->
@@ -202,7 +209,7 @@
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a th:href="'view_profile_subscription?user=' + ${User.getUsername()}">
+                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
                                     <div>
                                         <span class="semibold" style="font-size: 1.05em;">Stars</span><br><span
                                             th:text="${starCount}" class="semibold" style="font-size: 1.05em;"></span>
@@ -255,76 +262,25 @@
                         <i class='fas fa-fire'></i> Top Search
                     </div>
                     <table width="100%" style="padding-top: 0.5em">
-                        <tr>
-                            <td class="trendingNum semibold">1</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">DC</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">2</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Batman</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">3</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Superman</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">4</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Cat</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">5</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">asd</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">6</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">2</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">7</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">light</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">8</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">fun</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">9</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">aw</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">10</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">pen</a></div>
-                            </td>
-                        </tr>
+                        <span th:each="searchWord, iter:${top10Searches}">
+                            <tr>
+                                <td class="trendingNum semibold"><span th:text="${iter.count}"></span></td>
+                                <td>
+                                    <div style="margin-left: 1em;" class="button-link">
+                                        <form method="post"
+                                              th:id="'TSForm' + ${searchWord.getWord()}"
+                                              action="/topSearchForm">
+                                            <input hidden th:value="${searchWord.getWord()}"
+                                                   name="searchContent">
+                                        </form>
+                                        <a href="#" th:id="'TS' + ${searchWord.getWord()}"
+                                           onclick="linkForTopSearch(this);">
+                                            <span th:text="${searchWord.getWord()}"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </span>
                     </table>
                 </div>
             </div>
