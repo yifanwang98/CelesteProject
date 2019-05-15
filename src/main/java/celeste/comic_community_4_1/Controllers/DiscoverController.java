@@ -2,8 +2,8 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.Notification;
-import celeste.comic_community_4_1.miscellaneous.PostComparator;
 import celeste.comic_community_4_1.miscellaneous.PostData;
+import celeste.comic_community_4_1.miscellaneous.TagProcessor;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 public class DiscoverController {
@@ -56,7 +55,7 @@ public class DiscoverController {
     PostTagRepository postTagRepository;
 
     @GetMapping("/discover")
-    public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
+    public String discover(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -83,35 +82,48 @@ public class DiscoverController {
         List<Post> postList = postRepository.findByUser(user);
         model.addAttribute("postsCount", postList.size());
 
-        postList.clear();
-
         List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
-        for (int i = 0; i < wordsList.size(); i++) {
-            String word = wordsList.get(i).getWord();
 
-//            List<Post> pg = postRepository.findByPrimaryGenre(word);
-//            List<Post> sg = postRepository.findBySecondaryGenre(word);
-//            pg.removeAll(sg);
-//            pg.addAll(sg);
-//            List<Post> temp = pg;
-//
-//
-//            if (temp.size() == 0) {
-//                continue;
-//            } else if (temp.size() <= i) {
-//                postList.addAll(temp);
-//                continue;
-//            } else {
-//                temp.subList(i, temp.size()).clear();
-//                postList.addAll(temp);
-//            }
-
+        List<String> searchWordTagList = new ArrayList<>();
+        for (SearchWords sw : wordsList) {
+            searchWordTagList.add(TagProcessor.process(sw.getWord()));
         }
 
-        postList = postList.stream().distinct().collect(Collectors.toList());
+        postList = postRepository.findPostsByCreatedAtAfterAndIsRepostAndUserIsNot(Notification.getDaysBefore(30), false, user);
+        HashMap<Post, Integer> postHashMap = new HashMap<>();
+        for (Post post : postList) {
+            if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, post.getUser()))
+                continue;
+            if (starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user))
+                continue;
+            if (likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user))
+                continue;
 
-        // Sort
-        Collections.sort(postList, new PostComparator());
+            int heat = 0;
+            for (String tag : searchWordTagList) {
+                if (postTagRepository.existsPostTagByPostAndTag(post, tag))
+                    heat -= 1;
+            }
+            for (SearchWords sw : wordsList) {
+                if (post.getPostComment().toLowerCase().contains(sw.getWord().toLowerCase()))
+                    heat -= 1;
+                if (post.getUser().getUsername().toLowerCase().contains(sw.getWord().toLowerCase()))
+                    heat -= 1;
+            }
+
+            postHashMap.put(post, heat);
+        }
+
+        List<Map.Entry<Post, Integer>> list = new ArrayList<>(postHashMap.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+
+        postList.clear();
+
+        for (Map.Entry<Post, Integer> entry : list) {
+            postList.add(entry.getKey());
+            if (postList.size() >= 50)
+                break;
+        }
 
         // Organize Info
         List<PostData> postDataList = new ArrayList<>();

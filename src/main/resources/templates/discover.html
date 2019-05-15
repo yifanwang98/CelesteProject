@@ -9,7 +9,7 @@
     <!-- Style Sheet -->
     <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
-    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -17,56 +17,11 @@
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function(){
 
-        })
+        });
 
         function linkForTopSearch(link) {
             var keyword = link.id.substring(2);
             document.getElementById('TSForm' + keyword).submit();
-        }
-
-        function followAUser(username) {
-            $.ajax({
-                type : "POST",
-                url : 'singlepostReport',
-                data:{postID:postID,reason:reason},
-                cache : false,
-                success : function(data) {
-                    if(data == "Report has been sent. Please wait for our reply."){
-                        alert(data)
-                        location.reload();
-
-                    }
-                    else {
-                        alert(data)
-                    }
-                },
-                error: function(){
-                    alert(arguments[1]);
-                }
-            });
-        }
-        function reportAPost(postID) {
-            var reason = prompt("Please describe the reason:","");
-            if (reason==null) reason = ""
-            $.ajax({
-                type : "POST",
-                url : 'singlepostReport',
-                data:{postID:postID,reason:reason},
-                cache : false,
-                success : function(data) {
-                    if(data == "Report has been sent. Please wait for our reply."){
-                        alert(data)
-                        location.reload();
-
-                    }
-                    else {
-                        alert(data)
-                    }
-                },
-                error: function(){
-                    alert(arguments[1]);
-                }
-            });
         }
 
     </script>
@@ -157,19 +112,9 @@
                                         <span th:if="${postData.liked}" class="post-action-liked-top">
                                             <i class='fas fa-thumbs-up'></i>
                                         </span>
-                                        <a href=""
+                                        <a href="#"
                                            th:if="${User.getUsername() == postData.post.getUser().getUsername()}"
                                            class="post-action-more"><i class='far fa-trash-alt'></i></a>
-                                        <div class="dropdown"
-                                             th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
-                                            <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
-                                            <div class="dropdown-content">
-                                                <a th:href="'javascript:reportAPost(' + ${postData.post.getPostID()} + ');'"><i class="fas fa-exclamation-triangle"></i> Report</a>
-                                            </div>
-                                        </div>
-                                        <div class="post-action-follow"th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
-                                            <a th:href="'javascript:followAUser(' + ${postData.post.getUser().getUsername()} + ');'"><i class='fas fa-plus'></i> Follow</a>
-                                        </div>
                                     </td>
                                 </tr>
                             </table>
