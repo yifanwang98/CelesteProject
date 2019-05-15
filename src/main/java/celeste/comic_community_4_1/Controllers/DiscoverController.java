@@ -4,12 +4,16 @@ import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.miscellaneous.PostData;
 import celeste.comic_community_4_1.miscellaneous.TagProcessor;
+import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -170,8 +174,52 @@ public class DiscoverController {
         model.addAttribute("top10Searches", top10Searches);
 
         return "discover";
-
     }
+
+    private static final String ILLEGAL_CHAR = ",.?:;'\"[]\\|/{}<>`~ ";
+
+    @ResponseBody
+    @GetMapping("/checkusername")
+    public String checkUsername(@RequestParam(value = "username", required = false) String username) {
+        if (username != null) {
+            if (username.length() < 2) {
+                return "Username too short";
+            }
+            for (int i = 0; i < ILLEGAL_CHAR.length(); i++) {
+                if (username.indexOf(ILLEGAL_CHAR.charAt(i)) >= 0) {
+                    return "Illegal character: " + ILLEGAL_CHAR.charAt(i);
+                }
+            }
+        }
+        Optional<User> a = userRepository.findById(username);
+        if (a.isPresent()) {
+            return "Taken";
+        } else {
+            return "";
+        }
+    }
+
+    @PostMapping("/signUpSignIn")
+    public String signUpSignIn(@RequestParam(value = "username") String username,
+                               @RequestParam(value = "password") String password,
+                               @RequestParam(value = "email") String email,
+                               @RequestParam(value = "gender") String gender,
+                               ModelMap model, HttpServletRequest request) throws Exception {
+        User newUser = new User();
+        newUser.setUsername(username.trim());
+        newUser.setCreatedAt(new Date());
+        newUser.setPassword(password);
+        newUser.setEmail(email);
+        newUser.setGender(gender);
+
+        String base64 = ThumbnailConverter.DEFAULT_AVATAR;
+        newUser.setAvatar(base64);
+        userRepository.save(newUser);
+        model.addAttribute("User", newUser);
+
+        return discover(model, request);
+    }
+
 
 }
 
