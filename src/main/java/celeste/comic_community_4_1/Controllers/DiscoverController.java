@@ -85,28 +85,26 @@ public class DiscoverController {
 
         postList.clear();
 
-        List<SearchWords> wordslist = searchWordsRepository.findTop5ByOrderByHeatDesc();
-        Collections.reverse(wordslist);
-        for(int i =0;i<wordslist.size();i++){
-            String word = wordslist.get(i).getWord();
-            List<Post> pg = postRepository.findByPrimaryGenre(word);
-            List<Post> sg = postRepository.findBySecondaryGenre(word);
-            pg.removeAll(sg);
-            pg.addAll(sg);
-            List<Post> temp=pg;
+        List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        for (int i = 0; i < wordsList.size(); i++) {
+            String word = wordsList.get(i).getWord();
 
-
-            if(temp.size()==0){
-                continue;
-            }
-            else if(temp.size()<=i){
-                postList.addAll(temp);
-                continue;
-            }
-            else {
-                temp.subList(i, temp.size()).clear();
-                postList.addAll(temp);
-            }
+//            List<Post> pg = postRepository.findByPrimaryGenre(word);
+//            List<Post> sg = postRepository.findBySecondaryGenre(word);
+//            pg.removeAll(sg);
+//            pg.addAll(sg);
+//            List<Post> temp = pg;
+//
+//
+//            if (temp.size() == 0) {
+//                continue;
+//            } else if (temp.size() <= i) {
+//                postList.addAll(temp);
+//                continue;
+//            } else {
+//                temp.subList(i, temp.size()).clear();
+//                postList.addAll(temp);
+//            }
 
         }
 

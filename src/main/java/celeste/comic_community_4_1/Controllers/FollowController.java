@@ -69,6 +69,9 @@ public class FollowController {
             model.addAttribute("crossCheckedFollowList", crossCheckFollowing(user, following));
             model.addAttribute("isSubscribing", isSubscribing(user, linkedUser));
         }
+
+        model.addAttribute("isFollowing", followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, linkedUser));
+
         return "profile_following";
     }
 
@@ -105,6 +108,8 @@ public class FollowController {
             model.addAttribute("crossCheckedFollowList", crossCheckFollowing(user, follower));
             model.addAttribute("isSubscribing", isSubscribing(user, linkedUser));
         }
+
+        model.addAttribute("isFollowing", followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, linkedUser));
         return "profile_follower";
     }
 
@@ -126,8 +131,8 @@ public class FollowController {
         model.addAttribute("isOthersProfile", false);
 
 
-        List<Follow> x = followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(toBeUnfollow,user.getUsername());
-        if (x.size()!=0) {
+        List<Follow> x = followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(toBeUnfollow, user.getUsername());
+        if (x.size() != 0) {
             followRepository.delete(x.get(0));
             return "Remove Success!";
         }
@@ -178,10 +183,10 @@ public class FollowController {
     @PostMapping("/unfollow_follow")
     public String unfollow_follow(@RequestParam(value = "username1") String username1,
                                   @RequestParam(value = "username2") String username2,
-                           ModelMap model, HttpServletRequest request) throws Exception {
+                                  ModelMap model, HttpServletRequest request) throws Exception {
 
         List<Follow> x = followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(username1, username2);
-        if (x.size()==1) {
+        if (x.size() == 1) {
             followRepository.delete(x.get(0));
             return "Unfollow Success!";
         } else {
@@ -193,6 +198,45 @@ public class FollowController {
             followRepository.save(newfollow);
             return "Follow Success!";
         }
+    }
+
+    @ResponseBody
+    @PostMapping("/followUser")
+    public String followUser(@RequestParam(value = "username2") String username2,
+                             ModelMap model, HttpServletRequest request) throws Exception {
+
+        String username1 = (String) request.getSession().getAttribute("username");
+        User user1 = userRepository.findUserByUsername(username1);
+        User user2 = userRepository.findUserByUsername(username2);
+        Follow x = followRepository.findFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user1, user2);
+        if (x != null) {
+            return "Following";
+        } else {
+            Follow newfollow = new Follow();
+            FollowIndentity followIndentity = new FollowIndentity();
+            followIndentity.setUser2(userRepository.findById(username2).get());
+            followIndentity.setUser1(userRepository.findById(username1).get());
+            newfollow.setFollowIndentity(followIndentity);
+            followRepository.save(newfollow);
+            return "Follow Success!";
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/unfollowUser")
+    public String unfollowUser(@RequestParam(value = "username2") String username2,
+                               ModelMap model, HttpServletRequest request) throws Exception {
+
+        String username1 = (String) request.getSession().getAttribute("username");
+        User user1 = userRepository.findUserByUsername(username1);
+        User user2 = userRepository.findUserByUsername(username2);
+        Follow x = followRepository.findFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user1, user2);
+        if (x != null) {
+            followRepository.delete(x);
+            return "Unfollow Success!";
+        }
+
+        return "Not Following";
     }
 }
 

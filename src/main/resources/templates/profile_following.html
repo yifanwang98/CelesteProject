@@ -14,29 +14,72 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
     <script type="text/javascript" th:inline="javascript">
-        function unfollow_followname(username1,username2) {
+        function followUser() {
+            var username2 = [[${profileOwner.getUsername()}]];
             $.ajax({
-                type : "POST",
-                url : 'unfollow_follow',
-                data:{username1:username1,username2:username2},
-                cache : false,
-                success : function(data) {
-                    if(data == "Unfollow Success!"  ){
-                        $('#'+username1+'__'+username2).text(" Follow")
-                        $('#'+username1+'__'+username2).prepend("<i class='fas fa-plus'></i>")
-                    }
-                    else if(data == "Follow Success!") {
-                        $('#'+username1+'__'+username2).text(" Unfollow")
-                        $('#'+username1+'__'+username2).prepend("<i class='fas fa-minus'></i>")
-                    }
+                type: "POST",
+                url: 'followUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+
                 },
-                error: function(){
-                    alert(arguments[1]);
+                error: function () {
+                    //alert(arguments[1]);
                 }
             });
+            location.reload();
         }
+
+        function unfollowUser() {
+            var username2 = [[${profileOwner.getUsername()}]];
+            $.ajax({
+                type: "POST",
+                url: 'unfollowUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+
+                },
+                error: function () {
+                    //alert(arguments[1]);
+                }
+            });
+            location.reload();
+        }
+
+        function followUser2(link) {
+            var username2 = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'followUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                },
+                error: function () {
+                }
+            });
+            location.reload();
+        }
+
+
+        function unfollowUser2(link) {
+            var username2 = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'unfollowUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                },
+                error: function () {
+                }
+            });
+            location.reload();
+        }
+
         $(document).ready(function(){
 
         });
@@ -99,11 +142,24 @@
     <div style="text-align: center">
         <image th:src="'data:image/png;base64,'+${profileOwner.getAvatar()}" class="avatar-image"></image>
     </div>
-    <div class="profile-name">
+    <div style="text-align: center; margin-top: -1em;">
         <span class="profile-name" th:text="${profileOwner.getUsername()}"></span>
         <span th:if="${profileOwner.getGender() == 'male'}" class="follow-male"><i class='fas fa-mars'></i></span>
         <span th:unless="${profileOwner.getGender() == 'male'}" class="follow-female"><i
                 class='fas fa-venus'></i></span>
+
+        <span id="top-follow" th:if="${isOthersProfile && !isFollowing}">
+            <br><a href="#"
+                   onclick="followUser()"
+                   th:id="'unfollow_followname'+ ${User.getUsername()}+'_'+${profileOwner.getUsername()}"
+                   class="profile-top-follow"><i class='fas fa-plus'></i> Follow</a>
+        </span>
+        <span id="top-unfollow" th:if="${isOthersProfile && isFollowing}">
+            <br><a href="#"
+                   onclick="unfollowUser()"
+                   class="profile-top-unfollow"><i class='fas fa-minus'></i> Unfollow</a>
+        </span>
+
     </div>
     <div class="profile-follow-info">
         <table width="100%">
@@ -191,8 +247,9 @@
                             <span th:if="${crossCheckedFollowList.get(iter.index) == false}">
                                 <span th:if="${!follow.getFollowIndentity().getUser2().getUsername().equals(User.getUsername())}">
                                     <div class="subscription-series-unsubscribe">
-                                        <a th:id="${User.getUsername()}+'__'+${follow.getFollowIndentity().getUser2().getUsername()}"th:href="'javascript:unfollow_followname(' + ${User.getUsername()}+','+${follow.getFollowIndentity().getUser2().getUsername()} + ');'">
-                                            <i class='fas fa-plus'></i> Follow</a>
+                                        <a th:id="'AA-' + ${follow.getFollowIndentity().getUser2().getUsername()}"
+                                           onclick="followUser2(this)"
+                                           href="#"><i class='fas fa-plus'></i> Follow</a>
                                     </div>
                                 </span>
                             </span>
@@ -206,9 +263,9 @@
                         </span>
                         <span th:unless="${isOthersProfile}">
                             <div class="subscription-series-unsubscribe">
-                                <!--"'/unfollow?value=' + ${follow.getFollowIndentity().getUser2().getUsername()}"-->
-                                        <a th:id="${User.getUsername()}+'__'+${follow.getFollowIndentity().getUser2().getUsername()}"th:href="'javascript:unfollow_followname(' + ${User.getUsername()}+','+${follow.getFollowIndentity().getUser2().getUsername()} + ');'">
-                                    <i class='fas fa-minus'></i> Unfollow</a>
+                                <a th:id="'BB-' + ${follow.getFollowIndentity().getUser2().getUsername()}"
+                                   onclick="unfollowUser2(this)"
+                                   href="#"><i class='fas fa-minus'></i> Unfollow</a>
                             </div>
                         </span>
                     </td>

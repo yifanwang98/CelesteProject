@@ -137,6 +137,8 @@ public class ProfileController {
         }
 
         model.addAttribute("postDataList", postDataList);
+        model.addAttribute("isFollowing", followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, profileOwner));
+
         return "profile_post";
     }
 
@@ -200,6 +202,7 @@ public class ProfileController {
             seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
         }
         model.addAttribute("seriesDataList", seriesDataList);
+        model.addAttribute("isFollowing", followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, profileOwner));
 
         return "profile_series";
     }
@@ -257,6 +260,7 @@ public class ProfileController {
             seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
         }
         model.addAttribute("seriesDataList", seriesDataList);
+        model.addAttribute("isFollowing", followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, profileOwner));
 
         return "profile_subscription";
     }

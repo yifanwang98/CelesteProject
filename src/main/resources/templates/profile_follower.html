@@ -38,6 +38,71 @@
                 }
             });
         }
+
+        function followUser() {
+            var username2 = [[${profileOwner.getUsername()}]];
+            $.ajax({
+                type: "POST",
+                url: 'followUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+
+                },
+                error: function () {
+                    //alert(arguments[1]);
+                }
+            });
+            location.reload();
+        }
+
+        function unfollowUser() {
+            var username2 = [[${profileOwner.getUsername()}]];
+            $.ajax({
+                type: "POST",
+                url: 'unfollowUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+
+                },
+                error: function () {
+                    //alert(arguments[1]);
+                }
+            });
+            location.reload();
+        }
+
+        function followUser2(link) {
+            var username2 = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'followUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                },
+                error: function () {
+                }
+            });
+            location.reload();
+        }
+
+
+        function unfollowUser2(link) {
+            var username2 = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'unfollowUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                },
+                error: function () {
+                }
+            });
+            location.reload();
+        }
         $(document).ready(function(){
 
         });
@@ -101,11 +166,27 @@
     <div style="text-align: center">
         <image th:src="'data:image/png;base64,'+${profileOwner.getAvatar()}" class="avatar-image"></image>
     </div>
-    <div class="profile-name">
+    <div style="text-align: center; margin-top: -1em;">
         <span class="profile-name" th:text="${profileOwner.getUsername()}"></span>
-        <span th:if="${profileOwner.getGender() == 'male'}" class="follow-male"><i class='fas fa-mars'></i></span>
-        <span th:unless="${profileOwner.getGender() == 'male'}" class="follow-female"><i
-                class='fas fa-venus'></i></span>
+        <span th:if="${profileOwner.getGender() == 'male'}"
+              style="font-size: 1.2em;"
+              class="follow-male"><i class='fas fa-mars'></i></span>
+        <span th:unless="${profileOwner.getGender() == 'male'}"
+              style="font-size: 1.2em;"
+              class="follow-female"><i class='fas fa-venus'></i></span>
+
+        <span id="top-follow" th:if="${isOthersProfile && !isFollowing}">
+            <br><a href="#"
+                   onclick="followUser()"
+                   th:id="'unfollow_followname'+ ${User.getUsername()}+'_'+${profileOwner.getUsername()}"
+                   class="profile-top-follow"><i class='fas fa-plus'></i> Follow</a>
+        </span>
+        <span id="top-unfollow" th:if="${isOthersProfile && isFollowing}">
+            <br><a href="#"
+                   onclick="unfollowUser()"
+                   class="profile-top-unfollow"><i class='fas fa-minus'></i> Unfollow</a>
+        </span>
+
     </div>
     <div class="profile-follow-info">
         <table width="100%">
@@ -193,7 +274,9 @@
                             <span th:if="${crossCheckedFollowList.get(iter.index) == false}">
                                 <span th:if="${!follow.getFollowIndentity().getUser1().getUsername().equals(User.getUsername())}">
                                     <div class="subscription-series-unsubscribe">
-                                        <a href=""><i class='fas fa-plus'></i> Follow</a>
+                                        <a th:id="'AA-' + ${follow.getFollowIndentity().getUser1().getUsername()}"
+                                           onclick="followUser2(this)"
+                                           href="#"><i class='fas fa-plus'></i> Follow</a>
                                     </div>
                                 </span>
                             </span>
