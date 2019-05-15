@@ -137,15 +137,6 @@ public class FollowController {
             return "Remove Success!";
         }
         return "Unexpected Error!";
-
-//        // Get Following
-//        List<Follow> following = followRepository.findByFollowIndentityUserone(user);
-//        model.addAttribute("followingList", following);
-//        model.addAttribute("following", following.size());
-//        //Get Followers
-//        List<Follow> d = followRepository.findByFollowIndentityUsertwo(user);
-//        model.addAttribute("followers", d.size());
-//        return "profile_following";
     }
 
     private List<Boolean> crossCheckFollowing(User me, List<Follow> othersFollowing) {
@@ -177,27 +168,6 @@ public class FollowController {
             }
         }
         return false;
-    }
-
-    @ResponseBody
-    @PostMapping("/unfollow_follow")
-    public String unfollow_follow(@RequestParam(value = "username1") String username1,
-                                  @RequestParam(value = "username2") String username2,
-                                  ModelMap model, HttpServletRequest request) throws Exception {
-
-        List<Follow> x = followRepository.findByFollowIndentityUseroneUsernameAndFollowIndentityUsertwoUsername(username1, username2);
-        if (x.size() == 1) {
-            followRepository.delete(x.get(0));
-            return "Unfollow Success!";
-        } else {
-            Follow newfollow = new Follow();
-            FollowIndentity newfi = new FollowIndentity();
-            newfi.setUser1(userRepository.findById(username1).get());
-            newfi.setUser2(userRepository.findById(username2).get());
-            newfollow.setFollowIndentity(newfi);
-            followRepository.save(newfollow);
-            return "Follow Success!";
-        }
     }
 
     @ResponseBody

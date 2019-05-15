@@ -62,13 +62,44 @@
             });
         }
 
-
         function unfollowUser2(link) {
             var username2 = link.id.substring(3);
             $.ajax({
                 type: "POST",
                 url: 'unfollowUser',
                 data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function subscribeSeries(link) {
+            var seriesID = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'subscribeSeries',
+                data: {seriesID: seriesID},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function unsubscribeSeries(link) {
+            var seriesID = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'unsubscribeSeries',
+                data: {seriesID: seriesID},
                 cache: false,
                 success: function (data) {
                     location.reload();
@@ -524,11 +555,15 @@
                                             </div>
                                             <div th:if="${result.seriesData.subscribed}"
                                                  class="subscription-series-unsubscribe">
-                                                <a href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
+                                                <a onclick="unsubscribeSeries(this)"
+                                                   th:id="'US-' + ${result.seriesData.series.getSeriesID()}"
+                                                   href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
                                             </div>
                                             <div th:if="${!result.seriesData.subscribed && !result.seriesData.owner}"
                                                  class="subscription-series-unsubscribe">
-                                                <a href="#"><i class='fas fa-plus'></i> Subscribe</a>
+                                                <a onclick="subscribeSeries(this)"
+                                                   th:id="'SS-' + ${result.seriesData.series.getSeriesID()}"
+                                                   href="#"><i class='fas fa-plus'></i> Subscribe</a>
                                             </div>
                                         </td>
                                     </tr>

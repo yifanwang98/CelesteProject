@@ -264,6 +264,7 @@ public class ProfileController {
 
         return "profile_subscription";
     }
+
     @ResponseBody
     @PostMapping("/subscribe_Unsubscribe_Series")
     public String subscribe_Unsubscribe_Series(@RequestParam("seriesID") Long seriesID,
@@ -292,6 +293,56 @@ public class ProfileController {
             seriesFollowRepository.delete(x.get(0));
             return "Unsubscribe Success!";
         }
+    }
+
+    @ResponseBody
+    @PostMapping("/subscribeSeries")
+    public String subscribeSeries(@RequestParam("seriesID") Long seriesID,
+                                  ModelMap model, HttpServletRequest request) throws Exception {
+
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        List<SeriesFollow> x = seriesFollowRepository.findSeriesFollowBySeriesFollowIndentityUserAndSeriesFollowIndentitySeriesSeriesID(user, seriesID);
+        if (x.size() == 0) {
+            SeriesFollow newsf = new SeriesFollow();
+            SeriesFollowIndentity newsfi = new SeriesFollowIndentity();
+            newsfi.setSeries(seriesRepository.findById(seriesID).get());
+            newsfi.setUser(user);
+            newsf.setSeriesFollowIndentity(newsfi);
+            seriesFollowRepository.save(newsf);
+            return "Subscribe Success!";
+        }
+        return "Subscribed";
+    }
+
+    @ResponseBody
+    @PostMapping("/unsubscribeSeries")
+    public String unsubscribeSeries(@RequestParam("seriesID") Long seriesID,
+                                    ModelMap model, HttpServletRequest request) throws Exception {
+
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        List<SeriesFollow> x = seriesFollowRepository.findSeriesFollowBySeriesFollowIndentityUserAndSeriesFollowIndentitySeriesSeriesID(user, seriesID);
+        if (x.size() != 0) {
+            seriesFollowRepository.delete(x.get(0));
+        }
+        return "Unsubscribed";
     }
 
     @GetMapping("/view_profile_star")

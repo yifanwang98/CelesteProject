@@ -181,7 +181,6 @@
         <span id="top-follow" th:if="${isOthersProfile && !isFollowing}">
             <br><a href="#"
                    onclick="followUser()"
-                   th:id="'unfollow_followname'+ ${User.getUsername()}+'_'+${profileOwner.getUsername()}"
                    class="profile-top-follow"><i class='fas fa-plus'></i> Follow</a>
         </span>
         <span id="top-unfollow" th:if="${isOthersProfile && isFollowing}">

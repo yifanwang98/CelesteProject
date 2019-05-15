@@ -265,8 +265,9 @@ public class SearchController {
         // Full Search
         List<User> users = userRepository.findAll();
         for (User user : users) {
-            if (!user.getUsername().toLowerCase().contains(keyword))
+            if (!user.getUsername().toLowerCase().contains(keyword) || user.equals(currentUser))
                 continue;
+
             SearchResult searchResult = new SearchResult();
             searchResult.relavence = (double) keyword.length() / (double) user.getUsername().length();
             searchResult.userData = new UserData(user,
