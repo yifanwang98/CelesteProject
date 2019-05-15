@@ -33,7 +33,7 @@ public class PostAnalysis implements Serializable {
     private User user;
 
     @NotNull
-    private Date viewedAt;
+    private Date viewedAt = new Date();
 
     public PostAnalysis() {
     }
