@@ -114,6 +114,16 @@ public class SearchController {
         return search(model, request, ComicGenre.GENRE, ComicGenre.FILTER, searchContent);
     }
 
+    @GetMapping("/searchForm")
+    public String search(ModelMap model, HttpServletRequest request) throws Exception {
+        return search(model,
+                request,
+                (String[]) request.getSession().getAttribute("lastSearchGenre"),
+                ComicGenre.FILTER,
+                (String) request.getSession().getAttribute("lastSearch"));
+    }
+
+
     @PostMapping("/searchForm")
     public String search(ModelMap model, HttpServletRequest request,
                          @RequestParam(value = "genre", required = false) String[] genres,
@@ -216,6 +226,8 @@ public class SearchController {
         List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
         model.addAttribute("top10Searches", top10Searches);
 
+        request.getSession().setAttribute("lastSearch", searchContent);
+        request.getSession().setAttribute("lastSearchGenre", genres);
         return "search";
     }
 
