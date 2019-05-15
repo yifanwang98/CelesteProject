@@ -5,6 +5,9 @@ import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
+import celeste.comic_community_4_1.service.PaypalService;
+import com.paypal.api.payments.Payment;
+import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -50,7 +53,7 @@ public class SettingController {
     SeriesRepository seriesRepository;
 
     @GetMapping("/setting")
-    public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
+    public String setting(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -151,7 +154,54 @@ public class SettingController {
         return returnstring;
     }
 
-    @GetMapping({"upgradeAccount", "/pay/pay_cancel"})
+    @Autowired
+    private PaypalService paypalService;
+
+    @GetMapping("/pay/pay_cancel")
+    public String cancelPay() {
+        return "paypal_medium";
+    }
+
+    @GetMapping("/pay/pay_success")
+    public String successPay(@RequestParam("paymentId") String paymentId,
+                             @RequestParam("PayerID") String payerId,
+                             ModelMap model,
+                             HttpServletRequest request) throws Exception {
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        try {
+            Payment payment = paypalService.executePayment(paymentId, payerId);
+            if (payment.getState().equals("approved")) {
+
+                // Blocked User
+                user.setMembership("1");
+                userRepository.save(user);
+            }
+        } catch (PayPalRESTException e) {
+        }
+
+        return "paypal_medium2";
+    }
+
+    @GetMapping({"upgradeAccount2"})
+    public String upgrade2(ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        user.setMembership("1");
+        userRepository.save(user);
+        model.addAttribute("User", user);
+
+        return setting(model, request);
+    }
+
+    @GetMapping({"upgradeAccount"})
     public String upgrade(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
