@@ -78,6 +78,7 @@ public class SettingController {
         return "setting";
 
     }
+
     @ResponseBody
     @PostMapping("/changeSetting")
     public String changeAvatar(@RequestParam("file") MultipartFile file,
@@ -85,7 +86,7 @@ public class SettingController {
                                @RequestParam("new-email") String newemail,
                                @RequestParam("new-gender") String newgender,
                                ModelMap model, HttpServletRequest request,
-                               RedirectAttributes redirectAttributes) throws Exception{
+                               RedirectAttributes redirectAttributes) throws Exception {
 
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setPassword(newpassword);
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setEmail(newemail);
@@ -94,7 +95,7 @@ public class SettingController {
         if (!file.isEmpty()) {
             String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));// 取文件格式后缀名
             type = type.substring(1);
-            if(!type.equals("jpg") && !type.equals("png")){
+            if (!type.equals("jpg") && !type.equals("png")) {
                 return "Only .png or .jpg is accepted!";
             }
 
@@ -112,13 +113,13 @@ public class SettingController {
     @ResponseBody
     @PostMapping("/tmpchangeAvatar")
     public String tmpchangeAvatar(@RequestParam("file") MultipartFile file,
-                               ModelMap model, HttpServletRequest request,
-                               RedirectAttributes redirectAttributes) throws Exception{
+                                  ModelMap model, HttpServletRequest request,
+                                  RedirectAttributes redirectAttributes) throws Exception {
 
         if (!file.isEmpty()) {
             String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));// 取文件格式后缀名
             type = type.substring(1);
-            if(!type.equals("jpg") && !type.equals("png")){
+            if (!type.equals("jpg") && !type.equals("png")) {
                 return "Only .png or .jpg is accepted!";
             }
 
@@ -132,8 +133,7 @@ public class SettingController {
 
     @ResponseBody
     @GetMapping("/upgrade_downgrade")
-    public String upgrade(@RequestParam(value = "userstatus" ) String userstatus, ModelMap model, HttpServletRequest request) throws Exception{
-
+    public String upgrade(@RequestParam(value = "userstatus") String userstatus, ModelMap model, HttpServletRequest request) throws Exception {
 
 
         // Session User
@@ -141,16 +141,14 @@ public class SettingController {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         String returnstring;
-        if(userstatus.equals("none")){
+        if (userstatus.equals("none")) {
             user.setMembership("1");
-            returnstring =  "Upgrade success!";
-        }
-        else{
+            returnstring = "Upgrade success!";
+        } else {
             user.setMembership("none");
-            returnstring =  "Downgrade success!";
+            returnstring = "Downgrade success!";
         }
         userRepository.save(user);
-//        model.addAttribute("User", user);
         return returnstring;
     }
 
@@ -228,9 +226,8 @@ public class SettingController {
     }
 
 
-
     @GetMapping("/resetAccount")
-    public String resetAccount(ModelMap model, HttpServletRequest request) throws Exception{
+    public String resetAccount(ModelMap model, HttpServletRequest request) throws Exception {
 
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
@@ -274,7 +271,7 @@ public class SettingController {
     }
 
     @GetMapping("/closeAccount")
-    public String closeAccount(ModelMap model, HttpServletRequest request) throws Exception{
+    public String closeAccount(ModelMap model, HttpServletRequest request) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));

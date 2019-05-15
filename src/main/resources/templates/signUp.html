@@ -27,20 +27,15 @@
                     $('input[name=submit]').attr("disabled",true);
                 }
             });
+
             $('input[name=username]').on("input propertychange",function() {
                 $.ajax({
                     type : "GET",
                     url : 'checkusername',
                     data:{ username: $('input[name=username]').val()},
-                    // dataType : "json",
                     cache : false,
                     success : function(data) {
-                        if(data == "Taken"){
-                            $('#uuu').text("Username: (username exists!)")
-                        }
-                        else {
-                            $('#uuu').text("Username: ")
-                        }
+                        $('#usernameError').text(data);
                     },
                     error: function(){
                         alert(arguments[1]);
@@ -77,7 +72,7 @@
     <p class="loginTitle webfont">Join Celeste</p>
     <form action="signUpSignIn" method="post">
         <div class="loginInfo webfont" id = "uuu">
-            Username: <br>
+            Username: <span id="usernameError" style="color:#d33f42;"></span><br>
         </div>
         <input type="text" name="username" value="" maxlength="24" class="loginTextfield webfont" required><br>
 

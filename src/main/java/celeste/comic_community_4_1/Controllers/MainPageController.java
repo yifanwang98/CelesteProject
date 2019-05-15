@@ -185,5 +185,15 @@ public class MainPageController {
         return "index";
     }
 
+    @GetMapping("/signup")
+    public String signUp() {
+        return "signUp";
+    }
+
+    @GetMapping("/backtosignin")
+    public String backtosignin() {
+        return "index";
+    }
+
 }
 
