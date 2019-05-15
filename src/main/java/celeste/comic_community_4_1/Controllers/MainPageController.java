@@ -149,7 +149,7 @@ public class MainPageController {
     }
 
     @PostMapping("/home")
-    public String FirstLogin(@RequestParam(value = "username", required = false) String username,
+    public String firstLogin(@RequestParam(value = "username", required = false) String username,
                              @RequestParam(value = "password", required = false) String password,
                              ModelMap model, HttpServletRequest request) throws Exception {
         if (password != null && password.length() > 0) {

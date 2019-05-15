@@ -46,30 +46,66 @@
             }
         }
 
-        function unfollow_followname(e) {
-            e.preventDefault();
-            var id = e.target.id;
-            var index = id.lastIndexOf('_');
-            var username1 = (id.substring(19, index));
-            var username2 = (id.substring(index + 1, e.target.id.length));
+        function followUser2(link) {
+            var username2 = link.id.substring(3);
             $.ajax({
                 type: "POST",
-                url: 'unfollow_follow',
-                data: {username1: username1, username2: username2},
+                url: 'followUser',
+                data: {username2: username2},
                 cache: false,
                 success: function (data) {
-                    if (data == "Unfollow Success!") {
-                        ($('#' + id).text("  Follow"))
-                        ($('#' + id).prepend("<i class='fas fa-plus'></i>"))
-                        // location.reload();
-                    }
-                    else if (data == "Follow Success!") {
-                        ($('#' + id).text("  Unfollow"))
-                        ($('#' + id).prepend("<i class='fas fa-minus'></i>"))
-                    }
+                    location.reload();
                 },
                 error: function () {
-                    alert(arguments[1]);
+                    location.reload();
+                }
+            });
+        }
+
+        function unfollowUser2(link) {
+            var username2 = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'unfollowUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function subscribeSeries(link) {
+            var seriesID = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'subscribeSeries',
+                data: {seriesID: seriesID},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function unsubscribeSeries(link) {
+            var seriesID = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'unsubscribeSeries',
+                data: {seriesID: seriesID},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
                 }
             });
         }
@@ -438,16 +474,15 @@
                                         <td>
                                             <div class="subscription-series-unsubscribe"
                                                  th:if="${result.userData.followed}">
-                                                <a href="#"
-                                                   onclick="unfollow_followname(event)"
-                                                   th:id="'unfollow_followname'+ ${User.getUsername()}+'_'+${result.userData.user.getUsername()}"
-                                                ><i class='fas fa-minus'></i> Unfollow</a>
+                                                <a th:id="'UF-'+${result.userData.user.getUsername()}"
+                                                   onclick="unfollowUser2(this)"
+                                                   href="#"><i class='fas fa-minus'></i> Unfollow</a>
                                             </div>
                                             <div class="subscription-series-unsubscribe"
                                                  th:unless="${result.userData.followed}">
-                                                <a href="#"
-                                                   th:name="'unfollow_followname'+ ${User.getUsername()}+'_'+${result.userData.user.getUsername()}">
-                                                    <i class='fas fa-plus'></i> Follow</a>
+                                                <a th:id="'FF-' + ${result.userData.user.getUsername()}"
+                                                   onclick="followUser2(this)"
+                                                   href="#"><i class='fas fa-plus'></i> Follow</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -520,11 +555,15 @@
                                             </div>
                                             <div th:if="${result.seriesData.subscribed}"
                                                  class="subscription-series-unsubscribe">
-                                                <a href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
+                                                <a onclick="unsubscribeSeries(this)"
+                                                   th:id="'US-' + ${result.seriesData.series.getSeriesID()}"
+                                                   href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
                                             </div>
                                             <div th:if="${!result.seriesData.subscribed && !result.seriesData.owner}"
                                                  class="subscription-series-unsubscribe">
-                                                <a href="#"><i class='fas fa-plus'></i> Subscribe</a>
+                                                <a onclick="subscribeSeries(this)"
+                                                   th:id="'SS-' + ${result.seriesData.series.getSeriesID()}"
+                                                   href="#"><i class='fas fa-plus'></i> Subscribe</a>
                                             </div>
                                         </td>
                                     </tr>
