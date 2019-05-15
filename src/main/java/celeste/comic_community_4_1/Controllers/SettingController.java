@@ -21,6 +21,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+//import celeste.comic_community_4_1.service.PaypalService;
+//import com.paypal.api.payments.Payment;
+//import com.paypal.base.rest.PayPalRESTException;
+
 @Controller
 public class SettingController {
 
