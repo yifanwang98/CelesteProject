@@ -26,6 +26,7 @@
     background: #269b9b;
     text-decoration: none;
     color: #fff;
+    cursor: pointer;
 }
 
 
@@ -86,6 +87,7 @@
 
 .remove-image-icon a:hover {
     color: #c50000;
+    cursor: pointer;
 }
 
 .add-img-icon {
@@ -98,6 +100,7 @@
 
 .add-img-icon:hover {
     background: #e7e7e7;;
+    cursor: pointer;
 }
 
 .pending-steps {
@@ -128,6 +131,7 @@
 
 .add-tag:hover {
     color: #218787;
+    cursor: pointer;
     text-decoration: none;
 }
 

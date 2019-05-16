@@ -474,15 +474,7 @@
                                         <td>
                                             <div class="subscription-series-unsubscribe"
                                                  th:if="${result.userData.followed}">
-                                                <a th:id="'UF-'+${result.userData.user.getUsername()}"
-                                                   onclick="unfollowUser2(this)"
-                                                   href="#"><i class='fas fa-minus'></i> Unfollow</a>
-                                            </div>
-                                            <div class="subscription-series-unsubscribe"
-                                                 th:unless="${result.userData.followed}">
-                                                <a th:id="'FF-' + ${result.userData.user.getUsername()}"
-                                                   onclick="followUser2(this)"
-                                                   href="#"><i class='fas fa-plus'></i> Follow</a>
+                                                <a href="#">Following</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -553,17 +545,9 @@
                                                             class='far fa-edit'></i> Edit</a>
                                                 </div>
                                             </div>
-                                            <div th:if="${result.seriesData.subscribed}"
+                                            <div th:if="${result.seriesData.subscribed && !result.seriesData.owner}"
                                                  class="subscription-series-unsubscribe">
-                                                <a onclick="unsubscribeSeries(this)"
-                                                   th:id="'US-' + ${result.seriesData.series.getSeriesID()}"
-                                                   href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
-                                            </div>
-                                            <div th:if="${!result.seriesData.subscribed && !result.seriesData.owner}"
-                                                 class="subscription-series-unsubscribe">
-                                                <a onclick="subscribeSeries(this)"
-                                                   th:id="'SS-' + ${result.seriesData.series.getSeriesID()}"
-                                                   href="#"><i class='fas fa-plus'></i> Subscribe</a>
+                                                <a href="#">Subscribed</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -629,17 +613,6 @@
                                                 <span th:if="${result.postData.liked}" class="post-action-liked-top">
                                                     <i class='fas fa-thumbs-up'></i>
                                                 </span>
-                                                <!--<a href=""-->
-                                                <!--th:if="{User.getUsername() == result.postData.post.getUser().getUsername()}"-->
-                                                <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
-                                                <div class="dropdown"
-                                                     th:unless="${User.getUsername() == result.postData.post.getUser().getUsername()}">
-                                                    <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
-                                                    <div class="dropdown-content">
-                                                        <a th:href="'javascript:reportAPost(' + ${result.postData.post.getPostID()} + ');'"><i
-                                                                class="fas fa-exclamation-triangle"></i> Report</a>
-                                                    </div>
-                                                </div>
                                             </td>
                                         </tr>
                                     </table>
