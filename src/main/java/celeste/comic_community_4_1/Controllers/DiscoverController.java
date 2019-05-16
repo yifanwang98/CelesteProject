@@ -2,18 +2,21 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.Notification;
-import celeste.comic_community_4_1.miscellaneous.PostComparator;
 import celeste.comic_community_4_1.miscellaneous.PostData;
+import celeste.comic_community_4_1.miscellaneous.TagProcessor;
+import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 public class DiscoverController {
@@ -56,7 +59,7 @@ public class DiscoverController {
     PostTagRepository postTagRepository;
 
     @GetMapping("/discover")
-    public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
+    public String discover(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -83,49 +86,48 @@ public class DiscoverController {
         List<Post> postList = postRepository.findByUser(user);
         model.addAttribute("postsCount", postList.size());
 
-        postList.clear();
+        List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
 
-        List<SearchWords> wordslist = searchWordsRepository.findTop5ByOrderByHeatDesc();
-        Collections.reverse(wordslist);
-        for(int i =0;i<wordslist.size();i++){
-            String word= wordslist.get(i).getSearchWord();
-            List<Post> pg = postRepository.findByPrimaryGenre(word);
-            List<Post> sg = postRepository.findBySecondaryGenre(word);
-            pg.removeAll(sg);
-            pg.addAll(sg);
-            List<Post> temp=pg;
-
-
-            if(temp.size()==0){
-                continue;
-            }
-            else if(temp.size()<=i){
-                postList.addAll(temp);
-                continue;
-            }
-            else {
-                temp.subList(i, temp.size()).clear();
-                postList.addAll(temp);
-            }
-
+        List<String> searchWordTagList = new ArrayList<>();
+        for (SearchWords sw : wordsList) {
+            searchWordTagList.add(TagProcessor.process(sw.getWord()));
         }
 
-        postList = postList.stream().distinct().collect(Collectors.toList());
-//        for(int i = 0;i<postList.size();i++){
-//            System.out.println(postList.get(i).getPostID());
-//        }
-//        for(int i = 0;i<wordslist.size();i++){
-//            System.out.println(wordslist.get(i).getSearchWord());
-//        }
+        postList = postRepository.findPostsByCreatedAtAfterAndIsRepostAndUserIsNot(Notification.getDaysBefore(30), false, user);
+        HashMap<Post, Integer> postHashMap = new HashMap<>();
+        for (Post post : postList) {
+            if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, post.getUser()))
+                continue;
+            if (starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user))
+                continue;
+            if (likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user))
+                continue;
 
-        //All the post by this user's follows
-//        List<Follow> followList = followRepository.findByFollowIndentityUserone(user);
-//        for (int i = 0; i < followList.size(); i++) {
-//            postList.addAll(postRepository.findByUser(followList.get(i).getFollowIndentity().getUser2()));
-//        }
+            int heat = 0;
+            for (String tag : searchWordTagList) {
+                if (postTagRepository.existsPostTagByPostAndTag(post, tag))
+                    heat -= 1;
+            }
+            for (SearchWords sw : wordsList) {
+                if (post.getPostComment().toLowerCase().contains(sw.getWord().toLowerCase()))
+                    heat -= 1;
+                if (post.getUser().getUsername().toLowerCase().contains(sw.getWord().toLowerCase()))
+                    heat -= 1;
+            }
 
-        // Sort
-        Collections.sort(postList, new PostComparator());
+            postHashMap.put(post, heat);
+        }
+
+        List<Map.Entry<Post, Integer>> list = new ArrayList<>(postHashMap.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+
+        postList.clear();
+
+        for (Map.Entry<Post, Integer> entry : list) {
+            postList.add(entry.getKey());
+            if (postList.size() >= 50)
+                break;
+        }
 
         // Organize Info
         List<PostData> postDataList = new ArrayList<>();
@@ -149,12 +151,6 @@ public class DiscoverController {
                 }
             }
 
-            // Count
-//            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-//            long commentCount = commentRepository.countCommentByPost(post);
-//            long starCount = starRepository.countStarByPostIndentityPost(post);
-//            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
-//
             boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
@@ -173,9 +169,57 @@ public class DiscoverController {
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
 
-        return "discover";
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
 
+        return "discover";
     }
+
+    private static final String ILLEGAL_CHAR = ",.?:;'\"[]\\|/{}<>`~ ";
+
+    @ResponseBody
+    @GetMapping("/checkusername")
+    public String checkUsername(@RequestParam(value = "username", required = false) String username) {
+        if (username != null) {
+            if (username.length() < 2) {
+                return "Username too short";
+            }
+            for (int i = 0; i < ILLEGAL_CHAR.length(); i++) {
+                if (username.indexOf(ILLEGAL_CHAR.charAt(i)) >= 0) {
+                    return "Illegal character: " + ILLEGAL_CHAR.charAt(i);
+                }
+            }
+        }
+        Optional<User> a = userRepository.findById(username);
+        if (a.isPresent()) {
+            return "Taken";
+        } else {
+            return "";
+        }
+    }
+
+    @PostMapping("/signUpSignIn")
+    public String signUpSignIn(@RequestParam(value = "username") String username,
+                               @RequestParam(value = "password") String password,
+                               @RequestParam(value = "email") String email,
+                               @RequestParam(value = "gender") String gender,
+                               ModelMap model, HttpServletRequest request) throws Exception {
+        User newUser = new User();
+        newUser.setUsername(username.trim());
+        newUser.setCreatedAt(new Date());
+        newUser.setPassword(password);
+        newUser.setEmail(email);
+        newUser.setGender(gender);
+
+        String base64 = ThumbnailConverter.DEFAULT_AVATAR;
+        newUser.setAvatar(base64);
+        userRepository.save(newUser);
+        model.addAttribute("User", newUser);
+
+        return discover(model, request);
+    }
+
 
 }
 

@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "PostAnalysis")
@@ -32,7 +33,7 @@ public class PostAnalysis implements Serializable {
     private User user;
 
     @NotNull
-    private Date viewedAt;
+    private Date viewedAt = new Date();
 
     public PostAnalysis() {
     }
@@ -67,5 +68,19 @@ public class PostAnalysis implements Serializable {
 
     public void setViewedAt(Date viewedAt) {
         this.viewedAt = viewedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PostAnalysis that = (PostAnalysis) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
     }
 }

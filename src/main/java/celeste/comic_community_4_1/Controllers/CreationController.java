@@ -18,8 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
-public class UploadExistingController2 {
+public class CreationController {
 
+    private static final double MAX_FILE_SIZE = 2.5;
 
     @Autowired
     UserRepository userRepository;
@@ -51,6 +52,31 @@ public class UploadExistingController2 {
     @Autowired
     PostTagRepository postTagRepository;
 
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
+
+    @GetMapping("/createPostOption")
+    public String getAnalysis(ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+        // Find Current User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+        model.addAttribute("User", user);
+        return "createPost_Option";
+    }
 
     @GetMapping("/uploadPost2")
     public String goToUploadPostPage(ModelMap model, HttpServletRequest request) throws Exception {
@@ -146,12 +172,28 @@ public class UploadExistingController2 {
         }
 
         UploadPostDraft upd = (UploadPostDraft) request.getSession().getAttribute("postDraft");
+        boolean error = false;
         for (MultipartFile f : file) {
             if (f.isEmpty())
                 continue;
+
+            double size = f.getSize() * Math.pow(10, -6);
+            if (size > CreationController.MAX_FILE_SIZE) {
+                error = true;
+            }
+
+            if (upd.getThumbnails().size() >= 9) {
+                request.getSession().setAttribute("postDraft", upd);
+                model.addAttribute("postDraft", upd);
+                model.addAttribute("error1", true);
+                return "uploadPost2";
+            }
+
             upd.addImage(ThumbnailConverter.toBase64Only(f));
             upd.addThumbnail(ThumbnailConverter.toBase64Square(f, 200.0));
         }
+        model.addAttribute("error", error);
+        model.addAttribute("error1", false);
         request.getSession().setAttribute("postDraft", upd);
         model.addAttribute("postDraft", upd);
         return "uploadPost2";
@@ -346,6 +388,120 @@ public class UploadExistingController2 {
         request.getSession().removeAttribute("postDraft");
 
         return "uploadPost4";
+    }
+
+    /****************************************************************************************************
+     ****************************************************************************************************
+     ****************************************************************************************************
+     ****************************************************************************************************
+     ****************************************************************************************************
+     ****************************************************************************************************
+     *****************************************************************************************************/
+
+    @GetMapping("/createSeries")
+    public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+        model.addAttribute("User", user);
+        model.addAttribute("genreList", ComicGenre.GENRE);
+        return "createSeries";
+
+    }
+
+    @PostMapping("/createSeriesForm")
+    public String createSeriesForm(ModelMap model, HttpServletRequest request,
+                                   @RequestParam(value = "title") String title,
+                                   @RequestParam(value = "description", required = false) String description,
+                                   @RequestParam(value = "genre1", required = false) String genre1,
+                                   @RequestParam(value = "genre2", required = false) String genre2,
+                                   @RequestParam(value = "wiki") String wiki) throws Exception {
+
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+        model.addAttribute("User", user);
+
+        if (genre1.equals(genre2) && !genre1.equals("None")) {
+            genre2 = "None"; // Prevent Duplicate Genre
+        }
+
+        Series newSeries = new Series();
+        if (description != null) {
+            newSeries.setDescription(description);
+        }
+        newSeries.setPrimaryGenre(genre1);
+        newSeries.setSecondaryGenre(genre2);
+        newSeries.setSeriesName(title);
+        newSeries.setPublicEditing(wiki.equals("Yes"));
+        newSeries.setUser(user);
+
+        String base64 = ThumbnailConverter.DEFAULT_SERIES_COVER;
+        newSeries.setCover(base64);
+
+        seriesRepository.save(newSeries);
+
+        // Profile Info
+        model.addAttribute("profileOwner", user);
+        model.addAttribute("isOthersProfile", false);
+
+        // Get Following & Followers
+        model.addAttribute("following", followRepository.countFollowByFollowIndentityUserone(user));
+        model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(user));
+
+        //All the post by this user
+        model.addAttribute("postsCount", postRepository.countPostByUser(user));
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Series List
+        List<Series> seriesList = seriesRepository.findByUser(user);
+        Collections.sort(seriesList, new SeriesComparator());
+        List<SeriesData> seriesDataList = new ArrayList<>();
+        for (Series series : seriesList) {
+            List<String> tags = new ArrayList<>();
+            while (tags.size() < TagProcessor.MAX_TAG_PER_SERIES) {
+                tags.add(null);
+            }
+            long subscriptionCount = seriesFollowRepository.countSeriesFollowBySeriesFollowIndentitySeries(series);
+            boolean subscribed = seriesFollowRepository.existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(series, user);
+            boolean owner = series.getUser().getUsername().equals(username);
+
+            seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
+        }
+        model.addAttribute("seriesDataList", seriesDataList);
+
+        return "profile_series";
     }
 
 }

@@ -2,7 +2,7 @@
 <html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Subscription</title>
+    <title>Subscription - Celeste</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -15,28 +15,67 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
     <script type="text/javascript" th:inline="javascript">
-        function subscribe_Unsubscribe_Series(seriesID) {
+        function followUser() {
+            var username2 = [[${profileOwner.getUsername()}]];
+            $.ajax({
+                type: "POST",
+                url: 'followUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function unfollowUser() {
+            var username2 = [[${profileOwner.getUsername()}]];
+            $.ajax({
+                type: "POST",
+                url: 'unfollowUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function subscribeSeries(link) {
+            var seriesID = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'subscribeSeries',
+                data: {seriesID: seriesID},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function unsubscribeSeries(link) {
+            var seriesID = link.id.substring(3);
             $.ajax({
                 type : "POST",
-                url : 'subscribe_Unsubscribe_Series',
+                url: 'unsubscribeSeries',
                 data:{seriesID:seriesID},
                 cache : false,
                 success : function(data) {
-                    if(data == "Unsubscribe Success!"  ){
-                        alert(data)
-                        $('#'+seriesID).text(" Subscribe")
-                        $('#'+seriesID).prepend("<i class='fas fa-plus'></i>")
-                    }
-                    else if(data == "Subscribe Success!") {
-                        alert(data)
-                        $('#'+seriesID).text(" Unsubscribe")
-                        $('#'+seriesID).prepend("<i class='fas fa-plus'></i>")
-                    }
+                    location.reload();
                 },
                 error: function(){
-                    alert(arguments[1]);
+                    location.reload();
                 }
             });
         }
@@ -98,11 +137,23 @@
     <div style="text-align: center">
         <image th:src="'data:image/png;base64,'+${profileOwner.getAvatar()}" class="avatar-image"></image>
     </div>
-    <div class="profile-name">
+    <div style="text-align: center; margin-top: -1em;">
         <span class="profile-name" th:text="${profileOwner.getUsername()}"></span>
         <span th:if="${profileOwner.getGender() == 'male'}" class="follow-male"><i class='fas fa-mars'></i></span>
         <span th:unless="${profileOwner.getGender() == 'male'}" class="follow-female"><i
                 class='fas fa-venus'></i></span>
+
+        <span id="top-follow" th:if="${isOthersProfile && !isFollowing}">
+            <br><a href="#"
+                   onclick="followUser()"
+                   class="profile-top-follow"><i class='fas fa-plus'></i> Follow</a>
+        </span>
+        <span id="top-unfollow" th:if="${isOthersProfile && isFollowing}">
+            <br><a href="#"
+                   onclick="unfollowUser()"
+                   class="profile-top-unfollow"><i class='fas fa-minus'></i> Unfollow</a>
+        </span>
+
     </div>
     <div class="profile-follow-info">
         <table width="100%">
@@ -220,10 +271,14 @@
                         </div>
                     </div>
                     <div th:if="${seriesData.subscribed}" class="subscription-series-unsubscribe">
-                        <a th:id="${seriesData.series.getSeriesID()}"th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesData.series.getSeriesID()} + ');'"><i class='fas fa-minus'></i> Unsubscribe</a>
+                        <a th:id="'US-' + ${seriesData.series.getSeriesID()}"
+                           onclick="unsubscribeSeries(this)"
+                           href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
                     </div>
                     <div th:if="${!seriesData.subscribed && !seriesData.owner}" class="subscription-series-unsubscribe">
-                        <a th:id="${seriesData.series.getSeriesID()}"th:href="'javascript:subscribe_Unsubscribe_Series(' + ${seriesData.series.getSeriesID()} + ');'"><i class='fas fa-plus'></i> Subscribe</a>
+                        <a th:id="'SS-' + ${seriesData.series.getSeriesID()}"
+                           onclick="subscribeSeries(this)"
+                           href="#"><i class='fas fa-plus'></i> Subscribe</a>
                     </div>
                 </td>
             </tr>

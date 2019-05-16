@@ -46,32 +46,73 @@
             }
         }
 
-        function unfollow_followname(e) {
-            e.preventDefault();
-            var id = e.target.id;
-            var index = id.lastIndexOf('_');
-            var username1 = (id.substring(19, index));
-            var username2 = (id.substring(index + 1, e.target.id.length));
+        function followUser2(link) {
+            var username2 = link.id.substring(3);
             $.ajax({
                 type: "POST",
-                url: 'unfollow_follow',
-                data: {username1: username1, username2: username2},
+                url: 'followUser',
+                data: {username2: username2},
                 cache: false,
                 success: function (data) {
-                    if (data == "Unfollow Success!") {
-                        ($('#' + id).text("  Follow"))
-                        ($('#' + id).prepend("<i class='fas fa-plus'></i>"))
-                        // location.reload();
-                    }
-                    else if (data == "Follow Success!") {
-                        ($('#' + id).text("  Unfollow"))
-                        ($('#' + id).prepend("<i class='fas fa-minus'></i>"))
-                    }
+                    location.reload();
                 },
                 error: function () {
-                    alert(arguments[1]);
+                    location.reload();
                 }
             });
+        }
+
+        function unfollowUser2(link) {
+            var username2 = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'unfollowUser',
+                data: {username2: username2},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function subscribeSeries(link) {
+            var seriesID = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'subscribeSeries',
+                data: {seriesID: seriesID},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function unsubscribeSeries(link) {
+            var seriesID = link.id.substring(3);
+            $.ajax({
+                type: "POST",
+                url: 'unsubscribeSeries',
+                data: {seriesID: seriesID},
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function linkForTopSearch(link) {
+            var keyword = link.id.substring(2);
+            document.getElementById('TSForm' + keyword).submit();
         }
 
         function switchToAll() {
@@ -433,16 +474,15 @@
                                         <td>
                                             <div class="subscription-series-unsubscribe"
                                                  th:if="${result.userData.followed}">
-                                                <a href="#"
-                                                   onclick="unfollow_followname(event)"
-                                                   th:id="'unfollow_followname'+ ${User.getUsername()}+'_'+${result.userData.user.getUsername()}"
-                                                ><i class='fas fa-minus'></i> Unfollow</a>
+                                                <a th:id="'UF-'+${result.userData.user.getUsername()}"
+                                                   onclick="unfollowUser2(this)"
+                                                   href="#"><i class='fas fa-minus'></i> Unfollow</a>
                                             </div>
                                             <div class="subscription-series-unsubscribe"
                                                  th:unless="${result.userData.followed}">
-                                                <a href="#"
-                                                   th:name="'unfollow_followname'+ ${User.getUsername()}+'_'+${result.userData.user.getUsername()}">
-                                                    <i class='fas fa-plus'></i> Follow</a>
+                                                <a th:id="'FF-' + ${result.userData.user.getUsername()}"
+                                                   onclick="followUser2(this)"
+                                                   href="#"><i class='fas fa-plus'></i> Follow</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -490,11 +530,11 @@
                                                 </div>
                                                 <div class="subscription-series-tag">
                                                     <span th:if="${!result.seriesData.series.getPrimaryGenre().equals('None')}">
-                                                        <a href="#">#<span
+                                                        <a href="#"><i class='far fa-bookmark'></i> <span
                                                                 th:text="${result.seriesData.series.getPrimaryGenre()}"></span></a>
                                                     </span>
                                                     <span th:if="${!result.seriesData.series.getSecondaryGenre().equals('None')}">
-                                                        <a href="#">#<span
+                                                        <a href="#"><i class='far fa-bookmark'></i> <span
                                                                 th:text="${result.seriesData.series.getSecondaryGenre()}"></span></a>
                                                     </span>
                                                     <span th:each="tag, iter: ${result.seriesData.tags}">
@@ -515,11 +555,15 @@
                                             </div>
                                             <div th:if="${result.seriesData.subscribed}"
                                                  class="subscription-series-unsubscribe">
-                                                <a href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
+                                                <a onclick="unsubscribeSeries(this)"
+                                                   th:id="'US-' + ${result.seriesData.series.getSeriesID()}"
+                                                   href="#"><i class='fas fa-minus'></i> Unsubscribe</a>
                                             </div>
                                             <div th:if="${!result.seriesData.subscribed && !result.seriesData.owner}"
                                                  class="subscription-series-unsubscribe">
-                                                <a href="#"><i class='fas fa-plus'></i> Subscribe</a>
+                                                <a onclick="subscribeSeries(this)"
+                                                   th:id="'SS-' + ${result.seriesData.series.getSeriesID()}"
+                                                   href="#"><i class='fas fa-plus'></i> Subscribe</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -571,8 +615,9 @@
                                     <table width="100%">
                                         <tr>
                                             <td>
-                                                <span class="post-author"
-                                                      th:text="${result.postData.post.getUser().getUsername()}"></span><br>
+                                                <a class="post-author"
+                                                   th:href="'view_profile?user=' + ${result.postData.post.getUser().getUsername()}"
+                                                   th:text="${result.postData.post.getUser().getUsername()}"></a><br>
                                                 <span class="post-time"
                                                       th:text="${result.postData.postCreatedAt()}"></span>
                                             </td>
@@ -584,16 +629,15 @@
                                                 <span th:if="${result.postData.liked}" class="post-action-liked-top">
                                                     <i class='fas fa-thumbs-up'></i>
                                                 </span>
-                                                <a href=""
-                                                   th:if="${User.getUsername() == result.postData.post.getUser().getUsername()}"
-                                                   class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                                <!--<a href=""-->
+                                                <!--th:if="{User.getUsername() == result.postData.post.getUser().getUsername()}"-->
+                                                <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
                                                 <div class="dropdown"
                                                      th:unless="${User.getUsername() == result.postData.post.getUser().getUsername()}">
                                                     <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                                     <div class="dropdown-content">
                                                         <a th:href="'javascript:reportAPost(' + ${result.postData.post.getPostID()} + ');'"><i
                                                                 class="fas fa-exclamation-triangle"></i> Report</a>
-                                                        <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -610,11 +654,15 @@
                                     <div class="post-genre">
                                         <span th:if="${!result.postData.post.getPrimaryGenre().equals('None') || !result.postData.post.getSecondaryGenre().equals('None')}">
                                             <span th:if="${!result.postData.post.getPrimaryGenre().equals('None')}"
-                                                  class="post-genre-text"
-                                                  th:text="'#' + ${result.postData.post.getPrimaryGenre()} + ' '"></span>
+                                                  class="post-genre-text">
+                                                <i class='far fa-bookmark'></i>
+                                                <span th:text="${result.postData.post.getPrimaryGenre()} + ' '"></span>
+                                            </span>
                                             <span th:if="${!result.postData.post.getSecondaryGenre().equals('None')}"
-                                                  class="post-genre-text"
-                                                  th:text="'#' + ${result.postData.post.getSecondaryGenre()}"></span>
+                                                  class="post-genre-text">
+                                                <i class='far fa-bookmark'></i>
+                                                <span th:text="${result.postData.post.getSecondaryGenre()} + ' '"></span>
+                                            </span>
                                         </span>
                                         <span th:each="tag: ${result.postData.postTags}">
                                             <span th:text="'#' + ${tag}" class="post-genre-text"></span>
@@ -652,8 +700,9 @@
                                                     <table width="100%">
                                                         <tr>
                                                             <td>
-                                                                <span class="post-author"
-                                                                      th:text="${result.postData.originalPost.getUser().getUsername()}"></span><br>
+                                                                <a class="post-author"
+                                                                   th:href="'view_profile?user=' + ${result.postData.originalPost.getUser().getUsername()}"
+                                                                   th:text="${result.postData.originalPost.getUser().getUsername()}"></a><br>
                                                                 <span class="post-time"
                                                                       th:text="${result.postData.originalPostCreatedAt()}"></span>
                                                             </td>
@@ -672,11 +721,15 @@
                                                     <div class="post-genre"
                                                          th:if="${!result.postData.originalPost.getPrimaryGenre().equals('None') || !result.postData.originalPost.getSecondaryGenre().equals('None')}">
                                                         <span th:if="${!result.postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                              class="post-genre-text"
-                                                              th:text="'#' + ${result.postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                              class="post-genre-text">
+                                                            <i class='far fa-bookmark'></i>
+                                                            <span th:text="${result.postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                        </span>
                                                         <span th:if="${!result.postData.originalPost.getSecondaryGenre().equals('None')}"
-                                                              class="post-genre-text"
-                                                              th:text="'#' + ${result.postData.originalPost.getSecondaryGenre()}"></span>
+                                                              class="post-genre-text">
+                                                            <i class='far fa-bookmark'></i>
+                                                            <span th:text="'#' + ${result.postData.originalPost.getSecondaryGenre()}"></span>
+                                                        </span>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -790,7 +843,7 @@
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a th:href="'view_profile_subscription?user=' + ${User.getUsername()}">
+                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
                                     <div>
                                         <span class="semibold" style="font-size: 1.05em;">Stars</span><br><span
                                             th:text="${starCount}" class="semibold" style="font-size: 1.05em;"></span>
@@ -843,76 +896,25 @@
                         <i class='fas fa-fire'></i> Top Search
                     </div>
                     <table width="100%" style="padding-top: 0.5em">
-                        <tr>
-                            <td class="trendingNum semibold">1</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">DC</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">2</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Batman</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">3</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Superman</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">4</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Cat</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">5</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">asd</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">6</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">2</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">7</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">light</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">8</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">fun</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">9</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">aw</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">10</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">pen</a></div>
-                            </td>
-                        </tr>
+                        <span th:each="searchWord, iter:${top10Searches}">
+                            <tr>
+                                <td class="trendingNum semibold"><span th:text="${iter.count}"></span></td>
+                                <td>
+                                    <div style="margin-left: 1em;" class="button-link">
+                                        <form method="post"
+                                              th:id="'TSForm' + ${searchWord.getWord()}"
+                                              action="/topSearchForm">
+                                            <input hidden th:value="${searchWord.getWord()}"
+                                                   name="searchContent">
+                                        </form>
+                                        <a href="#" th:id="'TS' + ${searchWord.getWord()}"
+                                           onclick="linkForTopSearch(this);">
+                                            <span th:text="${searchWord.getWord()}"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </span>
                     </table>
                 </div>
             </div>

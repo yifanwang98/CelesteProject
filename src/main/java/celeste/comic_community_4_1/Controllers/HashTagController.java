@@ -57,6 +57,9 @@ public class HashTagController {
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
 
+    @Autowired
+    SearchWordsRepository searchWordsRepository;
+
     @GetMapping("/hashtag")
     public String hashtag(@RequestParam(value = "tag") String hashtag,
                           ModelMap model,
@@ -120,6 +123,10 @@ public class HashTagController {
         model.addAttribute("postsCount", postRepository.findByUser(user).size());
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
 
         return "hashtag";
     }
