@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class SinglePostController {
@@ -37,6 +34,12 @@ public class SinglePostController {
 
     @Autowired
     PostContentRepository postContentRepository;
+
+    @Autowired
+    PostTagRepository postTagRepository;
+
+    @Autowired
+    SeriesContentRepository seriesContentRepository;
 
     @Autowired
     CommentRepository commentRepository;
@@ -77,8 +80,9 @@ public class SinglePostController {
         Post postToDisplay = postList.get(0);
         model.addAttribute("postToDisplay", postToDisplay);
 
+        Post originalPost = postToDisplay;
         if (postToDisplay.isRepost()) {
-            Post originalPost = postRepository.findByPostID(postToDisplay.getOriginalPostID()).get(0);
+            originalPost = postRepository.findByPostID(postToDisplay.getOriginalPostID()).get(0);
             model.addAttribute("originalPost", originalPost);
         }
 
@@ -107,10 +111,52 @@ public class SinglePostController {
         if (!postAnalysisRepository.existsPostAnalysisByPostAndUserAndViewedAt(postToDisplay, user, today)
                 && !user.getUsername().equals(postToDisplay.getUser().getUsername())) {
             PostAnalysis pa = new PostAnalysis();
-            pa.setPost(postToDisplay);
+            if (postToDisplay.isRepost()) {
+                Post originalPost1 = postRepository.findPostByPostID(postToDisplay.getOriginalPostID());
+                pa.setPost(originalPost1);
+            } else {
+                pa.setPost(postToDisplay);
+            }
             pa.setUser(user);
             pa.setViewedAt(today);
             postAnalysisRepository.save(pa);
+        }
+
+        Set<Series> fromSeries = new HashSet<>();
+        for (int j = 0; j < temp.size(); j++) {
+            Work work = temp.get(j).getPostIndentity().getWork();
+            List<SeriesContent> seriesContents = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+            for (SeriesContent content : seriesContents) {
+                fromSeries.add(content.getSeriesContentIndentity().getSeries());
+            }
+        }
+        model.addAttribute("fromSeries", fromSeries);
+
+        // Tag
+        List<String> postTags = new ArrayList<>();
+        List<PostTag> postTagList = postTagRepository.findPostTagByPost(originalPost);
+        for (PostTag tag : postTagList) {
+            postTags.add(tag.getTag());
+        }
+        model.addAttribute("postTags", postTags);
+
+        if (user.getMembership().equalsIgnoreCase("None")
+                && !originalPost.getUser().getUsername().equals(user.getUsername())) {
+            for (Series series : fromSeries) {
+                List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentitySeriesOrderByCreatedAtAsc(series);
+                for (int i = 0; i < seriesContentList.size(); i++) {
+                    for (int j = 0; j < temp.size(); j++) {
+                        long workid = temp.get(j).getPostIndentity().getWork().getWorkID();
+                        if (seriesContentList.get(i).getSeriesContentIndentity().getWork().getWorkID() == workid) {
+                            if (i < 3) {
+                                break;
+                            } else {
+                                return "singlePost_Error";
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         return "singlePost";
@@ -120,7 +166,7 @@ public class SinglePostController {
     @PostMapping("/uploadComment")
     public String uploadComment(@RequestParam(value = "description") String comment,
                                 @RequestParam(value = "postID") Long postID,
-                              ModelMap model, HttpServletRequest request) throws Exception {
+                                ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -131,7 +177,7 @@ public class SinglePostController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
 //        System.out.println(postID);
-        Comment newComment  = new Comment();
+        Comment newComment = new Comment();
         newComment.setPost(postRepository.findByPostID(postID).get(0));
         newComment.setUser(user);
         newComment.setContent(comment);
@@ -142,7 +188,7 @@ public class SinglePostController {
     @ResponseBody
     @PostMapping("/singlepostLike")
     public String singlepostLike(@RequestParam(value = "postID") long postID,
-                                ModelMap model, HttpServletRequest request) throws Exception {
+                                 ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -156,11 +202,10 @@ public class SinglePostController {
         PostIndentity newPi = new PostIndentity();
         newPi.setUser(user);
         newPi.setPost(postRepository.findById(postID).get());
-        if(likeRepository.findById(newPi).isPresent()){
+        if (likeRepository.findById(newPi).isPresent()) {
             likeRepository.delete(likeRepository.findById(newPi).get());
             return "Unlike Success!";
-        }
-        else {
+        } else {
             newLike.setPostIndentity(newPi);
             likeRepository.save(newLike);
 
@@ -248,7 +293,7 @@ public class SinglePostController {
     @ResponseBody
     @PostMapping("/singlepostStar")
     public String singlepostReport(@RequestParam(value = "postID") long postID,
-                                 ModelMap model, HttpServletRequest request) throws Exception {
+                                   ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -262,11 +307,10 @@ public class SinglePostController {
         PostIndentity newPi = new PostIndentity();
         newPi.setUser(user);
         newPi.setPost(postRepository.findById(postID).get());
-        if(starRepository.findById(newPi).isPresent()){
+        if (starRepository.findById(newPi).isPresent()) {
             starRepository.delete(starRepository.findById(newPi).get());
             return "Unstar Success!";
-        }
-        else {
+        } else {
             newStar.setPostIndentity(newPi);
             starRepository.save(newStar);
 
@@ -275,21 +319,23 @@ public class SinglePostController {
         }
 
     }
+
     @ResponseBody
     @PostMapping("/getoriginalImageSrc")
     public String getoriginalImageSrc(@RequestParam(value = "postID") long postID,
                                       @RequestParam(value = "index") int index,
-                                   ModelMap model, HttpServletRequest request) throws Exception {
+                                      ModelMap model, HttpServletRequest request) throws Exception {
         List<PostContent> temp = postContentRepository.findByPostIndentityPostPostID(postID);
         String src = temp.get(index).getPostIndentity().getWork().getContent();
         return src;
 
     }
+
     @ResponseBody
     @PostMapping("/singlepostRepost")
     public String singlepostRepost(@RequestParam(value = "postID") long postID,
                                    @RequestParam(value = "comment") String comment,
-                                 ModelMap model, HttpServletRequest request) throws Exception {
+                                   ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -306,8 +352,35 @@ public class SinglePostController {
         newRepost.setPostComment(comment);
         postRepository.save(newRepost);
         return "Repost Success!";
-
-
     }
+
+    @ResponseBody
+    @PostMapping("/deleteComment")
+    public String deleteComment(@RequestParam(value = "postID") long postID,
+                                @RequestParam(value = "commentID") long commentID,
+                                ModelMap model, HttpServletRequest request) throws Exception {
+        if (request.getSession().getAttribute("username") == null) {
+            return "index";
+        }
+
+        // Session User
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        Post post = postRepository.findPostByPostID(postID);
+        if (post == null)
+            return "The post does not exist";
+
+        Comment comment = commentRepository.findCommentByCommentID(commentID);
+        if (comment == null)
+            return "The comment does not exist";
+
+        commentRepository.delete(comment);
+
+        return "Success";
+    }
+
+
 }
 

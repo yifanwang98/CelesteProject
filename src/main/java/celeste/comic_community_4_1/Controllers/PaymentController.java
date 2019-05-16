@@ -67,11 +67,6 @@ public class PaymentController {
         }
         return "redirect:/";
     }
-//
-//    @GetMapping("/pay/pay_cancel")
-//    public String cancelPay() {
-//        return "pay_cancel";
-//    }
 
     @GetMapping("/pay/pay_success")
     public String successPay(@RequestParam("paymentId") String paymentId,

@@ -84,19 +84,19 @@ public class AnalysisController {
         // Get Contribution
         long[] contribution = new long[]{0, 0, 0, 0};
         calendar.add(Calendar.DATE, -7);
-        contribution[0] = postRepository.countPostByCreatedAtAfterAndUser(calendar.getTime(), user);
+        contribution[0] = postRepository.countPostByCreatedAtAfterAndUserAndIsRepost(calendar.getTime(), user, false);
         calendar.add(Calendar.DATE, 7);
 
         calendar.add(Calendar.DATE, -30);
-        contribution[1] = postRepository.countPostByCreatedAtAfterAndUser(calendar.getTime(), user);
+        contribution[1] = postRepository.countPostByCreatedAtAfterAndUserAndIsRepost(calendar.getTime(), user, false);
         calendar.add(Calendar.DATE, 30);
 
         calendar.add(Calendar.DATE, -180);
-        contribution[2] = postRepository.countPostByCreatedAtAfterAndUser(calendar.getTime(), user);
+        contribution[2] = postRepository.countPostByCreatedAtAfterAndUserAndIsRepost(calendar.getTime(), user, false);
         calendar.add(Calendar.DATE, 180);
 
         calendar.add(Calendar.DATE, -365);
-        contribution[3] = postRepository.countPostByCreatedAtAfterAndUser(calendar.getTime(), user);
+        contribution[3] = postRepository.countPostByCreatedAtAfterAndUserAndIsRepost(calendar.getTime(), user, false);
         calendar.add(Calendar.DATE, 365);
         analysisData.setContribution(contribution);
 

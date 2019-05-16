@@ -56,6 +56,9 @@ public class SearchController {
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
 
+    @Autowired
+    SearchWordsRepository searchWordsRepository;
+
     @GetMapping("/search")
     public String goToSearch(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -96,11 +99,30 @@ public class SearchController {
 
 
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
-//        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
 
         return "search";
     }
+
+    @PostMapping("/topSearchForm")
+    public String search(ModelMap model, HttpServletRequest request,
+                         @RequestParam(value = "searchContent") String searchContent) throws Exception {
+        return search(model, request, ComicGenre.GENRE, ComicGenre.FILTER, searchContent);
+    }
+
+    @GetMapping("/searchForm")
+    public String search(ModelMap model, HttpServletRequest request) throws Exception {
+        return search(model,
+                request,
+                (String[]) request.getSession().getAttribute("lastSearchGenre"),
+                ComicGenre.FILTER,
+                (String) request.getSession().getAttribute("lastSearch"));
+    }
+
 
     @PostMapping("/searchForm")
     public String search(ModelMap model, HttpServletRequest request,
@@ -185,16 +207,67 @@ public class SearchController {
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
 
+        // Add to heat
+        if (searchResultCount[0] != 0) {
+            HashMap<String, Double> heatResult = calculateHeat(searchContent);
+            for (String key : heatResult.keySet()) {
+                SearchWords sw = searchWordsRepository.findSearchWordsByWord(key);
+                if (sw == null) {
+                    sw = new SearchWords();
+                    sw.setWord(key);
+                    sw.setHeat(0);
+                }
+                sw.setHeat(sw.getHeat() + heatResult.get(key));
+                searchWordsRepository.save(sw);
+            }
+        }
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
+
+        request.getSession().setAttribute("lastSearch", searchContent);
+        request.getSession().setAttribute("lastSearchGenre", genres);
         return "search";
     }
+
+    private HashMap<String, Double> calculateHeat(String content) {
+        HashMap<String, Double> result = new HashMap<>();
+        while (content.contains("  ")) {
+            content = content.replaceAll("  ", " ");
+        }
+        String[] words = content.toLowerCase().split(" ");
+        for (int currentLength = words.length; currentLength > 0; currentLength--) {
+            for (int startIndex = 0; startIndex <= words.length - currentLength; startIndex++) {
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < currentLength; j++) {
+                    sb.append(words[j + startIndex]).append(" ");
+                }
+                String subword = sb.toString().trim();
+                if (subword.length() < 2)
+                    continue;
+                if (EXCLUDED_WORDS.contains("_" + subword + "_"))
+                    continue;
+                double heat = Math.pow(0.9, words.length - currentLength);
+                if (result.containsKey(subword)) {
+                    heat += result.get(subword);
+                }
+                result.put(subword, heat);
+            }
+        }
+        return result;
+    }
+
+    private static final String EXCLUDED_WORDS = "_a_an_the_is_and_or_this_that_these_those_how_what_why_who_which_";
 
     private List<SearchResult> findAuthor(String keyword, User currentUser) {
         List<SearchResult> searchResultList = new ArrayList<>();
         // Full Search
         List<User> users = userRepository.findAll();
         for (User user : users) {
-            if (!user.getUsername().toLowerCase().contains(keyword))
+            if (!user.getUsername().toLowerCase().contains(keyword) || user.equals(currentUser))
                 continue;
+
             SearchResult searchResult = new SearchResult();
             searchResult.relavence = (double) keyword.length() / (double) user.getUsername().length();
             searchResult.userData = new UserData(user,

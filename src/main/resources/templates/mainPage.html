@@ -18,8 +18,12 @@
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function(){
 
-        })
+        });
 
+        function linkForTopSearch(link) {
+            var keyword = link.id.substring(2);
+            document.getElementById('TSForm' + keyword).submit();
+        }
 
         function starAPost(postID) {
             $.ajax({
@@ -184,8 +188,9 @@
                             <table width="100%">
                                 <tr>
                                     <td>
-                                        <span class="post-author"
-                                              th:text="${postData.post.getUser().getUsername()}"></span><br>
+                                        <a class="post-author"
+                                           th:href="'view_profile?user=' + ${postData.post.getUser().getUsername()}"
+                                           th:text="${postData.post.getUser().getUsername()}"></a><br>
                                         <span class="post-time" th:text="${postData.postCreatedAt()}"></span>
                                     </td>
                                     <td width="10%"
@@ -196,16 +201,15 @@
                                         <span th:if="${postData.liked}" class="post-action-liked-top">
                                             <i class='fas fa-thumbs-up'></i>
                                         </span>
-                                        <a href=""
-                                           th:if="${User.getUsername() == postData.post.getUser().getUsername()}"
-                                           class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                        <!--<a href=""-->
+                                        <!--th:if="${User.getUsername() == postData.post.getUser().getUsername()}"-->
+                                        <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
                                         <div class="dropdown" hidden
                                              th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                             <div class="dropdown-content">
                                                 <a th:href="'javascript:reportAPost(' + ${postData.post.getPostID()} + ');'">
                                                     <i class="fas fa-exclamation-triangle"></i> Report</a>
-                                                <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
                                             </div>
                                         </div>
                                     </td>
@@ -219,14 +223,18 @@
                         <td>
                             <div th:text="${postData.post.getPostComment()}" class="post-text"
                                  th:if="${!postData.post.getPostComment().isEmpty()}"></div>
-                            <div class="post-genre">
+                            <div class="post-genre" th:if="${!postData.post.isRepost()}">
                                 <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
                                     <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
-                                          class="post-genre-text"
-                                          th:text="'#' + ${postData.post.getPrimaryGenre()} + ' '"></span>
+                                          class="post-genre-text">
+                                        <i class='far fa-bookmark'></i>
+                                        <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
+                                    </span>
                                     <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
-                                          class="post-genre-text"
-                                          th:text="'#' + ${postData.post.getSecondaryGenre()}"></span>
+                                          class="post-genre-text">
+                                        <i class='far fa-bookmark'></i>
+                                        <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
+                                    </span>
                                 </span>
                                 <span th:each="tag: ${postData.postTags}">
                                     <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
@@ -266,8 +274,9 @@
                                             <table width="100%">
                                                 <tr>
                                                     <td>
-                                                        <span class="post-author"
-                                                              th:text="${postData.originalPost.getUser().getUsername()}"></span><br>
+                                                        <a class="post-author"
+                                                           th:href="'view_profile?user=' + ${postData.originalPost.getUser().getUsername()}"
+                                                           th:text="${postData.originalPost.getUser().getUsername()}"></a><br>
                                                         <span class="post-time"
                                                               th:text="${postData.originalPostCreatedAt()}"></span>
                                                     </td>
@@ -286,11 +295,20 @@
                                             <div class="post-genre"
                                                  th:if="${!postData.originalPost.getPrimaryGenre().equals('None') || !postData.originalPost.getSecondaryGenre().equals('None')}">
                                                 <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                      class="post-genre-text"
-                                                      th:text="'#' + ${postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                      class="post-genre-text">
+                                                    <i class='far fa-bookmark'></i>
+                                                    <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                </span>
                                                 <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
-                                                      class="post-genre-text"
-                                                      th:text="'#' + ${postData.originalPost.getSecondaryGenre()}"></span>
+                                                      class="post-genre-text">
+                                                    <i class='far fa-bookmark'></i>
+                                                    <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
+                                                </span>
+                                                <span th:each="tag: ${postData.postTags}">
+                                                    <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                                        <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                                    </a>
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -399,7 +417,7 @@
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a th:href="'view_profile_subscription?user=' + ${User.getUsername()}">
+                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
                                     <div>
                                         <span class="semibold" style="font-size: 1.05em;">Stars</span><br><span
                                             th:text="${starCount}" class="semibold" style="font-size: 1.05em;"></span>
@@ -452,76 +470,25 @@
                         <i class='fas fa-fire'></i> Top Search
                     </div>
                     <table width="100%" style="padding-top: 0.5em">
-                        <tr>
-                            <td class="trendingNum semibold">1</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">DC</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">2</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Batman</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">3</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Superman</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">4</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">Cat</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">5</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">asd</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">6</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">2</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">7</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">light</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">8</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">fun</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">9</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">aw</a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="trendingNum semibold">10</td>
-                            <td>
-                                <div style="margin-left: 1em;" class="button-link">
-                                    <a href="">pen</a></div>
-                            </td>
-                        </tr>
+                        <span th:each="searchWord, iter:${top10Searches}">
+                            <tr>
+                                <td class="trendingNum semibold"><span th:text="${iter.count}"></span></td>
+                                <td>
+                                    <div style="margin-left: 1em;" class="button-link">
+                                        <form method="post"
+                                              th:id="'TSForm' + ${searchWord.getWord()}"
+                                              action="/topSearchForm">
+                                            <input hidden th:value="${searchWord.getWord()}"
+                                                   name="searchContent">
+                                        </form>
+                                        <a href="#" th:id="'TS' + ${searchWord.getWord()}"
+                                           onclick="linkForTopSearch(this);">
+                                            <span th:text="${searchWord.getWord()}"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </span>
                     </table>
                 </div>
             </div>

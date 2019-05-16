@@ -12,6 +12,41 @@
     height: 8em;
 }
 
+.profile-top-follow, .profile-top-follow:link, .profile-top-follow:visited {
+    font-size: 0.95em;
+    display: inline-block;
+    width: 8em;
+    color: #fff;
+    background: #218787;
+    border-radius: 5px;
+    border: #218787 1px solid;
+    text-decoration: none;
+    padding: 0.15em 0;
+}
+
+.profile-top-follow:hover {
+    background: #fff;
+    color: #218787;
+    cursor: pointer;
+}
+
+.profile-top-unfollow, .profile-top-unfollow:link, .profile-top-unfollow:visited {
+    font-size: 0.95em;
+    display: inline-block;
+    width: 8em;
+    color: #218787;
+    border-radius: 5px;
+    border: #218787 1px solid;
+    text-decoration: none;
+    padding: 0.15em 0;
+}
+
+.profile-top-unfollow:hover {
+    color: #fff;
+    background: #218787;
+    cursor: pointer;
+}
+
 .profile-name {
     text-align: center;
     font-size: 1.2em;
@@ -40,7 +75,6 @@
     text-align: center;
 }
 
-s
 .profile-button-table-cell {
     background: rgba(255, 255, 255, 0.7);
     height: 8em;

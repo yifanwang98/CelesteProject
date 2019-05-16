@@ -8,6 +8,9 @@ import java.util.List;
 
 @Repository
 public interface SearchWordsRepository extends JpaRepository<SearchWords, String> {
-
     List<SearchWords> findTop5ByOrderByHeatDesc();
+
+    SearchWords findSearchWordsByWord(String word);
+
+    List<SearchWords> findTop10ByOrderByHeatDesc();
 }

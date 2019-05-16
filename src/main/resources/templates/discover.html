@@ -9,7 +9,7 @@
     <!-- Style Sheet -->
     <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
-    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/profile.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -17,52 +17,11 @@
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function(){
 
-        })
+        });
 
-
-        function followAUser(username) {
-            $.ajax({
-                type : "POST",
-                url : 'singlepostReport',
-                data:{postID:postID,reason:reason},
-                cache : false,
-                success : function(data) {
-                    if(data == "Report has been sent. Please wait for our reply."){
-                        alert(data)
-                        location.reload();
-
-                    }
-                    else {
-                        alert(data)
-                    }
-                },
-                error: function(){
-                    alert(arguments[1]);
-                }
-            });
-        }
-        function reportAPost(postID) {
-            var reason = prompt("Please describe the reason:","");
-            if (reason==null) reason = ""
-            $.ajax({
-                type : "POST",
-                url : 'singlepostReport',
-                data:{postID:postID,reason:reason},
-                cache : false,
-                success : function(data) {
-                    if(data == "Report has been sent. Please wait for our reply."){
-                        alert(data)
-                        location.reload();
-
-                    }
-                    else {
-                        alert(data)
-                    }
-                },
-                error: function(){
-                    alert(arguments[1]);
-                }
-            });
+        function linkForTopSearch(link) {
+            var keyword = link.id.substring(2);
+            document.getElementById('TSForm' + keyword).submit();
         }
 
     </script>
@@ -153,21 +112,9 @@
                                         <span th:if="${postData.liked}" class="post-action-liked-top">
                                             <i class='fas fa-thumbs-up'></i>
                                         </span>
-                                        <a href=""
+                                        <a href="#"
                                            th:if="${User.getUsername() == postData.post.getUser().getUsername()}"
                                            class="post-action-more"><i class='far fa-trash-alt'></i></a>
-                                        <div class="dropdown"
-                                             th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
-                                            <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
-                                            <div class="dropdown-content">
-                                                <a th:href="'javascript:reportAPost(' + ${postData.post.getPostID()} + ');'"><i class="fas fa-exclamation-triangle"></i> Report</a>
-                                                <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
-
-                                            </div>
-                                        </div>
-                                        <div class="post-action-follow"th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
-                                            <a th:href="'javascript:followAUser(' + ${postData.post.getUser().getUsername()} + ');'"><i class='fas fa-plus'></i> Follow</a>
-                                        </div>
                                     </td>
                                 </tr>
                             </table>
@@ -179,13 +126,24 @@
                         <td>
                             <div th:text="${postData.post.getPostComment()}" class="post-text"
                                  th:if="${!postData.post.getPostComment().isEmpty()}"></div>
-                            <div class="post-genre"
-                                 th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
-                                <span th:if="${!postData.post.getPrimaryGenre().equals('None')}" class="post-genre-text"
-                                      th:text="'#' + ${postData.post.getPrimaryGenre()} + ' '"></span>
-                                <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
-                                      class="post-genre-text"
-                                      th:text="'#' + ${postData.post.getSecondaryGenre()}"></span>
+                            <div class="post-genre" th:if="${!postData.post.isRepost()}">
+                                <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
+                                    <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                                          class="post-genre-text">
+                                        <i class='far fa-bookmark'></i>
+                                        <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
+                                    </span>
+                                    <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                                          class="post-genre-text">
+                                        <i class='far fa-bookmark'></i>
+                                        <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
+                                    </span>
+                                </span>
+                                <span th:each="tag: ${postData.postTags}">
+                                    <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                        <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                    </a>
+                                </span>
                             </div>
                         </td>
                     </tr>
@@ -239,11 +197,20 @@
                                             <div class="post-genre"
                                                  th:if="${!postData.originalPost.getPrimaryGenre().equals('None') || !postData.originalPost.getSecondaryGenre().equals('None')}">
                                                 <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                      class="post-genre-text"
-                                                      th:text="'#' + ${postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                      class="post-genre-text">
+                                                    <i class='far fa-bookmark'></i>
+                                                    <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                </span>
                                                 <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
-                                                      class="post-genre-text"
-                                                      th:text="'#' + ${postData.originalPost.getSecondaryGenre()}"></span>
+                                                      class="post-genre-text">
+                                                    <i class='far fa-bookmark'></i>
+                                                    <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
+                                                </span>
+                                                <span th:each="tag: ${postData.postTags}">
+                                                    <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                                        <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                                    </a>
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -289,54 +256,7 @@
                 </table>
                 <!-- Old 转赞评 -->
                 <div style="padding: 0.1em;"></div>
-                <!--<table width="100%" class="post-action">-->
-                <!--<col width="25%"/>-->
-                <!--<col width="25%"/>-->
-                <!--<col width="25%"/>-->
-                <!--<col width="25%"/>-->
-                <!--<tr>-->
-                <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-                <!--<a th:href="'javascript:repostAPost(' + ${postData.post.getPostID()} + ');'">-->
-                <!--<i class='fas fa-share-square'></i> Share (<span-->
-                <!--th:text="${postData.shareCount}"></span>)-->
-                <!--</a>-->
-                <!--</td>-->
-                <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-                <!--<a th:href="'singlePost?id=' + ${postData.post.getPostID()}">-->
-                <!--<i class='far fa-comment-dots'></i> Comment (<span-->
-                <!--th:text="${postData.commentCount}"></span>)-->
-                <!--</a>-->
-                <!--</td>-->
-                <!--<span th:if="${postData.starred}">-->
-                <!--<td class="post-action-stared" style="border-right: #ccc 1px solid">-->
-                <!--<a th:href="'javascript:starAPost(' + ${postData.post.getPostID()} + ');'"><i class='fas fa-star'></i> Star (<span-->
-                <!--th:text="${postData.starCount}"></span>)</a>-->
-                <!--</td>-->
-                <!--</span>-->
-                <!--<span th:unless="${postData.starred}">-->
-                <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
-                <!--<a th:href="'javascript:starAPost(' + ${postData.post.getPostID()} + ');'"><i class='fas fa-star'></i> Star (<span-->
-                <!--th:text="${postData.starCount}"></span>)</a>-->
-                <!--</td>-->
-                <!--</span>-->
-                <!--<span th:if="${postData.liked}">-->
-                <!--<td class="post-action-liked">-->
-                <!--<a th:href="'javascript:likeAPost(' + ${postData.post.getPostID()} + ');'"><i class='fas fa-thumbs-up'></i> Like (<span-->
-                <!--th:text="${postData.likeCount}"></span>)</a>-->
-                <!--</td>-->
-                <!--</span>-->
-                <!--<span th:unless="${postData.liked}">-->
-                <!--<td class="post-action-cell">-->
-                <!--<a th:href="'javascript:likeAPost(' + ${postData.post.getPostID()} + ');'"><i class='far fa-thumbs-up'></i> Like (<span-->
-                <!--th:text="${postData.likeCount}"></span>)</a>-->
-                <!--</td>-->
-                <!--</span>-->
-                <!--</tr>-->
-                <!--</table>-->
             </div>
-
-
-
         </td>
         <!---------------------------------------->
         <!---------------------------------------->
@@ -344,32 +264,65 @@
         <!-- Right Part -->
         <td class="profileColumn-td">
             <div class="profileColumn">
+                <div style="text-align: center; padding: 1.618em 0 0.25em 0;">
+                    <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                        <img th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                             style="width: 38.2%; border-radius: 100%; border: #cccccc 1px solid;">
+                    </a>
+                </div>
                 <!------------------------------------>
                 <!-- Profile Info -->
                 <div style="border-bottom: #f3f3f3 2px solid;">
-                    <table style="width: 100%; text-align: center;">
+                    <table style="width: 100%; text-align: center; padding: 0.61803em 0;">
+                        <col width="50%"/>
+                        <col width="50%"/>
+                        <tr>
+                            <td class="button-link">
+                                <a th:href="'/following?user=' + ${User.getUsername()}">
+                                    <div>
+                                        <span class="semibold" style="font-size: 1.05em;">Following</span><br><span
+                                            th:text="${following}" class="semibold" style="font-size: 1.05em;"></span>
+                                    </div>
+                                </a>
+                            </td>
+                            <td class="button-link">
+                                <a th:href="'/follower?user=' + ${User.getUsername()}">
+                                    <div>
+                                        <span class="semibold" style="font-size: 1.05em;">Follower</span><br><span
+                                            th:text="${followers}" class="semibold" style="font-size: 1.05em;"></span>
+                                    </div>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="border-bottom: #f3f3f3 2px solid;">
+                    <table style="width: 100%; text-align: center; border-spacing: 5px; padding: 0.61803em 0;">
                         <col width="33.333333%"/>
                         <col width="33.333333%"/>
                         <col width="33.333333%"/>
                         <tr>
                             <td class="button-link">
-                                <a href="">
-                                    <div style="padding: 1em 0;">
-                                        <span class="semibold" style="font-size: 1.05em;">Following</span><br>123
+                                <a th:href="'view_profile?user=' + ${User.getUsername()}">
+                                    <div>
+                                        <span class="semibold" style="font-size: 1.05em;">Posts</span><br><span
+                                            th:text="${postsCount}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a href="">
+                                <a th:href="'view_profile_series?user=' + ${User.getUsername()}">
                                     <div>
-                                        <span class="semibold" style="font-size: 1.05em;">Follower</span><br>3000
+                                        <span class="semibold" style="font-size: 1.05em;">Series</span><br><span
+                                            th:text="${seriesCount}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a href="">
+                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
                                     <div>
-                                        <span class="semibold" style="font-size: 1.05em;">My Post</span><br>20
+                                        <span class="semibold" style="font-size: 1.05em;">Stars</span><br><span
+                                            th:text="${starCount}" class="semibold" style="font-size: 1.05em;"></span>
                                     </div>
                                 </a>
                             </td>
@@ -379,6 +332,10 @@
                 <!------------------------------------>
                 <!-- Creation Link -->
                 <div style="border-bottom: #f3f3f3 2px solid;">
+                    <div style="margin: 1em 1em -0.4em 1.35em; color: #9a9a9a;"
+                         class="semibold">
+                        <i class='fas fa-feather'></i> Creation Center
+                    </div>
                     <table style="width: 100%; text-align: center; border-spacing: 5px;">
                         <col width="33.333333%"/>
                         <col width="33.333333%"/>
@@ -392,16 +349,16 @@
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a href="/createSeries">
+                                <a href="createSeries">
                                     <div>
                                         <i class='fas fa-sticky-note button-icon'></i><br>Series
                                     </div>
                                 </a>
                             </td>
                             <td class="button-link">
-                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
+                                <a href="/profile_analysis">
                                     <div>
-                                        <i class='fas fa-star button-icon'></i><br>Stars
+                                        <i class='fas fa-chart-line button-icon'></i><br>Analysis
                                     </div>
                                 </a>
                             </td>
@@ -412,23 +369,31 @@
                 <!-- Top Search -->
                 <div class="top-search-block">
                     <div style="color: #9a9a9a;" class="semibold">
-                        Top Search
+                        <i class='fas fa-fire'></i> Top Search
                     </div>
-                    <div class="button-link" style="line-height: 1.6; padding-left: 1em; padding-top: 0.5em">
-                        <a href=""># 1 DC</a><br>
-                        <a href=""># 2 batman</a><br>
-                        <a href=""># 3 irony</a><br>
-                        <a href=""># 4 crisis</a><br>
-                        <a href=""># 5 detective</a><br>
-                        <a href=""># 6 dark</a><br>
-                        <a href=""># 7 who</a><br>
-                        <a href=""># 8 flash</a><br>
-                        <a href=""># 9 the end</a><br>
-                        <a href="">#10 action</a><br>
-                    </div>
+                    <table width="100%" style="padding-top: 0.5em">
+                        <span th:each="searchWord, iter:${top10Searches}">
+                            <tr>
+                                <td class="trendingNum semibold"><span th:text="${iter.count}"></span></td>
+                                <td>
+                                    <div style="margin-left: 1em;" class="button-link">
+                                        <form method="post"
+                                              th:id="'TSForm' + ${searchWord.getWord()}"
+                                              action="/topSearchForm">
+                                            <input hidden th:value="${searchWord.getWord()}"
+                                                   name="searchContent">
+                                        </form>
+                                        <a href="#" th:id="'TS' + ${searchWord.getWord()}"
+                                           onclick="linkForTopSearch(this);">
+                                            <span th:text="${searchWord.getWord()}"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </span>
+                    </table>
                 </div>
             </div>
-            <div></div>
         </td>
     </tr>
 </table>

@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user")
@@ -17,7 +18,6 @@ import java.util.Date;
         allowGetters = true)
 public class User implements Serializable {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotBlank
     private String username;
 
@@ -134,5 +134,19 @@ public class User implements Serializable {
 
     public void setBlockedSince(Date blockedSince) {
         this.blockedSince = blockedSince;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(username);
     }
 }

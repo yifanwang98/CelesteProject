@@ -55,9 +55,11 @@ public class MainPageController {
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
 
+    @Autowired
+    SearchWordsRepository searchWordsRepository;
+
     @GetMapping(value = {"/mainPage", "/", "home"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
-
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -104,7 +106,7 @@ public class MainPageController {
         for (int i = 0; i < postList.size(); i++) {
             // Post Content
             Post post = postList.get(i);
-            Post originalPost = null;
+            Post originalPost = post;
             if (post.isRepost()) {
                 originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
             }
@@ -126,7 +128,7 @@ public class MainPageController {
 
             // Tag
             List<String> postTags = new ArrayList<>();
-            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(originalPost);
             for (PostTag tag : postTagList) {
                 postTags.add(tag.getTag());
             }
@@ -138,11 +140,16 @@ public class MainPageController {
 
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
+
         return "mainPage";
     }
 
     @PostMapping("/home")
-    public String FirstLogin(@RequestParam(value = "username", required = false) String username,
+    public String firstLogin(@RequestParam(value = "username", required = false) String username,
                              @RequestParam(value = "password", required = false) String password,
                              ModelMap model, HttpServletRequest request) throws Exception {
         if (password != null && password.length() > 0) {
@@ -175,6 +182,16 @@ public class MainPageController {
 
     @GetMapping("index")
     public String signIn(ModelMap model, HttpServletRequest request) throws Exception {
+        return "index";
+    }
+
+    @GetMapping("/signup")
+    public String signUp() {
+        return "signUp";
+    }
+
+    @GetMapping("/backtosignin")
+    public String backtosignin() {
         return "index";
     }
 

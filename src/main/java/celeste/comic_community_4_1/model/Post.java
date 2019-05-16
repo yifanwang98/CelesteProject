@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "post")
@@ -122,5 +123,19 @@ public class Post implements Serializable {
 
     public void setSecondaryGenre(String secondaryGenre) {
         this.secondaryGenre = secondaryGenre;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return postID == post.postID;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(postID);
     }
 }

@@ -17,4 +17,6 @@ public interface PostTagRepository extends JpaRepository<PostTag, Long> {
     long countPostTagByTag(String tag);
 
     List<PostTag> findPostTagByTag(String tag);
+
+    boolean existsPostTagByPostAndTag(Post post, String tag);
 }

@@ -2,7 +2,7 @@
 <html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Stars</title>
+    <title>Star - Celeste</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -15,6 +15,11 @@
     <link href="../static/stylesheet/single.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script>
+        function deleteStarredPost(post) {
+            document.getElementById('deletePost' + post.id.substring(2)).submit();
+        }
+    </script>
 </head>
 <body>
 <!-- Header Banner -->
@@ -157,7 +162,12 @@
                                 <span class="post-time" th:text="${postData.post.getCreatedAt()}"></span>
                             </td>
                             <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
-                                <a href=""
+                                <form action="/deleteStarredPost" method="post"
+                                      th:id="'deletePost' + ${postData.post.getPostID()}">
+                                    <input hidden name="postID" th:value="${postData.post.getPostID()}">
+                                </form>
+                                <a href="#" onclick="deleteStarredPost(this)"
+                                   th:id="'P-' + ${postData.post.getPostID()}"
                                    th:if="${followingStatus.get(iter.index) == T(celeste.comic_community_4_1.miscellaneous.FollowStatus).SELF}"
                                    class="post-action-more"><i class='far fa-trash-alt'></i></a>
                                 <div class="dropdown"
@@ -165,7 +175,6 @@
                                     <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                     <div class="dropdown-content">
                                         <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
-                                        <a href="#"><i class="fas fa-eye-slash"></i> Block</a>
                                     </div>
                                 </div>
                             </td>
@@ -178,11 +187,24 @@
                 <td></td>
                 <td>
                     <div th:text="${postData.post.getPostComment()}" class="post-text"></div>
-                    <div class="post-genre">
-                                <span th:if="${!postData.post.getPrimaryGenre().equals('None')}" class="post-genre-text"
-                                      th:text="'#' + ${postData.post.getPrimaryGenre()} + ' '"></span>
-                        <span th:if="${!postData.post.getSecondaryGenre().equals('None')}" class="post-genre-text"
-                              th:text="'#' + ${postData.post.getSecondaryGenre()}"></span>
+                    <div class="post-genre" th:if="${!postData.post.isRepost()}">
+                        <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
+                            <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                                  class="post-genre-text">
+                                <i class='far fa-bookmark'></i>
+                                <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
+                            </span>
+                            <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                                  class="post-genre-text">
+                                <i class='far fa-bookmark'></i>
+                                <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
+                            </span>
+                        </span>
+                        <span th:each="tag: ${postData.postTags}">
+                            <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                            </a>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -221,13 +243,23 @@
                                 <td>
                                     <div th:text="${postData.originalPost.getPostComment()}"
                                          class="post-text"></div>
-                                    <div class="post-genre">
-                                            <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                  class="post-genre-text"
-                                                  th:text="'#' + ${postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                    <div class="post-genre"
+                                         th:if="${!postData.originalPost.getPrimaryGenre().equals('None') || !postData.originalPost.getSecondaryGenre().equals('None')}">
+                                                <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
+                                                      class="post-genre-text">
+                                                    <i class='far fa-bookmark'></i>
+                                                    <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
+                                                </span>
                                         <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
-                                              class="post-genre-text"
-                                              th:text="'#' + ${postData.originalPost.getSecondaryGenre()}"></span>
+                                              class="post-genre-text">
+                                                    <i class='far fa-bookmark'></i>
+                                                    <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
+                                                </span>
+                                        <span th:each="tag: ${postData.postTags}">
+                                                    <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                                        <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                                    </a>
+                                                </span>
                                     </div>
                                 </td>
                             </tr>
