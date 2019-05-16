@@ -3,6 +3,7 @@ package celeste.comic_community_4_1.Controllers;
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.model.EmbeddedClasses.FollowIndentity;
 import celeste.comic_community_4_1.model.Follow;
+import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import java.util.List;
 @Controller
 public class FollowController {
 
-
     @Autowired
     UserRepository userRepository;
 
@@ -35,6 +35,30 @@ public class FollowController {
 
     @Autowired
     PostContentRepository postContentRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
+
+    @Autowired
+    StarRepository starRepository;
+
+    @Autowired
+    SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesContentRepository seriesContentRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
+
+    @Autowired
+    SeriesTagRepository seriesTagRepository;
+
+    @Autowired
+    PostTagRepository postTagRepository;
 
     @GetMapping("/following")
     public String viewFollowing(@RequestParam(value = "user") String linkedUsername,
@@ -56,6 +80,13 @@ public class FollowController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
         model.addAttribute("profileOwner", linkedUser);
         model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
+
+        //All the post by this user
+        List<Post> postList = postRepository.findByUser(linkedUser);
+        model.addAttribute("postsCount", postList.size());
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(linkedUser));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(linkedUser));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(linkedUser));
 
         // Get Following
         List<Follow> following = followRepository.findByFollowIndentityUserone(linkedUser);
@@ -95,6 +126,13 @@ public class FollowController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
         model.addAttribute("profileOwner", linkedUser);
         model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
+
+        //All the post by this user
+        List<Post> postList = postRepository.findByUser(linkedUser);
+        model.addAttribute("postsCount", postList.size());
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(linkedUser));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(linkedUser));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(linkedUser));
 
         // Get Following
         List<Follow> following = followRepository.findByFollowIndentityUserone(linkedUser);

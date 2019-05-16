@@ -33,6 +33,7 @@
 
 .clearAllGenre:hover {
     color: #666666;
+    cursor: pointer;
 }
 
 .advance-search-title {
@@ -121,4 +122,5 @@
 
 .searchResult-tag a:hover {
     font-style: italic;
+    cursor: pointer;
 }
