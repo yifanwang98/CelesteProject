@@ -180,6 +180,7 @@ public class CreationController {
             double size = f.getSize() * Math.pow(10, -6);
             if (size > CreationController.MAX_FILE_SIZE) {
                 error = true;
+                continue;
             }
 
             if (upd.getThumbnails().size() >= 9) {
