@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+.instruction-title {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 500;
+    margin-bottom: 1em;
+}
+
+.instruction-continue, .instruction-continue:link, .instruction-continue:visited {
+    font-size: 1.2em;
+    color: #218787;
+    text-decoration: none;
+}
+
+.instruction-continue:hover {
+    color: #30c5c5;
+}
+
+.drawing-canvas {
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    position: absolute;
+    top: 3.5em;
+    bottom: 3em;
+    left: 0;
+    right: 0;
+    width: 1024px;
+}
+
+.drawing-button {
+    color: #269b9b;
+    background: none;
+    border: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    height: 100%;
+    width: 7em;
+}
+
+.drawing-button:hover {
+    background: #269b9b;
+    color: white;
+}

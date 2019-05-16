@@ -68,6 +68,22 @@ public class SinglePostController {
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if (user.getMembership().equals("None")) {
+                if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                    return "blocked";
+                }
+            } else {
+                if (user.getBlockedSince().after(Notification.getDaysBefore(1))) {
+                    return "blocked";
+                }
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+
         model.addAttribute("User", user);
 
         // Find Post
