@@ -47,6 +47,7 @@ public class PaymentController {
     public String pay(HttpServletRequest request) {
         String cancelUrl = URLUtils.getBaseURl(request) + "/" + PAYPAL_CANCEL_URL;
         String successUrl = URLUtils.getBaseURl(request) + "/" + PAYPAL_SUCCESS_URL;
+        System.out.println(successUrl);
         try {
             Payment payment = paypalService.createPayment(
                     9.99,
@@ -77,13 +78,19 @@ public class PaymentController {
                              @RequestParam("PayerID") String payerId,
                              ModelMap model,
                              HttpServletRequest request) {
+        // debug
+        System.out.println("I'm in success");
+        System.out.println("PaymentID = "+paymentId);
+        System.out.println("PayerID = " + payerId);
+
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         try {
             Payment payment = paypalService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-
+                //Debug
+                System.out.println("Im in success-> try");
                 // Blocked User
                 user.setMembership("1");
                 userRepository.save(user);
