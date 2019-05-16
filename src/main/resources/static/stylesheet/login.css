@@ -61,6 +61,7 @@
 .button:hover {
     background: #269b9b;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .error {
@@ -86,5 +87,6 @@
 .linkText a:hover {
     color: #666666;
     text-decoration: none;
+    cursor: pointer;
 }
 

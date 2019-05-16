@@ -33,6 +33,7 @@
 .button-link a:hover {
     color: #218787;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .button-icon {
@@ -65,6 +66,7 @@
 .post-author:hover {
     color: #269b9b;
     font-style: italic;
+    cursor: pointer;
 }
 
 .post-time {
@@ -93,9 +95,11 @@
 
 .imageLink:link, .imageLink:visited, .imageLink:hover {
     text-decoration: none;
+    cursor: pointer;
 }
 
 .post-image-single:hover, .post-image-multiple:hover {
+    cursor: pointer;
     cursor: pointer;
 }
 
@@ -144,6 +148,7 @@
 .post-action-cell a:hover {
     color: #218787;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .post-action-liked {
@@ -159,6 +164,7 @@
 
 .post-action-liked-top:hover {
     color: #3973a0;
+    cursor: pointer;
 }
 
 .post-action-liked a:link, .post-action-liked a:visited {
@@ -169,6 +175,7 @@
 .post-action-liked a:hover {
     color: #9a9a9a;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .post-action-stared {
@@ -184,6 +191,7 @@
 
 .post-action-stared-top:hover {
     color: goldenrod;
+    cursor: pointer;
 }
 
 .post-action-stared a:link, .post-action-stared a:visited {
@@ -194,6 +202,7 @@
 .post-action-stared a:hover {
     color: #9a9a9a;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .post-action-more, .post-action-more:link, .post-action-more:visited {
@@ -224,6 +233,7 @@
 }
 
 .post-action-follow a:hover {
+    cursor: pointer;
     color: #30c5c5;
     text-decoration: none;
 }
