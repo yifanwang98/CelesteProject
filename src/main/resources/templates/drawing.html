@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home - Celeste</title>
+    <title>Drawing - Celeste</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,13 +9,14 @@
     <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/drawing.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
 <body>
 <!-- Header Banner -->
-<!--div class="header"-->
-<table class="header webfont semibold">
+<table class="header webfont semibold" style="z-index: 2;">
+    </tbody>
     <tbody style="padding: 0; margin: 0;">
     <tr>
         <!-- Left Part -->
@@ -26,13 +27,13 @@
                         <div class="logo"></div>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerSelected">Home</a>
+                        <a href="/mainPage" class="headerUnselected">Home</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="discover.html" class="headerUnselected">Discover</a>
+                        <a href="discover" class="headerUnselected">Discover</a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="search.html" class="headerUnselected">Search</a>
+                        <a href="search" class="headerUnselected">Search</a>
                     </td>
                 </tr>
             </table>
@@ -42,14 +43,16 @@
             <table style="padding: 0; margin: 0; align: right;">
                 <tr style="align: right;">
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
-                        <a href="profile_post.html" class="headerUnselected"><i
-                                class='fas fa-user-circle headerIcon'></i></a>
+                        <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
+                            <image th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                                   class="header-avatar-image"></image>
+                        </a>
                     </td>
                     <td class="headerCellPadding"></td>
                 </tr>
@@ -61,33 +64,46 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<table class="mainContent webfont" style="border-spacing: 1em;">
-    <div id="zwibbler" style="background-color: white; margin-left:auto;margin-right:auto;border:2px solid red;width:1024px;height:768px;"></div> 
-    <zwibbler>
-        <button id="save-button"> save_button</button>
-        <button id="load-button"> load_button</button>
-        <button id="download-button"> download button</button>
-        <button id="post-button"> post my work!</button>
-    </zwibbler>
-    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script> 
-    <script src="http://zwibbler.com/zwibbler-demo.js"></script> 
-    <script type="text/javascript"> 
-        var ctx = Zwibbler.create("zwibbler", {
+<!--<table class="mainContent webfont" style="border-spacing: 1em;">-->
+<div id="zwibbler" style="" class="drawing-canvas"></div>
+<!--<div>-->
+<!--<zwibbler>-->
+<!--<button id="save-button">Save</button>-->
+<!--<button id="load-button">Load</button>-->
+<!--<button id="download-button">Download</button>-->
+<!--&lt;!&ndash;<button id="post-button"> post my work!</button>&ndash;&gt;-->
+<!--</zwibbler>-->
+<!--</div>-->
+<!-- Footer Banner -->
+<table class="footer webfont semibold" id="footer" style="padding: 0; margin: 0; border-spacing: 0;">
+    <tr>
+        <td></td>
+        <td style="width: 25em;">
+            <button id="load-button" class="drawing-button">Load</button>
+            <button id="save-button" class="drawing-button">Save</button>
+            <button id="download-button" class="drawing-button">Download</button>
+        </td>
+    </tr>
+</table>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script src="http://zwibbler.com/zwibbler-demo.js"></script>
+<script type="text/javascript">
+    var ctx = Zwibbler.create("zwibbler", {
         showPropertyPanel: true,
         showPageSelector: true,
         showShapeBrushTool: true,
         defaultBrushWidth: 2
     });
-    
-    loadDrawing();
-    // set autosve.   60sec 
-    setTimeout( autoSave, 1000 * 60 ); 
 
-    $('#post-button').click(function(){
+    loadDrawing();
+    // set autosve.   60sec
+    setTimeout(autoSave, 1000 * 60);
+
+    $('#post-button').click(function () {
         var currentpage = ctx.getCurrentPage();
         var numPages = ctx.getPageCount();
         var data = [];
-        for(var i = 0; i < numPages; i++) {
+        for (var i = 0; i < numPages; i++) {
             ctx.setCurrentPage(i);
             data.push(ctx.save("png"));
         }
@@ -98,10 +114,10 @@
             data: JSON.stringify({
                 data: data
             }),
-            success: function(res){
+            success: function (res) {
                 console.log(res.status)
             },
-            error:function(err){
+            error: function (err) {
                 console.log(err);
             }
         })
@@ -115,9 +131,9 @@
         console.log('saveDrawing Done')
     });
 
-    
+
     /*
-	$("#png-button").click(function (){
+    $("#png-button").click(function (){
         var saved  = ctx.save('png')
         $.ajax({
             type: 'POST',
@@ -134,10 +150,10 @@
             }
         })
     });
-	*/
-	
-    // post the data to the back end. 
-    function saveDrawing(){
+    */
+
+    // post the data to the back end.
+    function saveDrawing() {
         var saved = ctx.save();
         console.log(typeof(saved))
         // send saved document to database.
@@ -149,47 +165,49 @@
             data: JSON.stringify({
                 data: saved
             }),
-            success: function(res){
+            success: function (res) {
                 console.log(res.status)
             },
-            error:function(err){
+            error: function (err) {
                 console.log(err);
             }
         })
     }
-    
-    function autoSave() { 
+
+    function autoSave() {
         console.log('autoSave has been called.')
-        setTimeout( autoSave, 1000 * 60 ); 
+        setTimeout(autoSave, 1000 * 60);
         console.log('timeout called')
-        saveDrawing(); 
+        saveDrawing();
         console.log('save drawing called.')
     }
-    
-    $("#load-button").click(function(){
+
+    $("#load-button").click(function () {
         loadDrawing();
     });
-    
-    function loadDrawing(){
+
+    function loadDrawing() {
         console.log('load-button')
         $.ajax({
-            type:'GET',
+            type: 'GET',
             url: '/load_drawing',
-            success: function(res){
-                console.log('get success!')
+            success: function (res) {
+                console.log('get success!');
                 // console.log(typeof(res))
-                var data = res.result
+                var data = res.result;
                 // console.log(data)
                 ctx.load(data);
             }
         });
     }
+
     $("#download-button").click(function () {
-        var filename = prompt("Please enter a filename");
+        var filename = prompt("Please enter filename:");
         if (filename) {
             ctx.download("png", filename + ".png");
         }
     });
+
     function onImage() {
         var dataUrl = ctx.save("png");
         window.open(dataUrl, "other");
@@ -212,8 +230,8 @@
             layer: "my_eraser_layer"
         });
     }
-    </script> 
-</table>
+</script>
+<!--</table>-->
 
 </body>
 </html>
