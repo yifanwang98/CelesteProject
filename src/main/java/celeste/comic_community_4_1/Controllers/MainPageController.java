@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -188,6 +189,44 @@ public class MainPageController {
     @GetMapping("/signup")
     public String signUp() {
         return "signUp";
+    }
+
+    @GetMapping("/forgetPassword")
+    public String forgetPassword() {
+        return "forgetPassword";
+    }
+
+    @PostMapping("/forgetPasswordUserInfo")
+    @ResponseBody
+    public String forgetPasswordUserInfo(@RequestParam(value = "username") String username,
+                                         @RequestParam(value = "email") String email) {
+        Optional<User> temp = userRepository.findById(username);
+        if(temp.isPresent()){
+            if(temp.get().getEmail().equals(email)){
+                return "Match!";
+            }
+        }
+        return "The username and email do not match!";
+    }
+
+    @PostMapping("/ResetPassword")
+    public String ResetPassword(@RequestParam(value = "username") String username,
+                                @RequestParam(value = "email") String email,
+                                ModelMap model, HttpServletRequest request) {
+        model.addAttribute("username",username);
+        model.addAttribute("email",email);
+        return "resetPassword";
+    }
+
+    @PostMapping("/SaveNewPassword")
+    public String SaveNewPassword(@RequestParam(value = "username") String username,
+                                  @RequestParam(value = "password") String password,
+                                ModelMap model, HttpServletRequest request) {
+
+        userRepository.findById(username).get().setPassword(password);
+        userRepository.save(userRepository.findById(username).get());
+        return "index";
+
     }
 
     @GetMapping("/backtosignin")
