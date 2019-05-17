@@ -19,6 +19,26 @@
     <script src="http://code.jquery.com/jquery-1.5.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
+        $(document).ready(function () {
+            var w = window.innerWidth * 0.60;
+            document.getElementById("scrollDiv").style.width = "" + w + "px";
+            var url = window.location.href;
+            var index = url.substring(url.indexOf('index=') + 6);
+            if (index.indexOf('#') > 0) {
+                index = url.substring(0, index.indexOf('#'));
+            }
+            document.getElementById("scrollDiv").scrollLeft = 70 * index;
+        });
+        $(window).resize(function () {
+            var w = window.innerWidth * 0.60;
+            document.getElementById("scrollDiv").style.width = "" + w + "px";
+            var url = window.location.href;
+            var index = url.substring(url.indexOf('index=') + 6);
+            if (index.indexOf('#') > 0) {
+                index = url.substring(0, index.indexOf('#'));
+            }
+            document.getElementById("scrollDiv").scrollLeft = 70 * index;
+        });
         function subscribe_Unsubscribe_Series(seriesID) {
             $.ajax({
                 type: "POST",
@@ -252,7 +272,9 @@
                 <div th:if="${thumbnails.isEmpty()}" style="text-align: center; color: #cccccc; font-size: 1.2em;">
                     The series is empty.
                 </div>
-                <div th:unless="${thumbnails.isEmpty()}" style="padding: 0.5em; overflow: hidden; float: none;">
+                <div th:unless="${thumbnails.isEmpty()}"
+                     id="scrollDiv"
+                     style="padding: 0.5em; width: 30em; overflow-x: scroll; white-space: nowrap;">
                     <span th:each="thumb, iter : ${thumbnails}">
                         <span th:if="${iter.index == (selectedSubIndex - fromIndex)}">
                             <a th:href="'singleSeries?id=' + ${seriesToView.getSeriesID()} + '&index=' + ${fromIndex + iter.index}"

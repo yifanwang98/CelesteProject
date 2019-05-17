@@ -75,14 +75,17 @@ public class SingleSeriesController {
         List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentitySeriesOrderByCreatedAtAsc(seriesToView);
         int selectedIndex = index >= seriesContentList.size() ? seriesContentList.size() - 1 : index;
         selectedIndex = selectedIndex < 0 ? 0 : selectedIndex;
-        int endIndex = selectedIndex + 2;
-        endIndex = endIndex > seriesContentList.size() - 1 ? seriesContentList.size() - 1 : endIndex;
-        int fromIndex = endIndex - 5;
-        fromIndex = fromIndex < 0 ? 0 : fromIndex;
-        endIndex = fromIndex + 5;
-        endIndex = endIndex > seriesContentList.size() - 1 ? seriesContentList.size() - 1 : endIndex;
+//        int endIndex = selectedIndex + 2;
+//        endIndex = endIndex > seriesContentList.size() - 1 ? seriesContentList.size() - 1 : endIndex;
+//        int fromIndex = endIndex - 5;
+//        fromIndex = fromIndex < 0 ? 0 : fromIndex;
+//        endIndex = fromIndex + 5;
+//        endIndex = endIndex > seriesContentList.size() - 1 ? seriesContentList.size() - 1 : endIndex;
         // SubList
-        List<SeriesContent> subContent = seriesContentList.subList(fromIndex, endIndex + 1);
+//        List<SeriesContent> subContent = seriesContentList.subList(fromIndex, endIndex + 1);
+        int fromIndex = 0;
+//        int endIndex = seriesContentList.size() - 1;
+        List<SeriesContent> subContent = seriesContentList;
         List<String> thumbnails = new ArrayList<>();
         for (SeriesContent seriesContent : subContent) {
             thumbnails.add(workRepository.findWorkByWorkID(seriesContent.getSeriesContentIndentity().getWork().getWorkID()).getThumbnail());
