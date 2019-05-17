@@ -82,6 +82,7 @@
     border-radius: 3px;
     margin-right: 1em;
     object-fit: cover;
+    background: white;
 }
 
 .post-image-multiple {
@@ -91,11 +92,13 @@
     border-radius: 3px;
     margin-right: 1em;
     object-fit: cover;
+    background: white;
 }
 
-.imageLink:link, .imageLink:visited, .imageLink:hover {
+.imageLink, .imageLink:link, .imageLink:visited, .imageLink:hover {
     text-decoration: none;
     cursor: pointer;
+    background: white;
 }
 
 .post-image-single:hover, .post-image-multiple:hover {
@@ -244,6 +247,7 @@
     width: 1.75em;
     border-radius: 50%;
     border: #30c5c5 1px solid;
+    background: white;
 }
 
 .discover-genre-outer-container {

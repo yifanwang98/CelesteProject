@@ -79,8 +79,8 @@ public class DiscoverController {
         model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(user));
 
         //All the post by this user
-        List<Post> postList = postRepository.findByUser(user);
-        model.addAttribute("postsCount", postList.size());
+        List<Post> postList;// = postRepository.findByUser(user);
+//        model.addAttribute("postsCount", postList.size());
 
         List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
 
@@ -163,12 +163,12 @@ public class DiscoverController {
 
         model.addAttribute("postDataList", postDataList);
 
-        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
-        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+//        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+//        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
 
         // Top Search
-        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
-        model.addAttribute("top10Searches", top10Searches);
+//        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+//        model.addAttribute("top10Searches", top10Searches);
 
         // Genre List
         List<GenreData> genreDataList = new ArrayList<>();
