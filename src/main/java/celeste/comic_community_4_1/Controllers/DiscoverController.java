@@ -148,8 +148,8 @@ public class DiscoverController {
                 }
             }
 
-            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
-            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
+//            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
+//            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
             // Tag
             List<String> postTags = new ArrayList<>();
@@ -158,7 +158,8 @@ public class DiscoverController {
                 postTags.add(tag.getTag());
             }
 
-            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries, postTags));
+//            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries, postTags));
+            postDataList.add(new PostData(post, originalPost, images, false, false, fromSeries, postTags));
         }
 
         model.addAttribute("postDataList", postDataList);
@@ -169,6 +170,36 @@ public class DiscoverController {
         // Top Search
         List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
         model.addAttribute("top10Searches", top10Searches);
+
+        // Genre List
+        List<GenreData> genreDataList = new ArrayList<>();
+        for (String genreName : ComicGenre.GENRE) {
+            if (genreName.equalsIgnoreCase("none"))
+                continue;
+
+            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+
+            String genreCover = null;
+            Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            if (tempPost != null) {
+                PostContent pc = postContentRepository.findByPostIndentityPostPostID(tempPost.getOriginalPostID()).get(0);
+                genreCover = pc.getPostIndentity().getWork().getThumbnail();
+            }
+            if (genreCover == null) {
+                Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+                if (tempSeries != null) {
+                    genreCover = tempSeries.getCover();
+                }
+            }
+            if (genreCover == null) {
+                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+            }
+
+            genreDataList.add(new GenreData(genreName, total, genreCover));
+        }
+        Collections.sort(genreDataList);
+        model.addAttribute("genreDataList", genreDataList);
 
         return "discover";
     }
