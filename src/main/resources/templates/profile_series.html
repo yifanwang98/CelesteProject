@@ -291,11 +291,13 @@
                         </div>
                         <div class="subscription-series-tag">
                             <span th:if="${!seriesData.series.getPrimaryGenre().equals('None')}">
-                                <a href=""><i class='far fa-bookmark'></i> <span
+                                <a th:href="'/genre?genre=' + ${seriesData.series.getPrimaryGenre()}"><i
+                                        class='far fa-bookmark'></i> <span
                                         th:text="${seriesData.series.getPrimaryGenre()}"></span></a>
                             </span>
                             <span th:if="${!seriesData.series.getSecondaryGenre().equals('None')}">
-                                <a href=""><i class='far fa-bookmark'></i> <span
+                                <a th:href="'/genre?genre=' + ${seriesData.series.getSecondaryGenre()}"><i
+                                        class='far fa-bookmark'></i> <span
                                         th:text="${seriesData.series.getSecondaryGenre()}"></span></a>
                             </span>
                             <span th:each="tag, iter: ${seriesData.tags}">
