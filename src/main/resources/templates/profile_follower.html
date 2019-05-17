@@ -87,7 +87,6 @@
             });
         }
 
-
         function unfollowUser2(link) {
             var username2 = link.id.substring(3);
             $.ajax({
@@ -275,8 +274,8 @@
                     </td>
                     <td>
                         <span th:if="${isOthersProfile}">
-                            <span th:if="${crossCheckedFollowList.get(iter.index) == false}">
-                                <span th:if="${!follow.getFollowIndentity().getUser1().getUsername().equals(User.getUsername())}">
+                            <span th:if="${crossCheckedFollowList.get(iter.index).booleanValue() == false}">
+                                <span th:if="${!follow.getFollowIndentity().getUser1().equals(User)}">
                                     <div class="subscription-series-unsubscribe">
                                         <a th:id="'AA-' + ${follow.getFollowIndentity().getUser1().getUsername()}"
                                            onclick="followUser2(this)"
@@ -284,7 +283,7 @@
                                     </div>
                                 </span>
                             </span>
-                            <span th:unless="${crossCheckedFollowList.get(iter.index) == false}">
+                            <span th:unless="${crossCheckedFollowList.get(iter.index).booleanValue() == false}">
                                 <span th:if="${!follow.getFollowIndentity().getUser1().getUsername().equals(User.getUsername())}">
                                     <div class="follow-following">
                                         Following

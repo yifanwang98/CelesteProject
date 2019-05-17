@@ -143,7 +143,7 @@ public class FollowController {
         model.addAttribute("followers", follower.size());
 
         if (!linkedUsername.equals(username)) {
-            model.addAttribute("crossCheckedFollowList", crossCheckFollowing(user, follower));
+            model.addAttribute("crossCheckedFollowList", crossCheckFollower(user, follower));
             model.addAttribute("isSubscribing", isSubscribing(user, linkedUser));
         }
 
@@ -179,20 +179,16 @@ public class FollowController {
 
     private List<Boolean> crossCheckFollowing(User me, List<Follow> othersFollowing) {
         List<Boolean> result = new ArrayList<>();
-        List<Follow> myFollowing = followRepository.findByFollowIndentityUserone(me);
-        boolean found;
         for (Follow f : othersFollowing) {
-            found = false;
-            for (Follow myF : myFollowing) {
-                if (myF.getFollowIndentity().getUser2().getUsername().equals(f.getFollowIndentity().getUser2().getUsername())) {
-                    result.add(true);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                result.add(false);
-            }
+            result.add(followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(me, f.getFollowIndentity().getUser2()));
+        }
+        return result;
+    }
+
+    private List<Boolean> crossCheckFollower(User me, List<Follow> othersFollowing) {
+        List<Boolean> result = new ArrayList<>();
+        for (Follow f : othersFollowing) {
+            result.add(followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(me, f.getFollowIndentity().getUser1()));
         }
         return result;
     }
