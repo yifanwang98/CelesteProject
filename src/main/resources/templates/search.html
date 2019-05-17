@@ -642,7 +642,8 @@
                                                 <span th:text="${result.postData.post.getSecondaryGenre()} + ' '"></span>
                                             </a>
                                         </span>
-                                        <span th:each="tag: ${result.postData.postTags}">
+                                        <span th:each="tag: ${result.postData.postTags}"
+                                              th:if="${!result.postData.post.isRepost()}">
                                             <a th:href="'/hashtag?tag=' + ${tag}"
                                                th:text="'#' + ${tag}" class="post-genre-text"></a>
                                         </span>

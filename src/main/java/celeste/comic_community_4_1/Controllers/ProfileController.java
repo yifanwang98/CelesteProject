@@ -106,7 +106,7 @@ public class ProfileController {
         for (int i = 0; i < postList.size(); i++) {
             // Post Content
             Post post = postList.get(i);
-            Post originalPost = null;
+            Post originalPost = post;
             if (post.isRepost()) {
                 originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
             }
@@ -127,7 +127,7 @@ public class ProfileController {
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, profileOwner);
 
             List<String> postTags = new ArrayList<>();
-            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(originalPost);
             for (PostTag tag : postTagList) {
                 postTags.add(tag.getTag());
             }

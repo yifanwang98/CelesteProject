@@ -36,9 +36,6 @@ public class AnalysisController {
     PostAnalysisRepository postAnalysisRepository;
 
     @Autowired
-    LikeRepository likeRepository;
-
-    @Autowired
     StarRepository starRepository;
 
     @Autowired
