@@ -24,9 +24,6 @@ public class SinglePostController {
     UserRepository userRepository;
 
     @Autowired
-    FollowRepository followRepository;
-
-    @Autowired
     WorkRepository workRepository;
 
     @Autowired
@@ -98,7 +95,7 @@ public class SinglePostController {
 
         Post originalPost = postToDisplay;
         if (postToDisplay.isRepost()) {
-            originalPost = postRepository.findByPostID(postToDisplay.getOriginalPostID()).get(0);
+            originalPost = postRepository.findPostByPostID(postToDisplay.getOriginalPostID());
             model.addAttribute("originalPost", originalPost);
         }
 

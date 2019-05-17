@@ -245,6 +245,11 @@
                             <i class='far fa-bookmark'></i>
                             <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
                         </a>
+                        <span th:each="tag: ${postData.postTags}" th:if="${!postData.post.isRepost()}">
+                            <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                            </a>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -296,6 +301,11 @@
                                             <i class='far fa-bookmark'></i>
                                             <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
                                         </a>
+                                        <span th:each="tag: ${postData.postTags}">
+                                            <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                                <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                            </a>
+                                        </span>
                                     </div>
                                 </td>
                             </tr>

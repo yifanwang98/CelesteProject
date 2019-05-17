@@ -18,7 +18,6 @@ import java.util.*;
 @Controller
 public class DiscoverController {
 
-
     @Autowired
     UserRepository userRepository;
 
@@ -209,8 +208,9 @@ public class DiscoverController {
     @ResponseBody
     @GetMapping("/checkusername")
     public String checkUsername(@RequestParam(value = "username", required = false) String username) {
+        username = username.trim();
         if (username != null) {
-            if (username.length() < 2) {
+            if (username.isEmpty()) {
                 return "Username too short";
             }
             for (int i = 0; i < ILLEGAL_CHAR.length(); i++) {

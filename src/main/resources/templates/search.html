@@ -533,7 +533,8 @@
                                                     </span>
                                                     <span th:each="tag, iter: ${result.seriesData.tags}">
                                                         <span th:if="${tag != null}">
-                                                            <a href="#">#<span th:text="${tag}"></span></a>
+                                                            <a th:href="'/hashtag?tag=' + ${tag}">#<span
+                                                                    th:text="${tag}"></span></a>
                                                         </span>
                                                     </span>
                                                 </div>
@@ -641,8 +642,10 @@
                                                 <span th:text="${result.postData.post.getSecondaryGenre()} + ' '"></span>
                                             </a>
                                         </span>
-                                        <span th:each="tag: ${result.postData.postTags}">
-                                            <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                        <span th:each="tag: ${result.postData.postTags}"
+                                              th:if="${!result.postData.post.isRepost()}">
+                                            <a th:href="'/hashtag?tag=' + ${tag}"
+                                               th:text="'#' + ${tag}" class="post-genre-text"></a>
                                         </span>
                                     </div>
                                 </td>
