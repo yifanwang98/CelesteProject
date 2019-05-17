@@ -281,7 +281,7 @@
                 <!-- Text -->
                 <tr>
                     <td></td>
-                    <td>
+                    <td style="word-break: break-word;">
                         <div th:text="${postToDisplay.getPostComment()}" class="post-text"></div>
                         <div class="post-genre" th:if="${!postToDisplay.isRepost()}">
                             <span th:if="${!postToDisplay.getPrimaryGenre().equals('None')}" class="post-genre-text">
@@ -303,7 +303,7 @@
                 <!-- From Series -->
                 <tr th:if="${!fromSeries.isEmpty() && !postToDisplay.isRepost()}">
                     <td></td>
-                    <td>
+                    <td style="word-break: break-word;">
                         <span class="post-genre semibold">From Series: </span>
                         <span th:each="series: ${fromSeries}">
                             <a class="post-genre-text" th:text="${series.getSeriesName()}"
@@ -348,7 +348,7 @@
                                 <!-- Text -->
                                 <tr>
                                     <td></td>
-                                    <td>
+                                    <td style="word-break: break-word;">
                                         <div th:text="${originalPost.getPostComment()}" class="post-text"></div>
                                         <div class="post-genre">
                                             <span th:if="${!originalPost.getPrimaryGenre().equals('None')}"
@@ -372,7 +372,7 @@
                                 <!-- From Series -->
                                 <tr th:if="${!fromSeries.isEmpty() && !originalPost.isRepost()}">
                                     <td></td>
-                                    <td>
+                                    <td style="word-break: break-word;">
                                         <span class="post-genre semibold">From Series: </span>
                                         <span th:each="series: ${fromSeries}">
                                             <a class="post-genre-text" th:text="${series.getSeriesName()}"
@@ -539,8 +539,8 @@
                     <!-- Text -->
                     <tr>
                         <td></td>
-                        <td>
-                            <div th:text="${comment.getContent()}" class="post-text"></div>
+                        <td style="word-break: break-word;">
+                            <div th:text="${comment.getContent()}" class="post-text">fajfkljakahdkghakgjhasigjwoighiowrhgfajfkljakahdkghakgjhasigjwoighiowrhgfajfkljakahdkghakgjhasigjwoighiowrhgfajfkljakahdkghakgjhasigjwoighio</div>
                         </td>
                     </tr>
                 </table>

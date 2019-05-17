@@ -621,7 +621,7 @@
                             <!-- Text -->
                             <tr>
                                 <td></td>
-                                <td>
+                                <td style="word-break: break-word;">
                                     <div th:text="${result.postData.post.getPostComment()}" class="post-text"
                                          th:if="${!result.postData.post.getPostComment().isEmpty()}"></div>
                                     <div class="post-genre">
@@ -646,7 +646,7 @@
                             <!-- From Series -->
                             <tr th:if="${!result.postData.fromSeries.isEmpty() && !result.postData.post.isRepost()}">
                                 <td></td>
-                                <td>
+                                <td style="word-break: break-word;">
                                     <span class="post-genre semibold">From Series: </span>
                                     <span th:each="fromSeries: ${result.postData.fromSeries}">
                                         <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
@@ -687,7 +687,7 @@
                                             <!-- Text -->
                                             <tr>
                                                 <td></td>
-                                                <td>
+                                                <td style="word-break: break-word;">
                                                     <div th:text="${result.postData.originalPost.getPostComment()}"
                                                          th:if="${!result.postData.originalPost.getPostComment().isEmpty()}"
                                                          class="post-text"></div>
@@ -709,7 +709,7 @@
                                             <!-- From Series -->
                                             <tr th:if="${!result.postData.fromSeries.isEmpty()}">
                                                 <td></td>
-                                                <td>
+                                                <td style="word-break: break-word;">
                                                     <span class="post-genre semibold">From Series: </span>
                                                     <span th:each="fromSeries: ${result.postData.fromSeries}">
                                                         <a class="post-genre-text"

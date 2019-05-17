@@ -1,10 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.Notification;
-import celeste.comic_community_4_1.miscellaneous.PostData;
-import celeste.comic_community_4_1.miscellaneous.TagProcessor;
-import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
+import celeste.comic_community_4_1.miscellaneous.*;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,11 +202,36 @@ public class DiscoverController {
                                @RequestParam(value = "email") String email,
                                @RequestParam(value = "gender") String gender,
                                ModelMap model, HttpServletRequest request) throws Exception {
+
+        email = email.toLowerCase();
+
+        if (!PasswordChecker.validPassword(username)) {
+            model.addAttribute("username", "");
+            model.addAttribute("email", email);
+            model.addAttribute("gender", gender);
+            model.addAttribute("errors", "Invalid character in username");
+            return "signUp";
+        }
+        if (!PasswordChecker.validPassword(password)) {
+            model.addAttribute("username", username);
+            model.addAttribute("email", email);
+            model.addAttribute("gender", gender);
+            model.addAttribute("errors", "Invalid character in password");
+            return "signUp";
+        }
+        if (!PasswordChecker.validPassword(email)) {
+            model.addAttribute("username", username);
+            model.addAttribute("gender", gender);
+            model.addAttribute("email", "");
+            model.addAttribute("errors", "Invalid character in email");
+            return "signUp";
+        }
+
         User newUser = new User();
         newUser.setUsername(username.trim());
         newUser.setCreatedAt(new Date());
         newUser.setPassword(password);
-        newUser.setEmail(email);
+        newUser.setEmail(email.toLowerCase());
         newUser.setGender(gender);
 
         String base64 = ThumbnailConverter.DEFAULT_AVATAR;
