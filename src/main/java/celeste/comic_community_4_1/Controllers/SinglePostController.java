@@ -58,8 +58,8 @@ public class SinglePostController {
 
 
     @GetMapping("/singlePost")
-    public String userprofile(@RequestParam(value = "id") long postId,
-                              ModelMap model, HttpServletRequest request) throws Exception {
+    public String singlePost(@RequestParam(value = "id") long postId,
+                             ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -342,8 +342,7 @@ public class SinglePostController {
                                       @RequestParam(value = "index") int index,
                                       ModelMap model, HttpServletRequest request) throws Exception {
         List<PostContent> temp = postContentRepository.findByPostIndentityPostPostID(postID);
-        String src = temp.get(index).getPostIndentity().getWork().getContent();
-        return src;
+        return temp.get(index).getPostIndentity().getWork().getContent();
 
     }
 
@@ -361,11 +360,13 @@ public class SinglePostController {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
+        Post currentPost = postRepository.findPostByPostID(postID);
+
         Post newRepost = new Post();
-        newRepost.setOriginalPostID(postID);
+        newRepost.setOriginalPostID(currentPost.getOriginalPostID());
         newRepost.setRepost(true);
         newRepost.setUser(user);
-        newRepost.setPostComment(comment);
+        newRepost.setPostComment(comment.trim());
         postRepository.save(newRepost);
         return "Repost Success!";
     }
@@ -375,14 +376,14 @@ public class SinglePostController {
     public String deleteComment(@RequestParam(value = "postID") long postID,
                                 @RequestParam(value = "commentID") long commentID,
                                 ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
-            return "index";
-        }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+//        if (request.getSession().getAttribute("username") == null) {
+//            return "index";
+//        }
+//
+//        // Session User
+//        String username = (String) request.getSession().getAttribute("username");
+//        User user = userRepository.findById(username)
+//                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
         Post post = postRepository.findPostByPostID(postID);
         if (post == null)
