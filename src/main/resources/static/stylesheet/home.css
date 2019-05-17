@@ -100,12 +100,14 @@
 
 .post-image-single:hover, .post-image-multiple:hover {
     cursor: pointer;
-    cursor: pointer;
 }
 
 .post-text {
     padding: 0.25em 0;
     text-align: justify-all;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: inline-block;
 }
 
 .post-genre {

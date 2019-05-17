@@ -201,9 +201,6 @@
                                         <span th:if="${postData.liked}" class="post-action-liked-top">
                                             <i class='fas fa-thumbs-up'></i>
                                         </span>
-                                        <!--<a href=""-->
-                                        <!--th:if="${User.getUsername() == postData.post.getUser().getUsername()}"-->
-                                        <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
                                         <div class="dropdown" hidden
                                              th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
@@ -220,7 +217,7 @@
                     <!-- Text -->
                     <tr>
                         <td></td>
-                        <td>
+                        <td style="word-break: break-word;">
                             <div th:text="${postData.post.getPostComment()}" class="post-text"
                                  th:if="${!postData.post.getPostComment().isEmpty()}"></div>
                             <div class="post-genre" th:if="${!postData.post.isRepost()}">
@@ -247,7 +244,7 @@
                     <!-- From Series -->
                     <tr th:if="${!postData.fromSeries.isEmpty() && !postData.post.isRepost()}">
                         <td></td>
-                        <td>
+                        <td style="word-break: break-word;">
                             <span class="post-genre semibold">From Series: </span>
                             <span th:each="fromSeries: ${postData.fromSeries}">
                                 <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
@@ -288,7 +285,7 @@
                                     <!-- Text -->
                                     <tr>
                                         <td></td>
-                                        <td>
+                                        <td style="word-break: break-word;">
                                             <div th:text="${postData.originalPost.getPostComment()}"
                                                  th:if="${!postData.originalPost.getPostComment().isEmpty()}"
                                                  class="post-text"></div>
@@ -315,7 +312,7 @@
                                     <!-- From Series -->
                                     <tr th:if="${!postData.fromSeries.isEmpty()}">
                                         <td></td>
-                                        <td>
+                                        <td style="word-break: break-word;">
                                             <span class="post-genre semibold">From Series: </span>
                                             <span th:each="fromSeries: ${postData.fromSeries}">
                                                 <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"

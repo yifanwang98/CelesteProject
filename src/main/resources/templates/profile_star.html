@@ -185,7 +185,7 @@
             <!-- Text -->
             <tr>
                 <td></td>
-                <td>
+                <td style="word-break: break-word;">
                     <div th:text="${postData.post.getPostComment()}" class="post-text"></div>
                     <div class="post-genre" th:if="${!postData.post.isRepost()}">
                         <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
@@ -240,7 +240,7 @@
                             <!-- Text -->
                             <tr>
                                 <td></td>
-                                <td>
+                                <td style="word-break: break-word;">
                                     <div th:text="${postData.originalPost.getPostComment()}"
                                          class="post-text"></div>
                                     <div class="post-genre"
