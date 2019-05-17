@@ -45,21 +45,18 @@
         <div class="loginInfo webfont">
             Password: <br>
         </div>
-        <input type="password" name="password" value="" maxlength="24" class="loginTextfield webfont" required><br><br>
+        <input type="password" name="password" value="" maxlength="24" class="loginTextfield webfont" required><br>
         <!-- Display error message if necessary -->
-        <div class="error webfont" th:text="${errors}">
-
-        </div>
-        <input type="submit" value="Login" class="button webfont" style="cursor: pointer;">
+        <div class="error webfont" th:text="${errors}"></div>
+        <input type="submit" value="Login" class="login-button webfont" style="cursor: pointer;">
     </form>
     <div style="width: 100%" class="linkText">
-
         <a href="signup">
             New to Celeste? Join now!
         </a>
-        <br><br>
+        <br>
         <a href="forgetPassword">
-            Forget Password
+            Forget Password?
         </a>
     </div>
 

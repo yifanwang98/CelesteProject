@@ -202,7 +202,7 @@ public class MainPageController {
                                          @RequestParam(value = "email") String email) {
         Optional<User> temp = userRepository.findById(username);
         if(temp.isPresent()){
-            if(temp.get().getEmail().equals(email)){
+            if (temp.get().getEmail().equalsIgnoreCase(email)) {
                 return "Match!";
             }
         }
