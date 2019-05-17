@@ -394,12 +394,6 @@ public class ProfileController {
                 images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
             }
 
-            // Count
-            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-            long commentCount = commentRepository.countCommentByPost(post);
-            long starCount = starRepository.countStarByPostIndentityPost(post);
-            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
-
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
             List<String> postTags = new ArrayList<>();
@@ -408,19 +402,29 @@ public class ProfileController {
                 postTags.add(tag.getTag());
             }
 
-            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount,
+            postDataList.add(new PostData(post, originalPost, images, 0, 0, 0, 0,
                     true, myLike, fromSeries, postTags));
 
-            if (profileOwner.getUsername().equals(post.getUser().getUsername())) {
+//            if (profileOwner.getUsername().equals(post.getUser().getUsername())) {
+//                followingStatus.add(FollowStatus.SELF);
+//            } else if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(profileOwner, post.getUser())) {
+//                followingStatus.add(FollowStatus.FOLLOWING);
+//            } else {
+//                followingStatus.add(FollowStatus.NOT_FOLLOWED);
+//            }
+        }
+
+        Collections.sort(postDataList);
+
+        for (int i = 0; i < postDataList.size(); i++) {
+            if (profileOwner.getUsername().equals(postDataList.get(i).post.getUser().getUsername())) {
                 followingStatus.add(FollowStatus.SELF);
-            } else if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(profileOwner, post.getUser())) {
+            } else if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(profileOwner, postDataList.get(i).post.getUser())) {
                 followingStatus.add(FollowStatus.FOLLOWING);
             } else {
                 followingStatus.add(FollowStatus.NOT_FOLLOWED);
             }
         }
-
-        Collections.sort(postDataList);
 
         model.addAttribute("followingStatus", followingStatus);
         model.addAttribute("postDataList", postDataList);
