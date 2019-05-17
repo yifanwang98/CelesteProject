@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Controller
 public class DrawingController {
@@ -96,21 +95,20 @@ public class DrawingController {
     @ResponseBody
     @PostMapping("/save_drawing")
     public String save_drawing(ModelMap model, HttpServletRequest request,
-                                @RequestBody String data) throws Exception {
+                               @RequestBody String data) throws Exception {
 
         String username = (String) request.getSession().getAttribute("username");
 
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        List<DrawingSaving> x = drawingSavingRepository.findByUserone(user);
-        if(!x.isEmpty()){
-            DrawingSaving exist = x.get(0);
-            exist.setDrawing(data);
-            drawingSavingRepository.save(exist);
+        DrawingSaving x = drawingSavingRepository.findDrawingSavingByUserone(user);
+        System.out.println(x);
+        if (x != null) {
+            x.setDrawing(data);
+            drawingSavingRepository.save(x);
             return "Your work is saved!(exist)";
-        }
-        else {
+        } else {
             DrawingSaving newdrawsave = new DrawingSaving();
             newdrawsave.setUserone(user);
             newdrawsave.setDrawing(data);
@@ -128,17 +126,17 @@ public class DrawingController {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        List<DrawingSaving> x = drawingSavingRepository.findByUserone(user);
-
-        if(!x.isEmpty()){
-            DrawingSaving exist = x.get(0);
-            String drawing = exist.getDrawing();
-            drawing=drawing.replaceAll("\\\\","");
-            drawing=drawing.substring(10);
-            drawing=drawing.substring(0,drawing.length()-2);
+//        List<DrawingSaving> x = drawingSavingRepository.findByUserone(user);
+        DrawingSaving x = drawingSavingRepository.findDrawingSavingByUserone(user);
+        System.out.println("\t" + x);
+        if (x != null) {
+            String drawing = x.getDrawing();
+            drawing = drawing.replaceAll("\\\\", "");
+            drawing = drawing.substring(drawing.indexOf("zwibbler3"));
+            drawing = drawing.substring(0, drawing.length() - 2);
+            System.out.println("\t" + drawing);
             return drawing;
-        }
-        else {
+        } else {
             return "You do not have any saved work!";
         }
     }
