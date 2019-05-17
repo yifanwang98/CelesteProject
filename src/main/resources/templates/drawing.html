@@ -79,8 +79,14 @@
     <tr>
         <td></td>
         <td style="width: 25em;">
-            <button id="load-button" class="drawing-button">Load</button>
-            <button id="save-button" class="drawing-button">Save</button>
+            <button id="load-button"
+                    class="drawing-button">Load
+            </button>
+
+            <button id="save-button"
+                    class="drawing-button">Save
+            </button>
+
             <button id="download-button" class="drawing-button">Download</button>
         </td>
     </tr>
@@ -96,7 +102,6 @@
     });
 
     loadDrawing();
-    // set autosve.   60sec
     setTimeout(autoSave, 1000 * 60);
 
     $('#post-button').click(function () {
@@ -122,40 +127,20 @@
             }
         })
 
-    })
+    });
 
 
     $("#save-button").click(function () {
-        console.log('save-button called')
+        console.log('save-button called');
         saveDrawing();
-        console.log('saveDrawing Done')
+        console.log('saveDrawing Done');
+        alert("Saved");
     });
-
-
-    /*
-    $("#png-button").click(function (){
-        var saved  = ctx.save('png')
-        $.ajax({
-            type: 'POST',
-            url: '/save_png',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                data: saved
-            }),
-            success: function(res){
-                console.log(res.status)
-            },
-            error:function(err){
-                console.log(err);
-            }
-        })
-    });
-    */
 
     // post the data to the back end.
     function saveDrawing() {
         var saved = ctx.save();
-        console.log(typeof(saved))
+        console.log(typeof(saved));
         // send saved document to database.
         // console.log(saved)
         $.ajax({
@@ -175,9 +160,9 @@
     }
 
     function autoSave() {
-        console.log('autoSave has been called.')
+        console.log('autoSave has been called.');
         setTimeout(autoSave, 1000 * 60);
-        console.log('timeout called')
+        console.log('timeout called');
         saveDrawing();
         console.log('save drawing called.')
     }
@@ -187,16 +172,15 @@
     });
 
     function loadDrawing() {
-        console.log('load-button')
+        console.log('load-button');
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: '/load_drawing',
             success: function (res) {
                 console.log('get success!');
-                // console.log(typeof(res))
-                var data = res.result;
-                // console.log(data)
+                var data = res;
                 ctx.load(data);
+                alert("Loaded");
             }
         });
     }
