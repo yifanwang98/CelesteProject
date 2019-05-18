@@ -2,7 +2,7 @@
 <html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create Post - Celeste</title>
+    <title>Instruction - Celeste</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,13 +10,15 @@
     <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
-    <link href="../static/stylesheet/createPost.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/single.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/drawing.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
 <body>
 <!-- Header Banner -->
 <table class="header webfont semibold">
+    </tbody>
     <tbody style="padding: 0; margin: 0;">
     <tr>
         <!-- Left Part -->
@@ -64,18 +66,26 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<div style="padding: 3em 30%;" class="webfont semibold">
-    <div class="option-title">
-        Create Post
-    </div>
-    <div style="text-align: center; vertical-align: middle;">
-        <a href="/drawingInstruction" class="option-button"> Draw From Scratch </a>
-    </div>
-    <div style="text-align: center; vertical-align: middle;">
-        <a href="/uploadPost2" class="option-button"> Upload Existing </a>
+<div class="single-container webfont">
+    <div class="single-inner-container">
+        <div style="padding: 2em 3em;">
+            <div class="instruction-title">
+                Drawing Instructions
+            </div>
+            <div style="text-align: justify;">
+                1. Celeste auto-saves your draft every 60 seconds onto the server for later retrieval, but you can
+                always manually save it.<br/><br>
+                2. You can save your art on your computer for uploading. You can upload your artwork through
+                <a href="/uploadPost2">this link</a>.<br/><br/>
+                3. Please make sure you enabled JavaScript.<br/><br/>
+                4. Supported Browsers: Chrome, Edge
+            </div>
+            <div style="text-align: center; padding-top: 1em">
+                <a href="/drawing" class="instruction-continue">Continue</a>
+            </div>
+        </div>
     </div>
 </div>
-<!---------------------------------------->
-<!---------------------------------------->
+<div style="padding: 2.75em;"></div>
 </body>
 </html>

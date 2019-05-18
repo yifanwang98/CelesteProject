@@ -38,9 +38,6 @@ public class CreationController {
     PostContentRepository postContentRepository;
 
     @Autowired
-    LikeRepository likeRepository;
-
-    @Autowired
     StarRepository starRepository;
 
     @Autowired

@@ -230,18 +230,25 @@
             <!-- Text -->
             <tr>
                 <td></td>
-                <td>
+                <td style="word-break: break-word;">
                     <div th:text="${postData.post.getPostComment()}" class="post-text"></div>
                     <div class="post-genre">
-                        <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
-                              class="post-genre-text">
+                        <a th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                           th:href="'/genre?genre=' + ${postData.post.getPrimaryGenre()}"
+                           class="post-genre-text">
                                 <i class='far fa-bookmark'></i>
                                 <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
-                        </span>
-                        <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                        </a>
+                        <a th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                           th:href="'/genre?genre=' + ${postData.post.getSecondaryGenre()}"
                               class="post-genre-text">
                             <i class='far fa-bookmark'></i>
                             <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
+                        </a>
+                        <span th:each="tag: ${postData.postTags}" th:if="${!postData.post.isRepost()}">
+                            <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                            </a>
                         </span>
                     </div>
                 </td>
@@ -278,19 +285,26 @@
                             <!-- Text -->
                             <tr>
                                 <td></td>
-                                <td>
+                                <td style="word-break: break-word;">
                                     <div th:text="${postData.originalPost.getPostComment()}"
                                          class="post-text"></div>
                                     <div class="post-genre">
-                                        <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                              class="post-genre-text">
+                                        <a th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
+                                           th:href="'/genre?genre=' + ${postData.originalPost.getPrimaryGenre()}"
+                                           class="post-genre-text">
                                             <i class='far fa-bookmark'></i>
                                             <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
-                                        </span>
-                                        <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                        </a>
+                                        <a th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                           th:href="'/genre?genre=' + ${postData.originalPost.getPrimaryGenre()}"
                                               class="post-genre-text">
                                             <i class='far fa-bookmark'></i>
                                             <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
+                                        </a>
+                                        <span th:each="tag: ${postData.postTags}">
+                                            <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                                <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                            </a>
                                         </span>
                                     </div>
                                 </td>

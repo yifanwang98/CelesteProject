@@ -375,7 +375,7 @@ public class SearchController {
 
             // Tag
             List<String> tags = new ArrayList<>();
-            List<PostTag> postTagList = postTagRepository.findPostTagByPost(p);
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(postRepository.findPostByPostID(p.getOriginalPostID()));
             for (PostTag tag : postTagList) {
                 tags.add(tag.getTag());
             }

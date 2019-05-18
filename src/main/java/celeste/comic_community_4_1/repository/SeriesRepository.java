@@ -18,4 +18,10 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     long countSeriesByUser(User user);
 
     List<Series> findSeriesBySeriesNameContains(String key);
+
+    Series findFirstBySecondaryGenreOrPrimaryGenre(String genre, String genre2);
+
+    long countSeriesByPrimaryGenreOrSecondaryGenre(String genre, String genre2);
+
+    List<Series> findDistinctByPrimaryGenreOrSecondaryGenre(String genre, String genre2);
 }

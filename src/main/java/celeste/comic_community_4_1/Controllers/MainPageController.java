@@ -2,6 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.Notification;
+import celeste.comic_community_4_1.miscellaneous.PasswordChecker;
 import celeste.comic_community_4_1.miscellaneous.PostComparator;
 import celeste.comic_community_4_1.miscellaneous.PostData;
 import celeste.comic_community_4_1.model.*;
@@ -187,7 +188,11 @@ public class MainPageController {
     }
 
     @GetMapping("/signup")
-    public String signUp() {
+    public String signUp(ModelMap model) {
+        model.addAttribute("username", "");
+        model.addAttribute("email", "");
+        model.addAttribute("gender", "male");
+        model.addAttribute("errors", "");
         return "signUp";
     }
 
@@ -201,8 +206,8 @@ public class MainPageController {
     public String forgetPasswordUserInfo(@RequestParam(value = "username") String username,
                                          @RequestParam(value = "email") String email) {
         Optional<User> temp = userRepository.findById(username);
-        if(temp.isPresent()){
-            if(temp.get().getEmail().equals(email)){
+        if (temp.isPresent()) {
+            if (temp.get().getEmail().equalsIgnoreCase(email)) {
                 return "Match!";
             }
         }
@@ -213,18 +218,28 @@ public class MainPageController {
     public String ResetPassword(@RequestParam(value = "username") String username,
                                 @RequestParam(value = "email") String email,
                                 ModelMap model, HttpServletRequest request) {
-        model.addAttribute("username",username);
-        model.addAttribute("email",email);
+        model.addAttribute("username", username);
+        model.addAttribute("email", email);
+        model.addAttribute("errors", "");
         return "resetPassword";
     }
 
     @PostMapping("/SaveNewPassword")
     public String SaveNewPassword(@RequestParam(value = "username") String username,
+                                  @RequestParam(value = "email") String email,
                                   @RequestParam(value = "password") String password,
-                                ModelMap model, HttpServletRequest request) {
+                                  ModelMap model, HttpServletRequest request) {
 
-        userRepository.findById(username).get().setPassword(password);
-        userRepository.save(userRepository.findById(username).get());
+        if (!PasswordChecker.validPassword(password)) {
+            model.addAttribute("username", username);
+            model.addAttribute("email", email);
+            model.addAttribute("errors", "Invalid character found");
+            return "resetPassword";
+        }
+
+        User user = userRepository.findUserByUsername(username);
+        user.setPassword(password);
+        userRepository.save(user);
         return "index";
 
     }

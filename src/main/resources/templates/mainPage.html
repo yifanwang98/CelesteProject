@@ -201,9 +201,6 @@
                                         <span th:if="${postData.liked}" class="post-action-liked-top">
                                             <i class='fas fa-thumbs-up'></i>
                                         </span>
-                                        <!--<a href=""-->
-                                        <!--th:if="${User.getUsername() == postData.post.getUser().getUsername()}"-->
-                                        <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
                                         <div class="dropdown" hidden
                                              th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
@@ -220,23 +217,25 @@
                     <!-- Text -->
                     <tr>
                         <td></td>
-                        <td>
+                        <td style="word-break: break-word;">
                             <div th:text="${postData.post.getPostComment()}" class="post-text"
                                  th:if="${!postData.post.getPostComment().isEmpty()}"></div>
                             <div class="post-genre" th:if="${!postData.post.isRepost()}">
                                 <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
-                                    <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
-                                          class="post-genre-text">
+                                    <a th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                                       th:href="'/genre?genre=' + ${postData.post.getPrimaryGenre()}"
+                                       class="post-genre-text">
                                         <i class='far fa-bookmark'></i>
                                         <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
-                                    </span>
-                                    <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                                    </a>
+                                    <a th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                                       th:href="'/genre?genre=' + ${postData.post.getSecondaryGenre()}"
                                           class="post-genre-text">
                                         <i class='far fa-bookmark'></i>
                                         <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
-                                    </span>
+                                    </a>
                                 </span>
-                                <span th:each="tag: ${postData.postTags}">
+                                <span th:each="tag: ${postData.postTags}" th:if="${!postData.post.isRepost()}">
                                     <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
                                         <span th:text="'#' + ${tag}" class="post-genre-text"></span>
                                     </a>
@@ -247,7 +246,7 @@
                     <!-- From Series -->
                     <tr th:if="${!postData.fromSeries.isEmpty() && !postData.post.isRepost()}">
                         <td></td>
-                        <td>
+                        <td style="word-break: break-word;">
                             <span class="post-genre semibold">From Series: </span>
                             <span th:each="fromSeries: ${postData.fromSeries}">
                                 <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
@@ -288,22 +287,24 @@
                                     <!-- Text -->
                                     <tr>
                                         <td></td>
-                                        <td>
+                                        <td style="word-break: break-word;">
                                             <div th:text="${postData.originalPost.getPostComment()}"
                                                  th:if="${!postData.originalPost.getPostComment().isEmpty()}"
                                                  class="post-text"></div>
                                             <div class="post-genre"
                                                  th:if="${!postData.originalPost.getPrimaryGenre().equals('None') || !postData.originalPost.getSecondaryGenre().equals('None')}">
-                                                <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                      class="post-genre-text">
+                                                <a th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
+                                                   th:href="'/genre?genre=' + ${postData.originalPost.getPrimaryGenre()}"
+                                                   class="post-genre-text">
                                                     <i class='far fa-bookmark'></i>
                                                     <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
-                                                </span>
-                                                <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                                </a>
+                                                <a th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                                   th:href="'/genre?genre=' + ${postData.originalPost.getSecondaryGenre()}"
                                                       class="post-genre-text">
                                                     <i class='far fa-bookmark'></i>
                                                     <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
-                                                </span>
+                                                </a>
                                                 <span th:each="tag: ${postData.postTags}">
                                                     <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
                                                         <span th:text="'#' + ${tag}" class="post-genre-text"></span>
@@ -315,7 +316,7 @@
                                     <!-- From Series -->
                                     <tr th:if="${!postData.fromSeries.isEmpty()}">
                                         <td></td>
-                                        <td>
+                                        <td style="word-break: break-word;">
                                             <span class="post-genre semibold">From Series: </span>
                                             <span th:each="fromSeries: ${postData.fromSeries}">
                                                 <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"

@@ -19,6 +19,29 @@
         function deleteStarredPost(post) {
             document.getElementById('deletePost' + post.id.substring(2)).submit();
         }
+
+        function reportAPost(postID) {
+            var reason = prompt("Please describe the reason:", "");
+            if (reason == null) reason = "";
+            $.ajax({
+                type: "POST",
+                url: 'singlepostReport',
+                data: {postID: postID, reason: reason},
+                cache: false,
+                success: function (data) {
+                    if (data == "Report has been sent. Please wait for our reply.") {
+                        alert(data);
+                        //location.reload();
+                    }
+                    else {
+                        alert(data)
+                    }
+                },
+                error: function () {
+                    alert(arguments[1]);
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -161,22 +184,32 @@
                                 <span class="post-author" th:text="${postData.post.getUser().getUsername()}"></span><br>
                                 <span class="post-time" th:text="${postData.post.getCreatedAt()}"></span>
                             </td>
-                            <td width="5%" style="vertical-align: top; text-align: right; padding-right: 1em;">
-                                <form action="/deleteStarredPost" method="post"
-                                      th:id="'deletePost' + ${postData.post.getPostID()}">
-                                    <input hidden name="postID" th:value="${postData.post.getPostID()}">
-                                </form>
-                                <a href="#" onclick="deleteStarredPost(this)"
-                                   th:id="'P-' + ${postData.post.getPostID()}"
-                                   th:if="${followingStatus.get(iter.index) == T(celeste.comic_community_4_1.miscellaneous.FollowStatus).SELF}"
-                                   class="post-action-more"><i class='far fa-trash-alt'></i></a>
-                                <div class="dropdown"
-                                     th:unless="${followingStatus.get(iter.index) == T(celeste.comic_community_4_1.miscellaneous.FollowStatus).SELF}">
-                                    <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
-                                    <div class="dropdown-content">
-                                        <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
+                            <td width="30%"
+                                style="vertical-align: top; text-align: right; padding-right: 1em;">
+                                <span th:if="${postData.starred}" class="post-action-stared-top">
+                                    <i class='fas fa-star'></i>
+                                </span>
+                                <span th:if="${postData.liked}" class="post-action-liked-top">
+                                    <i class='fas fa-thumbs-up'></i>
+                                </span>
+                                <span style="display: inline-block;">
+                                    <form action="/deleteStarredPost" method="post"
+                                          th:id="'deletePost' + ${postData.post.getPostID()}">
+                                        <input hidden name="postID" th:value="${postData.post.getPostID()}">
+                                    </form>
+                                    <a href="#" onclick="deleteStarredPost(this)"
+                                       th:id="'P-' + ${postData.post.getPostID()}"
+                                       th:if="${followingStatus.get(iter.index) == T(celeste.comic_community_4_1.miscellaneous.FollowStatus).SELF}"
+                                       class="post-action-more"><i class='far fa-trash-alt'></i></a>
+                                    <div class="dropdown"
+                                         th:unless="${followingStatus.get(iter.index) == T(celeste.comic_community_4_1.miscellaneous.FollowStatus).SELF}">
+                                        <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
+                                        <div class="dropdown-content">
+                                            <a th:href="'javascript:reportAPost(' + ${postData.post.getPostID()} + ');'"><i
+                                                    class="fas fa-exclamation-triangle"></i> Report</a>
+                                        </div>
                                     </div>
-                                </div>
+                                </span>
                             </td>
                         </tr>
                     </table>
@@ -185,20 +218,22 @@
             <!-- Text -->
             <tr>
                 <td></td>
-                <td>
+                <td style="word-break: break-word;">
                     <div th:text="${postData.post.getPostComment()}" class="post-text"></div>
                     <div class="post-genre" th:if="${!postData.post.isRepost()}">
                         <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
-                            <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
-                                  class="post-genre-text">
+                            <a th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                               th:href="'/genre?genre=' + ${postData.post.getPrimaryGenre()}"
+                               class="post-genre-text">
                                 <i class='far fa-bookmark'></i>
                                 <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
-                            </span>
-                            <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                            </a>
+                            <a th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                               th:href="'/genre?genre=' + ${postData.post.getSecondaryGenre()}"
                                   class="post-genre-text">
                                 <i class='far fa-bookmark'></i>
                                 <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
-                            </span>
+                            </a>
                         </span>
                         <span th:each="tag: ${postData.postTags}">
                             <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
@@ -227,8 +262,8 @@
                                     <table width="100%">
                                         <tr>
                                             <td>
-                                                        <span class="post-author"
-                                                              th:text="${postData.originalPost.getUser().getUsername()}"></span><br>
+                                                <span class="post-author"
+                                                      th:text="${postData.originalPost.getUser().getUsername()}"></span><br>
                                                 <span class="post-time"
                                                       th:text="${postData.originalPost.getCreatedAt()}"></span>
                                             </td>
@@ -240,26 +275,28 @@
                             <!-- Text -->
                             <tr>
                                 <td></td>
-                                <td>
+                                <td style="word-break: break-word;">
                                     <div th:text="${postData.originalPost.getPostComment()}"
                                          class="post-text"></div>
                                     <div class="post-genre"
                                          th:if="${!postData.originalPost.getPrimaryGenre().equals('None') || !postData.originalPost.getSecondaryGenre().equals('None')}">
-                                                <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                      class="post-genre-text">
+                                        <a th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
+                                           th:href="'/genre?genre=' + ${postData.originalPost.getPrimaryGenre()}"
+                                           class="post-genre-text">
                                                     <i class='far fa-bookmark'></i>
                                                     <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
-                                                </span>
-                                        <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
-                                              class="post-genre-text">
-                                                    <i class='far fa-bookmark'></i>
-                                                    <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
-                                                </span>
+                                        </a>
+                                        <a th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                           th:href="'/genre?genre=' + ${postData.originalPost.getSecondaryGenre()}"
+                                           class="post-genre-text">
+                                            <i class='far fa-bookmark'></i>
+                                            <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
+                                        </a>
                                         <span th:each="tag: ${postData.postTags}">
-                                                    <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
-                                                        <span th:text="'#' + ${tag}" class="post-genre-text"></span>
-                                                    </a>
-                                                </span>
+                                            <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                                <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                            </a>
+                                        </span>
                                     </div>
                                 </td>
                             </tr>
@@ -292,51 +329,52 @@
                 </td>
             </tr>
         </table>
-        <!-- 转赞评 -->
-        <table width="100%" class="post-action">
-            <col width="25%"/>
-            <col width="25%"/>
-            <col width="25%"/>
-            <col width="25%"/>
-            <tr>
-                <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                    <a href="">
-                        <i class='fas fa-share-square'></i> Share (<span
-                            th:text="${postData.shareCount}"></span>)
-                    </a>
-                </td>
-                <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                    <a th:href="'singlePost?id=' + ${postData.post.getPostID()}">
-                        <i class='far fa-comment-dots'></i> Comment (<span
-                            th:text="${postData.commentCount}"></span>)
-                    </a>
-                </td>
-                <span th:if="${postData.starred}">
-                    <td class="post-action-stared" style="border-right: #ccc 1px solid">
-                        <a href=""><i class='fas fa-star'></i> Star (<span
-                                th:text="${postData.starCount}"></span>)</a>
-                    </td>
-                </span>
-                <span th:unless="${postData.starred}">
-                    <td class="post-action-cell" style="border-right: #ccc 1px solid">
-                        <a href=""><i class='fas fa-star'></i> Star (<span
-                                th:text="${postData.starCount}"></span>)</a>
-                    </td>
-                </span>
-                <span th:if="${postData.liked}">
-                    <td class="post-action-liked">
-                        <a href=""><i class='fas fa-thumbs-up'></i> Like (<span
-                                th:text="${postData.likeCount}"></span>)</a>
-                    </td>
-                </span>
-                <span th:unless="${postData.liked}">
-                    <td class="post-action-cell">
-                        <a href=""><i class='far fa-thumbs-up'></i> Like (<span
-                                th:text="${postData.likeCount}"></span>)</a>
-                    </td>
-                </span>
-            </tr>
-        </table>
+        <div style="padding: 0.1em;"></div>
+        <!--&lt;!&ndash; 转赞评 &ndash;&gt;-->
+        <!--<table width="100%" class="post-action">-->
+        <!--<col width="25%"/>-->
+        <!--<col width="25%"/>-->
+        <!--<col width="25%"/>-->
+        <!--<col width="25%"/>-->
+        <!--<tr>-->
+        <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
+        <!--<a href="">-->
+        <!--<i class='fas fa-share-square'></i> Share (<span-->
+        <!--th:text="${postData.shareCount}"></span>)-->
+        <!--</a>-->
+        <!--</td>-->
+        <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
+        <!--<a th:href="'singlePost?id=' + ${postData.post.getPostID()}">-->
+        <!--<i class='far fa-comment-dots'></i> Comment (<span-->
+        <!--th:text="${postData.commentCount}"></span>)-->
+        <!--</a>-->
+        <!--</td>-->
+        <!--<span th:if="${postData.starred}">-->
+        <!--<td class="post-action-stared" style="border-right: #ccc 1px solid">-->
+        <!--<a href=""><i class='fas fa-star'></i> Star (<span-->
+        <!--th:text="${postData.starCount}"></span>)</a>-->
+        <!--</td>-->
+        <!--</span>-->
+        <!--<span th:unless="${postData.starred}">-->
+        <!--<td class="post-action-cell" style="border-right: #ccc 1px solid">-->
+        <!--<a href=""><i class='fas fa-star'></i> Star (<span-->
+        <!--th:text="${postData.starCount}"></span>)</a>-->
+        <!--</td>-->
+        <!--</span>-->
+        <!--<span th:if="${postData.liked}">-->
+        <!--<td class="post-action-liked">-->
+        <!--<a href=""><i class='fas fa-thumbs-up'></i> Like (<span-->
+        <!--th:text="${postData.likeCount}"></span>)</a>-->
+        <!--</td>-->
+        <!--</span>-->
+        <!--<span th:unless="${postData.liked}">-->
+        <!--<td class="post-action-cell">-->
+        <!--<a href=""><i class='far fa-thumbs-up'></i> Like (<span-->
+        <!--th:text="${postData.likeCount}"></span>)</a>-->
+        <!--</td>-->
+        <!--</span>-->
+        <!--</tr>-->
+        <!--</table>-->
     </div>
 </div>
 <!---------------------------------------->

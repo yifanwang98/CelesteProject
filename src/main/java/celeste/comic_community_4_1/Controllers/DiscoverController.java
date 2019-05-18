@@ -1,10 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.Notification;
-import celeste.comic_community_4_1.miscellaneous.PostData;
-import celeste.comic_community_4_1.miscellaneous.TagProcessor;
-import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
+import celeste.comic_community_4_1.miscellaneous.*;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ import java.util.*;
 
 @Controller
 public class DiscoverController {
-
 
     @Autowired
     UserRepository userRepository;
@@ -83,8 +79,8 @@ public class DiscoverController {
         model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(user));
 
         //All the post by this user
-        List<Post> postList = postRepository.findByUser(user);
-        model.addAttribute("postsCount", postList.size());
+        List<Post> postList;// = postRepository.findByUser(user);
+//        model.addAttribute("postsCount", postList.size());
 
         List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
 
@@ -151,8 +147,8 @@ public class DiscoverController {
                 }
             }
 
-            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
-            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
+//            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
+//            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
             // Tag
             List<String> postTags = new ArrayList<>();
@@ -161,17 +157,48 @@ public class DiscoverController {
                 postTags.add(tag.getTag());
             }
 
-            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries, postTags));
+//            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries, postTags));
+            postDataList.add(new PostData(post, originalPost, images, false, false, fromSeries, postTags));
         }
 
         model.addAttribute("postDataList", postDataList);
 
-        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
-        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+//        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+//        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
 
         // Top Search
-        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
-        model.addAttribute("top10Searches", top10Searches);
+//        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+//        model.addAttribute("top10Searches", top10Searches);
+
+        // Genre List
+        List<GenreData> genreDataList = new ArrayList<>();
+        for (String genreName : ComicGenre.GENRE) {
+            if (genreName.equalsIgnoreCase("none"))
+                continue;
+
+            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+
+            String genreCover = null;
+            Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            if (tempPost != null) {
+                PostContent pc = postContentRepository.findByPostIndentityPostPostID(tempPost.getOriginalPostID()).get(0);
+                genreCover = pc.getPostIndentity().getWork().getThumbnail();
+            }
+            if (genreCover == null) {
+                Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+                if (tempSeries != null) {
+                    genreCover = tempSeries.getCover();
+                }
+            }
+            if (genreCover == null) {
+                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+            }
+
+            genreDataList.add(new GenreData(genreName, total, genreCover));
+        }
+        Collections.sort(genreDataList);
+        model.addAttribute("genreDataList", genreDataList);
 
         return "discover";
     }
@@ -181,8 +208,9 @@ public class DiscoverController {
     @ResponseBody
     @GetMapping("/checkusername")
     public String checkUsername(@RequestParam(value = "username", required = false) String username) {
+        username = username.trim();
         if (username != null) {
-            if (username.length() < 2) {
+            if (username.isEmpty()) {
                 return "Username too short";
             }
             for (int i = 0; i < ILLEGAL_CHAR.length(); i++) {
@@ -205,11 +233,36 @@ public class DiscoverController {
                                @RequestParam(value = "email") String email,
                                @RequestParam(value = "gender") String gender,
                                ModelMap model, HttpServletRequest request) throws Exception {
+
+        email = email.toLowerCase();
+
+        if (!PasswordChecker.validPassword(username)) {
+            model.addAttribute("username", "");
+            model.addAttribute("email", email);
+            model.addAttribute("gender", gender);
+            model.addAttribute("errors", "Invalid character in username");
+            return "signUp";
+        }
+        if (!PasswordChecker.validPassword(password)) {
+            model.addAttribute("username", username);
+            model.addAttribute("email", email);
+            model.addAttribute("gender", gender);
+            model.addAttribute("errors", "Invalid character in password");
+            return "signUp";
+        }
+        if (!PasswordChecker.validPassword(email)) {
+            model.addAttribute("username", username);
+            model.addAttribute("gender", gender);
+            model.addAttribute("email", "");
+            model.addAttribute("errors", "Invalid character in email");
+            return "signUp";
+        }
+
         User newUser = new User();
         newUser.setUsername(username.trim());
         newUser.setCreatedAt(new Date());
         newUser.setPassword(password);
-        newUser.setEmail(email);
+        newUser.setEmail(email.toLowerCase());
         newUser.setGender(gender);
 
         String base64 = ThumbnailConverter.DEFAULT_AVATAR;

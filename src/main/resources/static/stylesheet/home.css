@@ -82,6 +82,7 @@
     border-radius: 3px;
     margin-right: 1em;
     object-fit: cover;
+    background: white;
 }
 
 .post-image-multiple {
@@ -91,21 +92,25 @@
     border-radius: 3px;
     margin-right: 1em;
     object-fit: cover;
+    background: white;
 }
 
-.imageLink:link, .imageLink:visited, .imageLink:hover {
+.imageLink, .imageLink:link, .imageLink:visited, .imageLink:hover {
     text-decoration: none;
     cursor: pointer;
+    background: white;
 }
 
 .post-image-single:hover, .post-image-multiple:hover {
-    cursor: pointer;
     cursor: pointer;
 }
 
 .post-text {
     padding: 0.25em 0;
     text-align: justify-all;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: inline-block;
 }
 
 .post-genre {
@@ -242,4 +247,35 @@
     width: 1.75em;
     border-radius: 50%;
     border: #30c5c5 1px solid;
+    background: white;
+}
+
+.discover-genre-outer-container {
+    background: white;
+    border-radius: 5px;
+    margin-bottom: 1.25em;
+}
+
+.discover-genre-inner-container {
+    padding: 1em 2em;
+}
+
+.discover-genre-card, .discover-genre-card:link, .discover-genre-card:visited {
+    text-decoration: none;
+    padding: 0.5em 0;
+    margin: 0 0.5em;
+    color: black;
+}
+
+.discover-genre-card:hover {
+    background: #eeeeee;
+    cursor: pointer;
+}
+
+.discover-sub-title {
+    text-align: center;
+    color: #666666;
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    font-style: italic;
 }

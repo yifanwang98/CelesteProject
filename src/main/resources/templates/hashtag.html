@@ -2,7 +2,8 @@
 <html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Notification - Celeste</title>
+    <title th:if="${displayHashTag}">Hashtag - Celeste</title>
+    <title th:unless="${displayHashTag}">Genre - Celeste</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -81,8 +82,12 @@
         <!-- Left Part -->
         <td style="vertical-align: top;">
             <div style="width: 100%; background: white; border-radius: 8px;">
-                <div class="notification-title semibold">#<span th:text="${hashtagResultData.hashtag}"></span></div>
-
+                <div th:if="${displayHashTag}" class="notification-title semibold">
+                    #<span th:text="${hashtagResultData.hashtag}"></span>
+                </div>
+                <div th:unless="${displayHashTag}" class="notification-title semibold">
+                    <i class='far fa-bookmark'></i> <span th:text="${hashtagResultData.hashtag}"></span>
+                </div>
 
                 <div th:if="${hashtagResultData.seriesImageList.size() > 0}">
                     <div style="margin: 0.5em 3em;">
