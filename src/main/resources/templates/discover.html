@@ -30,6 +30,8 @@
         }
 
         function loadMore() {
+            document.getElementById("loadMore-btn").style.display = 'None';
+            document.getElementById("loadMore-spin").style.display = '';
             $.ajax({
                 type: "POST",
                 url: 'discoverLoadMore',
@@ -38,6 +40,9 @@
                 success: function (data) {
                     if (data.substring(0, 1) == '0') {
                         document.getElementById("loadMore").style.display = 'None';
+                    } else {
+                        document.getElementById("loadMore-btn").style.display = '';
+                        document.getElementById("loadMore-spin").style.display = 'None';
                     }
                     $('#moreContent').append(data.substring(1));
                 },
@@ -229,8 +234,13 @@
         </td>
     </tr>
 </table>
-<div id="loadMore">
-    <button onclick="loadMore()">Load More</button>
+<div id="loadMore" style="text-align: center; margin-bottom: 3em;" th:if="${!postDataList.isEmpty()}">
+    <div id="loadMore-btn">
+        <button onclick="loadMore()" class="discover-load-more">- Load More -</button>
+    </div>
+    <div id="loadMore-spin" style="display: none;">
+        <i class="fa fa-spinner fa-spin discover-load-more discover-load-more-spin"></i>
+    </div>
 </div>
 </body>
 </html>
