@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Post - Celeste</title>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Style Sheet -->
+    <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/home.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/single.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/notification.css" type="text/css" rel="stylesheet">
+    <link href="../static/stylesheet/dropdown_menu.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <!-- Script -->
+    <script src="http://code.jquery.com/jquery-1.5.js"></script>
+    <script>
+
+    </script>
+</head>
+<body>
+<!-- Header Banner -->
+<table class="header webfont semibold" th:if="${userNull}">
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/index" class="headerSelected">Celeste</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table class="header webfont semibold" th:unless="${userNull}">
+    </tbody>
+    <tbody style="padding: 0; margin: 0;">
+    <tr>
+        <!-- Left Part -->
+        <td>
+            <table style="padding: 0; margin: 0;">
+                <tr>
+                    <td class="headerCellPadding">
+                        <div class="logo"></div>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/mainPage" class="headerUnselected">Home</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="discover" class="headerUnselected">Discover</a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="search" class="headerUnselected">Search</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- Right Part -->
+        <td style="width: 5em;">
+            <table style="padding: 0; margin: 0; align: right;">
+                <tr style="align: right;">
+                    <td class="headerCellPadding">
+                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding">
+                        <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
+                    </td>
+                    <td class="headerCellPadding"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div style="padding: 2.5em;"></div>
+<!---------------------------------------->
+<!---------------------------------------->
+<table style="width: 100%; text-align: center">
+    <tr>
+        <td class="webfont semibold"
+            style="font-size: 2em; font-style: italic; color: #269b9b;">
+            Ooops...
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="../static/images/319djv.jpg">
+        </td>
+    </tr>
+</table>
+<!---------------------------------------->
+<!---------------------------------------->
+<div style="padding: 2.5em;"></div>
+</body>
+</html>
