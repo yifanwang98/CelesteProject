@@ -52,6 +52,9 @@ public class CreationController {
     @Autowired
     SeriesFollowRepository seriesFollowRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
     @GetMapping("/createPostOption")
     public String getAnalysis(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -326,10 +329,18 @@ public class CreationController {
             genre2 = "None"; // Prevent Duplicate Genre
         }
 
-        if (!genre1.equals("None")) {
+        if (!genre1.equalsIgnoreCase("None")) {
             set.remove(TagProcessor.process(genre1));
+            Genre genre = genreRepository.findGenreByGenre(genre1);
+            genre.setCount(genre.getCount() + 1);
+            genre.setImages(upd.getThumbnails().get(0));
+            genreRepository.save(genre);
         }
         if (!genre2.equals("None")) {
+            Genre genre = genreRepository.findGenreByGenre(genre2);
+            genre.setCount(genre.getCount() + 1);
+            genre.setImages(upd.getThumbnails().get(upd.getThumbnails().size() - 1));
+            genreRepository.save(genre);
             set.remove(TagProcessor.process(genre2));
         }
 
@@ -467,6 +478,19 @@ public class CreationController {
         newSeries.setCover(base64);
 
         seriesRepository.save(newSeries);
+
+        if (!genre1.equalsIgnoreCase("None")) {
+            Genre genre = genreRepository.findGenreByGenre(genre1);
+            genre.setCount(genre.getCount() + 1);
+            genre.setImages(base64);
+            genreRepository.save(genre);
+        }
+        if (!genre2.equalsIgnoreCase("None")) {
+            Genre genre = genreRepository.findGenreByGenre(genre2);
+            genre.setImages(base64);
+            genre.setCount(genre.getCount() + 1);
+            genreRepository.save(genre);
+        }
 
         // Profile Info
         model.addAttribute("profileOwner", user);

@@ -1,10 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
-import celeste.comic_community_4_1.miscellaneous.Notification;
-import celeste.comic_community_4_1.miscellaneous.PasswordChecker;
-import celeste.comic_community_4_1.miscellaneous.PostComparator;
-import celeste.comic_community_4_1.miscellaneous.PostData;
+import celeste.comic_community_4_1.miscellaneous.*;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +57,9 @@ public class MainPageController {
     @Autowired
     SearchWordsRepository searchWordsRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
     @GetMapping(value = {"/mainPage", "/", "home"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -104,8 +104,11 @@ public class MainPageController {
         Collections.sort(postList, new PostComparator());
 
         // Organize Info
+        int endIndex = 2;
+        if (endIndex > postList.size())
+            endIndex = postList.size();
         List<PostData> postDataList = new ArrayList<>();
-        for (int i = 0; i < postList.size(); i++) {
+        for (int i = 0; i < endIndex; i++) {
             // Post Content
             Post post = postList.get(i);
             Post originalPost = post;
@@ -140,6 +143,9 @@ public class MainPageController {
 
         model.addAttribute("postDataList", postDataList);
 
+        request.getSession().setAttribute("mainPageList", postList);
+        request.getSession().setAttribute("mainPageListIndex", endIndex);
+
         model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
         model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
 
@@ -148,6 +154,62 @@ public class MainPageController {
         model.addAttribute("top10Searches", top10Searches);
 
         return "mainPage";
+    }
+
+    @ResponseBody
+    @PostMapping("/mainPageLoadMore")
+    public String discoverLoadMore(ModelMap model, HttpServletRequest request) throws Exception {
+        String username = (String) request.getSession().getAttribute("username");
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        List<Post> postList = (List<Post>) request.getSession().getAttribute("mainPageList");
+        int startIndex = (Integer) request.getSession().getAttribute("mainPageListIndex");
+        int endIndex = startIndex + 4;
+        boolean hasMore = true;
+        if (endIndex >= postList.size()) {
+            endIndex = postList.size();
+            hasMore = false;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = startIndex; i < endIndex; i++) {
+            Post post = postList.get(i);
+            Post originalPost = post;
+            if (post.isRepost()) {
+                originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
+            }
+            List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(postList.get(i).getOriginalPostID());
+            List<String> images = new ArrayList<>();
+
+            Set<Series> fromSeries = new HashSet<>();
+            for (int j = 0; j < postContents.size(); j++) {
+                Work work = postContents.get(j).getPostIndentity().getWork();
+                images.add(work.getThumbnail());
+                List<SeriesContent> seriesContents = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+                for (SeriesContent content : seriesContents) {
+                    fromSeries.add(content.getSeriesContentIndentity().getSeries());
+                }
+            }
+
+            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
+            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
+
+            // Tag
+            List<String> postTags = new ArrayList<>();
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(originalPost);
+            for (PostTag tag : postTagList) {
+                postTags.add(tag.getTag());
+            }
+
+            sb.append(MainPageHTML.generateHTML(new PostData(post, post, images, myStar, myLike, fromSeries, postTags), user));
+        }
+
+        request.getSession().setAttribute("mainPageListIndex", endIndex);
+        if (hasMore)
+            return "1" + sb.toString();
+        return "0" + sb.toString();
     }
 
     @PostMapping("/home")
@@ -184,6 +246,42 @@ public class MainPageController {
 
     @GetMapping("index")
     public String signIn(ModelMap model, HttpServletRequest request) throws Exception {
+//        //List<GenreData> genreDataList = new ArrayList<>();
+//        for (String genreName : ComicGenre.GENRE) {
+//            if (genreName.equalsIgnoreCase("none"))
+//                continue;
+//
+//            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+//            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+//
+//            String genreCover = null;
+//            if (total != 0) {
+//                Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+//                if (tempPost != null) {
+//                    genreCover = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID()).getPostIndentity().getWork().getThumbnail();
+//                }
+//                if (genreCover == null) {
+//                    Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+//                    if (tempSeries != null) {
+//                        genreCover = tempSeries.getCover();
+//                    }
+//                }
+//            }
+//
+//            if (genreCover == null) {
+//                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+//            }
+//
+//            //genreDataList.add(new GenreData(genreName, total, genreCover));
+//            if(!genreRepository.existsGenreByGenre(genreName)) {
+//                Genre genre = new Genre();
+//                genre.setGenre(genreName);
+//                genre.setCount(total);
+//                genre.setImages(genreCover);
+//                genreRepository.save(genre);
+//            } else {
+//            }
+//        }
         return "index";
     }
 

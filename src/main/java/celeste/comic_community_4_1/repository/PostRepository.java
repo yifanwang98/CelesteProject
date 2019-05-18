@@ -13,6 +13,8 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUser(User user1);
 
+    List<Post> findPostByUserAndCreatedAtBetween(User user, Date after, Date before);
+
     long countByoriginalPostIDAndIsRepost(long postid, Boolean b);
 
     List<Post> findByOriginalPostIDAndIsRepost(long postid, Boolean b);

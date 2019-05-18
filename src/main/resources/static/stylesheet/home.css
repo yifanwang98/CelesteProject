@@ -279,3 +279,19 @@
     margin-bottom: 0.5em;
     font-style: italic;
 }
+
+.discover-load-more {
+    font-size: 1.1em;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #666666;
+}
+
+.discover-load-more:hover {
+    color: #218787;
+}
+
+.discover-load-more-spin {
+    font-size: 1.5em;
+}
