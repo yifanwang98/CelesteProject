@@ -39,7 +39,8 @@
     font-weight: 500;
     cursor: pointer;
     height: 100%;
-    width: 7em;
+    /*width: 10em;*/
+    padding: 0 2em;
 }
 
 .drawing-button:hover {

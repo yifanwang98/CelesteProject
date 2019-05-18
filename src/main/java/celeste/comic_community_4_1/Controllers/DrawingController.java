@@ -126,15 +126,12 @@ public class DrawingController {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-//        List<DrawingSaving> x = drawingSavingRepository.findByUserone(user);
         DrawingSaving x = drawingSavingRepository.findDrawingSavingByUserone(user);
-        System.out.println("\t" + x);
         if (x != null) {
             String drawing = x.getDrawing();
             drawing = drawing.replaceAll("\\\\", "");
             drawing = drawing.substring(drawing.indexOf("zwibbler3"));
             drawing = drawing.substring(0, drawing.length() - 2);
-            System.out.println("\t" + drawing);
             return drawing;
         } else {
             return "You do not have any saved work!";
