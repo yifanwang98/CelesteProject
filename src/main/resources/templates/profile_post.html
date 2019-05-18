@@ -215,13 +215,6 @@
                                    onclick="deletePost(this)"
                                    th:if="${User.getUsername() == postData.post.getUser().getUsername()}"
                                    class="post-action-more"><i class='far fa-trash-alt'></i></a>
-                                <div class="dropdown"
-                                     th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
-                                    <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
-                                    <div class="dropdown-content">
-                                        <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
-                                    </div>
-                                </div>
                             </td>
                         </tr>
                     </table>
