@@ -234,14 +234,15 @@
                 <tr>
                     <td class="setting-subtitle">Password</td>
                     <td>
-                        <input type="password"  name="new-password" class="setting-textfield"  th:value="${User.getPassword()}">
+                        <input type="password" name="new-password" class="setting-textfield"
+                               th:value="${User.getPassword().substring(0, 8)}">
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle" id = "Confirm_Password">Confirm Password</td>
                     <td>
-                        <input type="password"  name="confirm-new-password"
-                               class="setting-textfield" th:value="${User.getPassword()}">
+                        <input type="password" name="confirm-new-password"
+                               class="setting-textfield" th:value="${User.getPassword().substring(0, 8)}">
                     </td>
                 </tr>
                 <tr>

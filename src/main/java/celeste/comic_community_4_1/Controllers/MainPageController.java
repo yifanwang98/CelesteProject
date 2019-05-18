@@ -221,7 +221,8 @@ public class MainPageController {
                 model.addAttribute("errors", "This username doesn't exist.");
                 return "index";
             }
-            User user = userRepository.findById(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+            User user = userRepository.findUserByUsername(username);
+            password = PasswordChecker.encryptSHA512(password);
             if (!password.equals(user.getPassword())) {
                 model.addAttribute("errors", "Your password is incorrect.");
                 return "index";
@@ -246,6 +247,13 @@ public class MainPageController {
 
     @GetMapping("index")
     public String signIn(ModelMap model, HttpServletRequest request) throws Exception {
+//        List<User> userList = userRepository.findAll();
+//        for (User user : userList) {
+//            if(user.getPassword().length() < 30) {
+//                user.setPassword(PasswordChecker.encryptSHA512(user.getPassword()));
+//                userRepository.save(user);
+//            }
+//        }
 //        //List<GenreData> genreDataList = new ArrayList<>();
 //        for (String genreName : ComicGenre.GENRE) {
 //            if (genreName.equalsIgnoreCase("none"))
@@ -328,14 +336,14 @@ public class MainPageController {
                                   @RequestParam(value = "password") String password,
                                   ModelMap model, HttpServletRequest request) {
 
-        if (!PasswordChecker.validPassword(password)) {
-            model.addAttribute("username", username);
+        if (!PasswordChecker.validPassword(username)) {
             model.addAttribute("email", email);
-            model.addAttribute("errors", "Invalid character found");
+            model.addAttribute("errors", "Invalid character in username");
             return "resetPassword";
         }
 
         User user = userRepository.findUserByUsername(username);
+        password = PasswordChecker.encryptSHA512(password);
         user.setPassword(password);
         userRepository.save(user);
         return "index";

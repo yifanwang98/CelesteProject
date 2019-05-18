@@ -214,13 +214,13 @@ public class DiscoverController {
             model.addAttribute("errors", "Invalid character in username");
             return "signUp";
         }
-        if (!PasswordChecker.validPassword(password)) {
-            model.addAttribute("username", username);
-            model.addAttribute("email", email);
-            model.addAttribute("gender", gender);
-            model.addAttribute("errors", "Invalid character in password");
-            return "signUp";
-        }
+//        if (!PasswordChecker.validPassword(password)) {
+//            model.addAttribute("username", username);
+//            model.addAttribute("email", email);
+//            model.addAttribute("gender", gender);
+//            model.addAttribute("errors", "Invalid character in password");
+//            return "signUp";
+//        }
         if (!PasswordChecker.validPassword(email)) {
             model.addAttribute("username", username);
             model.addAttribute("gender", gender);
@@ -232,6 +232,7 @@ public class DiscoverController {
         User newUser = new User();
         newUser.setUsername(username.trim());
         newUser.setCreatedAt(new Date());
+        password = PasswordChecker.encryptSHA512(password);
         newUser.setPassword(password);
         newUser.setEmail(email.toLowerCase());
         newUser.setGender(gender);

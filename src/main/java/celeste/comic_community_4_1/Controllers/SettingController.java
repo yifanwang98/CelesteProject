@@ -92,10 +92,11 @@ public class SettingController {
                                @RequestParam("new-gender") String newgender,
                                ModelMap model, HttpServletRequest request,
                                RedirectAttributes redirectAttributes) throws Exception {
-        if (!PasswordChecker.validPassword(newpassword) || !PasswordChecker.validPassword(newemail)) {
+        if (!PasswordChecker.validPassword(newemail)) {
             return "Invalid character detected!";
         }
 
+        newpassword = PasswordChecker.encryptSHA512(newpassword);
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setPassword(newpassword);
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setEmail(newemail);
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setGender(newgender);
