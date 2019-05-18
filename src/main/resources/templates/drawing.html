@@ -64,7 +64,6 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<!--<table class="mainContent webfont" style="border-spacing: 1em;">-->
 <div id="zwibbler" style="" class="drawing-canvas"></div>
 <!--<div>-->
 <!--<zwibbler>-->
@@ -77,20 +76,19 @@
 <!-- Footer Banner -->
 <table class="footer webfont semibold" id="footer" style="padding: 0; margin: 0; border-spacing: 0;">
     <tr>
-        <td></td>
-        <td style="width: 25em;">
+        <td style="text-align: left">
             <button id="load-button"
-                    class="drawing-button">Load
+                    class="drawing-button">Load From Server
             </button>
-
-            <button id="save-button"
-                    class="drawing-button">Save
-            </button>
-
+        </td>
+        <td style="text-align: right">
+            <button id="upload-button" class="drawing-button">Upload</button>
+            <button id="save-button" class="drawing-button">Save</button>
             <button id="download-button" class="drawing-button">Download</button>
         </td>
     </tr>
 </table>
+
 <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 <script src="http://zwibbler.com/zwibbler-demo.js"></script>
 <script type="text/javascript">
@@ -103,6 +101,14 @@
 
     loadDrawing();
     setTimeout(autoSave, 1000 * 60);
+
+    $('#upload-button').click(function () {
+        saveDrawing();
+        var ans = confirm("Have you download your artwork?");
+        if (ans) {
+            window.location.href = "/uploadPost2";
+        }
+    });
 
     $('#post-button').click(function () {
         var currentpage = ctx.getCurrentPage();
