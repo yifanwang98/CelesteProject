@@ -242,6 +242,8 @@ public class MainPageController {
     public String signOut(ModelMap model, HttpServletRequest request) throws Exception {
         request.getSession().removeAttribute("username");
         request.getSession().removeAttribute("postDraft");
+        request.getSession().removeAttribute("discoverList");
+        request.getSession().removeAttribute("mainPageList");
         return "index";
     }
 

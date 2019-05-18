@@ -234,21 +234,22 @@
                 <tr>
                     <td class="setting-subtitle">Password</td>
                     <td>
-                        <input type="password" name="new-password" class="setting-textfield"
-                               th:value="${User.getPassword().substring(0, 8)}">
+                        <input type="password" name="new-password" class="setting-textfield" maxlength="24"
+                               placeholder="******">
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle" id = "Confirm_Password">Confirm Password</td>
                     <td>
-                        <input type="password" name="confirm-new-password"
-                               class="setting-textfield" th:value="${User.getPassword().substring(0, 8)}">
+                        <input type="password" name="confirm-new-password" placeholder="******"
+                               class="setting-textfield" maxlength="24">
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle">Email</td>
                     <td>
-                        <input type="email" id = "email"  name="new-email" class="setting-textfield" th:value="${User.getEmail()}">
+                        <input type="email" id="email" name="new-email" class="setting-textfield"
+                               th:value="${User.getEmail()}" required>
                     </td>
                 </tr>
                 <tr>
