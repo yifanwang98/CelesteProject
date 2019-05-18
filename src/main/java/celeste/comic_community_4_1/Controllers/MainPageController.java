@@ -60,6 +60,9 @@ public class MainPageController {
     @Autowired
     SearchWordsRepository searchWordsRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
     @GetMapping(value = {"/mainPage", "/", "home"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -184,6 +187,42 @@ public class MainPageController {
 
     @GetMapping("index")
     public String signIn(ModelMap model, HttpServletRequest request) throws Exception {
+//        //List<GenreData> genreDataList = new ArrayList<>();
+//        for (String genreName : ComicGenre.GENRE) {
+//            if (genreName.equalsIgnoreCase("none"))
+//                continue;
+//
+//            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+//            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+//
+//            String genreCover = null;
+//            if (total != 0) {
+//                Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+//                if (tempPost != null) {
+//                    genreCover = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID()).getPostIndentity().getWork().getThumbnail();
+//                }
+//                if (genreCover == null) {
+//                    Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+//                    if (tempSeries != null) {
+//                        genreCover = tempSeries.getCover();
+//                    }
+//                }
+//            }
+//
+//            if (genreCover == null) {
+//                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+//            }
+//
+//            //genreDataList.add(new GenreData(genreName, total, genreCover));
+//            if(!genreRepository.existsGenreByGenre(genreName)) {
+//                Genre genre = new Genre();
+//                genre.setGenre(genreName);
+//                genre.setCount(total);
+//                genre.setImages(genreCover);
+//                genreRepository.save(genre);
+//            } else {
+//            }
+//        }
         return "index";
     }
 

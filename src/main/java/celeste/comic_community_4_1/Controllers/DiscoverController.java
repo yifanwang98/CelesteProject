@@ -34,9 +34,6 @@ public class DiscoverController {
     PostContentRepository postContentRepository;
 
     @Autowired
-    CommentRepository commentRepository;
-
-    @Autowired
     LikeRepository likeRepository;
 
     @Autowired
@@ -54,8 +51,13 @@ public class DiscoverController {
     @Autowired
     PostTagRepository postTagRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
+
     @GetMapping("/discover")
     public String discover(ModelMap model, HttpServletRequest request) throws Exception {
+        long t1 = System.currentTimeMillis();
         if (request.getSession().getAttribute("username") == null) {
             return "index";
         }
@@ -79,16 +81,15 @@ public class DiscoverController {
         model.addAttribute("followers", followRepository.countFollowByFollowIndentityUsertwo(user));
 
         //All the post by this user
-        List<Post> postList;// = postRepository.findByUser(user);
-//        model.addAttribute("postsCount", postList.size());
-
+        List<Post> postList;
+        System.out.println("S-Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
 
         List<String> searchWordTagList = new ArrayList<>();
         for (SearchWords sw : wordsList) {
             searchWordTagList.add(TagProcessor.process(sw.getWord()));
         }
-
+        System.out.println("F-Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         postList = postRepository.findPostsByCreatedAtAfterAndIsRepostAndUserIsNot(Notification.getDaysBefore(30), false, user);
         HashMap<Post, Integer> postHashMap = new HashMap<>();
         for (Post post : postList) {
@@ -113,7 +114,7 @@ public class DiscoverController {
 
             postHashMap.put(post, heat);
         }
-
+        System.out.println("P1Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         List<Map.Entry<Post, Integer>> list = new ArrayList<>(postHashMap.entrySet());
         list.sort(Map.Entry.comparingByValue());
 
@@ -124,99 +125,76 @@ public class DiscoverController {
             if (postList.size() >= 50)
                 break;
         }
-
+        System.out.println("P2Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         // Organize Info
+        int endIndex = 2;
+        if (endIndex > postList.size())
+            endIndex = postList.size();
         List<PostData> postDataList = new ArrayList<>();
-        for (int i = 0; i < postList.size(); i++) {
+        Post post;
+        List<PostContent> postContents;
+        List<SeriesContent> seriesContents;
+        List<String> images;
+        Work work;
+        List<String> postTags;
+        List<PostTag> postTagList;
+        for (int i = 0; i < endIndex; i++) {
             // Post Content
-            Post post = postList.get(i);
-            Post originalPost = null;
-            if (post.isRepost()) {
-                originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
-            }
-            List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(postList.get(i).getOriginalPostID());
-            List<String> images = new ArrayList<>();
+            post = postList.get(i);
+
+            postContents = postContentRepository.findByPostIndentityPostPostID(post.getOriginalPostID());
+            images = new ArrayList<>();
 
             Set<Series> fromSeries = new HashSet<>();
             for (int j = 0; j < postContents.size(); j++) {
-                Work work = postContents.get(j).getPostIndentity().getWork();
-                images.add(work.getThumbnail());
-                List<SeriesContent> seriesContents = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+                work = postContents.get(j).getPostIndentity().getWork();
+                seriesContents = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
                 for (SeriesContent content : seriesContents) {
                     fromSeries.add(content.getSeriesContentIndentity().getSeries());
                 }
+                images.add(work.getThumbnail());
             }
 
-//            boolean myStar = starRepository.existsStarByPostIndentityPostAndPostIndentityUser(post, user);
-//            boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
-
             // Tag
-            List<String> postTags = new ArrayList<>();
-            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            postTags = new ArrayList<>();
+            postTagList = postTagRepository.findPostTagByPost(post);
             for (PostTag tag : postTagList) {
                 postTags.add(tag.getTag());
             }
 
-//            postDataList.add(new PostData(post, originalPost, images, myStar, myLike, fromSeries, postTags));
-            postDataList.add(new PostData(post, originalPost, images, false, false, fromSeries, postTags));
+            postDataList.add(new PostData(post, post, images, false, false, fromSeries, postTags));
         }
 
-        model.addAttribute("postDataList", postDataList);
-
-//        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
-//        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
-
-        // Top Search
-//        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
-//        model.addAttribute("top10Searches", top10Searches);
-
+        model.addAttribute("postDataList", postDataList.subList(0, endIndex));
+        request.getSession().setAttribute("discoverList", postList);
+        request.getSession().setAttribute("discoverListIndex", endIndex);
+        System.out.println("G-Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         // Genre List
         List<GenreData> genreDataList = new ArrayList<>();
-        for (String genreName : ComicGenre.GENRE) {
-            if (genreName.equalsIgnoreCase("none"))
-                continue;
-
-            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
-            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
-
-            String genreCover = null;
-            Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
-            if (tempPost != null) {
-                PostContent pc = postContentRepository.findByPostIndentityPostPostID(tempPost.getOriginalPostID()).get(0);
-                genreCover = pc.getPostIndentity().getWork().getThumbnail();
-            }
-            if (genreCover == null) {
-                Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
-                if (tempSeries != null) {
-                    genreCover = tempSeries.getCover();
-                }
-            }
-            if (genreCover == null) {
-                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
-            }
-
-            genreDataList.add(new GenreData(genreName, total, genreCover));
+        List<Genre> genreDataList2 = genreRepository.findAll();
+        for (Genre genre : genreDataList2) {
+            genreDataList.add(new GenreData(genre.getGenre(), genre.getCount(), genre.getImages()));
         }
+        System.out.println("T-Time: " + ((System.currentTimeMillis() - t1) / 1000.0) + "\n");
         Collections.sort(genreDataList);
         model.addAttribute("genreDataList", genreDataList);
 
+        System.out.println("T-Time: " + ((System.currentTimeMillis() - t1) / 1000.0) + "\n");
         return "discover";
     }
 
-    private static final String ILLEGAL_CHAR = ",.?:;'\"[]\\|/{}<>`~ ";
+    private static final String ILLEGAL_CHAR = ",.:;'\"[]\\|/{}<>`~ ";
 
     @ResponseBody
     @GetMapping("/checkusername")
     public String checkUsername(@RequestParam(value = "username", required = false) String username) {
         username = username.trim();
-        if (username != null) {
-            if (username.isEmpty()) {
-                return "Username too short";
-            }
-            for (int i = 0; i < ILLEGAL_CHAR.length(); i++) {
-                if (username.indexOf(ILLEGAL_CHAR.charAt(i)) >= 0) {
-                    return "Illegal character: " + ILLEGAL_CHAR.charAt(i);
-                }
+        if (username.isEmpty()) {
+            return "Username too short";
+        }
+        for (int i = 0; i < ILLEGAL_CHAR.length(); i++) {
+            if (username.indexOf(ILLEGAL_CHAR.charAt(i)) >= 0) {
+                return "Illegal character: " + ILLEGAL_CHAR.charAt(i);
             }
         }
         Optional<User> a = userRepository.findById(username);
@@ -273,6 +251,51 @@ public class DiscoverController {
         return discover(model, request);
     }
 
+    @ResponseBody
+    @PostMapping("/discoverLoadMore")
+    public String discoverLoadMore(ModelMap model, HttpServletRequest request) throws Exception {
+
+        List<Post> postList = (List<Post>) request.getSession().getAttribute("discoverList");
+        int startIndex = (Integer) request.getSession().getAttribute("discoverListIndex");
+        int endIndex = startIndex + 4;
+        boolean hasMore = true;
+        if (endIndex > postList.size()) {
+            endIndex = postList.size();
+            hasMore = false;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = startIndex; i < endIndex; i++) {
+            Post post = postList.get(i);
+            List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(post.getOriginalPostID());
+            List<String> images = new ArrayList<>();
+
+            Set<Series> fromSeries = new HashSet<>();
+            for (int j = 0; j < postContents.size(); j++) {
+                Work work = postContents.get(j).getPostIndentity().getWork();
+                List<SeriesContent> seriesContents = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+                for (SeriesContent content : seriesContents) {
+                    fromSeries.add(content.getSeriesContentIndentity().getSeries());
+                }
+                images.add(work.getThumbnail());
+            }
+
+            // Tag
+            List<String> postTags = new ArrayList<>();
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            for (PostTag tag : postTagList) {
+                postTags.add(tag.getTag());
+            }
+
+            sb.append(DiscoverHTML.generateHTML(new PostData(post, post, images, false, false, fromSeries, postTags)));
+        }
+
+        request.getSession().setAttribute("discoverListIndex", endIndex);
+        if (hasMore)
+            return "1" + sb.toString();
+        return "0" + sb.toString();
+    }
 
 }
 
