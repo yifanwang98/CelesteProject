@@ -2,6 +2,7 @@ package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.Notification;
+import celeste.comic_community_4_1.miscellaneous.PasswordChecker;
 import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
@@ -91,6 +92,9 @@ public class SettingController {
                                @RequestParam("new-gender") String newgender,
                                ModelMap model, HttpServletRequest request,
                                RedirectAttributes redirectAttributes) throws Exception {
+        if (!PasswordChecker.validPassword(newpassword) || !PasswordChecker.validPassword(newemail)) {
+            return "Invalid character detected!";
+        }
 
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setPassword(newpassword);
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setEmail(newemail);
