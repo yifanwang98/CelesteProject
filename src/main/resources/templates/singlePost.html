@@ -251,7 +251,9 @@
                         <table width="100%">
                             <tr>
                                 <td>
-                                    <span class="post-author" th:text="${postToDisplay.getUser().getUsername()}"></span>
+                                    <a th:href="'view_profile?user=' + ${postToDisplay.getUser().getUsername()}"
+                                       class="post-author"
+                                       th:text="${postToDisplay.getUser().getUsername()}"></a>
                                     <span th:if="${postToDisplay.getUser().getGender() == 'male'}"
                                           class="follow-male"><i class='fas fa-mars'></i></span>
                                     <span th:unless="${postToDisplay.getUser().getGender() == 'male'}"
@@ -334,8 +336,9 @@
                                         <table width="100%">
                                             <tr>
                                                 <td>
-                                                    <span class="post-author"
-                                                          th:text="${originalPost.getUser().getUsername()}"></span>
+                                                    <a th:href="'view_profile?user=' + ${originalPost.getUser().getUsername()}"
+                                                       class="post-author"
+                                                       th:text="${originalPost.getUser().getUsername()}"></a>
                                                     <span th:if="${originalPost.getUser().getGender() == 'male'}"
                                                           class="follow-male"><i class='fas fa-mars'></i></span>
                                                     <span th:unless="${originalPost.getUser().getGender() == 'male'}"
