@@ -82,16 +82,12 @@ public class DiscoverController {
 
         //All the post by this user
         List<Post> postList;
-        System.out.println("S-Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
 
-        List<String> searchWordTagList = new ArrayList<>();
-        for (SearchWords sw : wordsList) {
-            searchWordTagList.add(TagProcessor.process(sw.getWord()));
-        }
-        System.out.println("F-Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         postList = postRepository.findPostsByCreatedAtAfterAndIsRepostAndUserIsNot(Notification.getDaysBefore(30), false, user);
+
         HashMap<Post, Integer> postHashMap = new HashMap<>();
+        String ww;
         for (Post post : postList) {
             if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, post.getUser()))
                 continue;
@@ -101,20 +97,21 @@ public class DiscoverController {
                 continue;
 
             int heat = 0;
-            for (String tag : searchWordTagList) {
-                if (postTagRepository.existsPostTagByPostAndTag(post, tag))
-                    heat -= 1;
-            }
+
             for (SearchWords sw : wordsList) {
-                if (post.getPostComment().toLowerCase().contains(sw.getWord().toLowerCase()))
+                ww = sw.getWord().toLowerCase();
+                if (post.getPostComment().toLowerCase().contains(ww))
                     heat -= 1;
-                if (post.getUser().getUsername().toLowerCase().contains(sw.getWord().toLowerCase()))
+                if (post.getUser().getUsername().toLowerCase().contains(ww))
                     heat -= 1;
             }
 
+            heat -= starRepository.countStarByPostIndentityPost(post) / 2;
+            heat -= likeRepository.countLikeByPostIndentityPost(post) / 2;
+
             postHashMap.put(post, heat);
         }
-        System.out.println("P1Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
+
         List<Map.Entry<Post, Integer>> list = new ArrayList<>(postHashMap.entrySet());
         list.sort(Map.Entry.comparingByValue());
 
@@ -125,7 +122,6 @@ public class DiscoverController {
             if (postList.size() >= 50)
                 break;
         }
-        System.out.println("P2Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         // Organize Info
         int endIndex = 2;
         if (endIndex > postList.size())
@@ -168,18 +164,15 @@ public class DiscoverController {
         model.addAttribute("postDataList", postDataList.subList(0, endIndex));
         request.getSession().setAttribute("discoverList", postList);
         request.getSession().setAttribute("discoverListIndex", endIndex);
-        System.out.println("G-Time: " + ((System.currentTimeMillis() - t1) / 1000.0));
         // Genre List
         List<GenreData> genreDataList = new ArrayList<>();
         List<Genre> genreDataList2 = genreRepository.findAll();
         for (Genre genre : genreDataList2) {
             genreDataList.add(new GenreData(genre.getGenre(), genre.getCount(), genre.getImages()));
         }
-        System.out.println("T-Time: " + ((System.currentTimeMillis() - t1) / 1000.0) + "\n");
         Collections.sort(genreDataList);
         model.addAttribute("genreDataList", genreDataList);
 
-        System.out.println("T-Time: " + ((System.currentTimeMillis() - t1) / 1000.0) + "\n");
         return "discover";
     }
 
@@ -259,7 +252,7 @@ public class DiscoverController {
         int startIndex = (Integer) request.getSession().getAttribute("discoverListIndex");
         int endIndex = startIndex + 4;
         boolean hasMore = true;
-        if (endIndex > postList.size()) {
+        if (endIndex >= postList.size()) {
             endIndex = postList.size();
             hasMore = false;
         }
