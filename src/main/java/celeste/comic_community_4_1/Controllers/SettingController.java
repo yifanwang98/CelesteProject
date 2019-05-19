@@ -87,7 +87,7 @@ public class SettingController {
     @ResponseBody
     @PostMapping("/changeSetting")
     public String changeAvatar(@RequestParam("file") MultipartFile file,
-                               @RequestParam("new-password") String newpassword,
+                               @RequestParam(value = "new-password", required = false) String newpassword,
                                @RequestParam("new-email") String newemail,
                                @RequestParam("new-gender") String newgender,
                                ModelMap model, HttpServletRequest request,
@@ -96,8 +96,10 @@ public class SettingController {
             return "Invalid character detected!";
         }
 
-        newpassword = PasswordChecker.encryptSHA512(newpassword);
-        userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setPassword(newpassword);
+        if (!newpassword.isEmpty()) {
+            newpassword = PasswordChecker.encryptSHA512(newpassword);
+            userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setPassword(newpassword);
+        }
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setEmail(newemail);
         userRepository.findById((String) (request.getSession().getAttribute("username"))).get().setGender(newgender);
         userRepository.save(userRepository.findById((String) (request.getSession().getAttribute("username"))).get());
@@ -285,7 +287,9 @@ public class SettingController {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
+        resetAccount(model, request);
         userRepository.delete(user);
+
         return "index";
     }
 
