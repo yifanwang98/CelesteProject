@@ -207,7 +207,8 @@
                         Avatar
                     </td>
                     <td style="text-align: center;">
-                        <image id="useravatar"th:src="'data:image/png;base64,'+${User.getAvatar()}" class="setting-avatar"></image>
+                        <image id="useravatar" th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                               class="setting-avatar"></image>
                     </td>
                     <td style="text-align: right">
                         <input type="file" accept=".jpg,.png" style="display: none;" id="new-avatar"  name = "file">

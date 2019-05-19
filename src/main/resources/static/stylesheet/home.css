@@ -242,10 +242,10 @@
     text-decoration: none;
 }
 
-.post-avatar-image {
+. post-avatar-image {
     width: 1.75em;
     border-radius: 50%;
-    border: #30c5c5 1px solid;
+    border: #cccccc 1px solid;
     background: white;
 }
 

@@ -379,8 +379,8 @@ public class SettingController {
                 List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
                 for (SeriesContent sc : seriesContentList)
                     seriesContentRepository.delete(sc);
-                workRepository.delete(work);
                 postContentRepository.delete(postContent);
+                workRepository.delete(work);
             }
 
             // Repost

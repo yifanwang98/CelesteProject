@@ -6,7 +6,7 @@
 
 .avatar-image {
     margin: 1em;
-    border: #30c5c5 2px solid;
+    border: #cccccc 1px solid;
     border-radius: 50%;
     width: 8em;
     height: 8em;
@@ -325,4 +325,16 @@
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
+}
+
+.create-post-banner, .create-post-banner:link, .create-post-banner:visited {
+    display: block;
+    color: #218787;
+    text-decoration: none;
+    padding: 0.25em 0;
+}
+
+.create-post-banner:hover {
+    font-weight: bold;
+    color: #269b9b;
 }
