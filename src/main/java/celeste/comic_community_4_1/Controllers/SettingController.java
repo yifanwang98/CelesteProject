@@ -302,7 +302,6 @@ public class SettingController {
         resetAccount(model, request);
         likeRepository.deleteLikeByPostIndentityUser(user);
         starRepository.deleteStarByPostIndentityUser(user);
-
         userRepository.delete(user);
         return "index";
     }

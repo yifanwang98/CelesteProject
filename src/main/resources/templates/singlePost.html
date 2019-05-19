@@ -60,6 +60,30 @@
             });
         }
 
+        function reportAPost(postID) {
+            var reason = prompt("Please describe the reason:", "");
+            if (reason != null) {
+                $.ajax({
+                    type: "POST",
+                    url: 'singlepostReport',
+                    data: {postID: postID, reason: reason},
+                    cache: false,
+                    success: function (data) {
+                        if (data == "Report has been sent. Please wait for our reply.") {
+                            alert(data);
+                            //location.reload();
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+                    error: function () {
+                        alert(arguments[1]);
+                    }
+                });
+            }
+        }
+
         function deleteComment(link) {
             var commentID = link.id.substring(2);
             var postID = [[${postToDisplay.getPostID()}]];
@@ -272,7 +296,8 @@
                                          th:unless="${User.getUsername() == postToDisplay.getUser().getUsername()}">
                                         <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                         <div class="dropdown-content">
-                                            <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
+                                            <a th:href="'javascript:reportAPost(' + ${postToDisplay.getPostID()} + ');'">
+                                                    <i class="fas fa-exclamation-triangle"></i> Report</a>
                                         </div>
                                     </div>
                                 </td>
@@ -531,7 +556,6 @@
                                              th:unless="${User.getUsername() == comment.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                             <div class="dropdown-content">
-                                                <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
                                                 <span th:if="${User.getUsername() == postToDisplay.getUser().getUsername()}">
                                                     <!-- If I am the post owner-->
                                                     <a href="#" onclick="deleteComment(this)"
