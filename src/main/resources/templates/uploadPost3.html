@@ -15,7 +15,7 @@
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <!-- Script -->
     <script src="http://code.jquery.com/jquery-1.5.js"></script>
-    <script>
+    <script type="text/javascript">
         function countChar(val) {
             var len = val.value.length;
             var newLines = val.value.match(/(\r\n|\n|\r)/g);
@@ -25,6 +25,35 @@
             }
             $('#charCount').text(len + addition);
         };
+
+        // $("uploadPostInfo").submit(function () {
+        //     console.log("111");
+        //     document.getElementById('uploading').style.display = '';
+        //     document.getElementById('infoTable').style.display = 'None';
+        //     document.getElementById('footer').style.display = 'None';
+        //     if ($(this).valid()) {
+        //         $(this).submit(function () {
+        //             return false;
+        //         });
+        //         return true;
+        //     }
+        //     else {
+        //         return false;
+        //     }
+        // });
+
+        function submitForm() {
+            // document.getElementById('uploading').style.display = '';
+            // document.getElementById('infoTable').style.display = 'None';
+            // document.getElementById('footer').style.display = 'None';
+            //
+            // document.getElementById('uploadPostInfo').submit();
+            console.log("111");
+            document.getElementById('uploading').style.display = '';
+            document.getElementById('infoTable').style.display = 'None';
+            document.getElementById('footer').style.display = 'None';
+            document.getElementById('uploadPostInfo').submit();
+        }
     </script>
 </head>
 <body>
@@ -77,11 +106,8 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<form id="uploadPostInfo" method="post" action="uploadPostInfo"
-      onsubmit="document.getElementById('uploading').style.display = '';
-                  document.getElementById('infoTable').style.display = 'None';
-                  document.getElementById('footer').style.display = 'None';">
-</form>
+<form id="uploadPostInfo" method="post" action="/uploadPostInfo"></form>
+
 <table style="width: 100%; padding: 2em 25%;" class="webfont" id="infoTable">
     <!-- Title -->
     <tr>
@@ -307,7 +333,8 @@
         </td>
         <td style="width: 6em;">
             <span th:if="${postDraft.valid()}">
-                <input type="submit" value="Next" class="add-img-button" form="uploadPostInfo"/>
+                <!--<input type="submit" value="Next" class="add-img-button" form="uploadPostInfo"/>-->
+                <input type="button" value="Next" class="add-img-button" onclick="submitForm()"/>
             </span>
             <span th:unless="${postDraft.valid()}">
                 <input type="submit" value="Next" class="add-img-button" disabled style="color: #949494"/>

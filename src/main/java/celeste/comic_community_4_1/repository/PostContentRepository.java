@@ -2,6 +2,7 @@ package celeste.comic_community_4_1.repository;
 
 
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostContentIndentity;
+import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.PostContent;
 import celeste.comic_community_4_1.model.Work;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,7 @@ public interface PostContentRepository extends JpaRepository<PostContent, PostCo
     PostContent findFirstByPostIndentityPostPostID(long post);
 
     PostContent findByPostIndentityWork(Work work);
+
+    void deletePostContentByPostIndentityPost(Post post);
 }
 

@@ -13,6 +13,8 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUser(User user1);
 
+    List<Post> findPostByUser(User user);
+
     List<Post> findPostByUserAndCreatedAtBetween(User user, Date after, Date before);
 
     long countByoriginalPostIDAndIsRepost(long postid, Boolean b);
@@ -40,5 +42,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     long countPostByCreatedAtAfterAndUserAndIsRepost(Date after, User user, boolean isRepost);
 
     List<Post> findPostsByCreatedAtAfterAndIsRepostAndUserIsNot(Date after, boolean isRepost, User excludedUser);
+
+    void deletePostByUser(User user);
+
+    void deletePostByOriginalPostIDAndIsRepost(long post, boolean isRepost);
 }
 

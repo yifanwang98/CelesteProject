@@ -24,4 +24,6 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     long countSeriesByPrimaryGenreOrSecondaryGenre(String genre, String genre2);
 
     List<Series> findDistinctByPrimaryGenreOrSecondaryGenre(String genre, String genre2);
+
+    void deleteSeriesByUser(User user);
 }

@@ -1,14 +1,16 @@
 package celeste.comic_community_4_1.Controllers;
 
-import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.Notification;
+import celeste.comic_community_4_1.miscellaneous.TagProcessor;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -57,14 +59,35 @@ public class SingleSeriesController {
     public String singleSeries(@RequestParam(value = "id") long seriesId,
                                @RequestParam(value = "index") int index,
                                ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         // Find Series
@@ -126,5 +149,48 @@ public class SingleSeriesController {
 
         return "singleSeries";
     }
+
+    @ResponseBody
+    @PostMapping("/addSeriesTag")
+    public String addSeriesTag(@RequestParam(value = "id") long seriesID,
+                               @RequestParam(value = "tag") String tag,
+                               ModelMap model, HttpServletRequest request) throws Exception {
+
+        if (!TagProcessor.validTag(tag)) {
+            return "Invalid Tag";
+        }
+
+        String processedTag = TagProcessor.process(tag);
+
+        if (processedTag.length() > TagProcessor.MAX_TAG_LENGTH) {
+            return "Tag Exceeds Max Length(10) After Parsing";
+        }
+
+        Series series = seriesRepository.findSeriesBySeriesID(seriesID);
+
+        if (seriesTagRepository.existsSeriesTagBySeriesAndTag(series, processedTag)) {
+            return "Duplicate Tag";
+        }
+
+        // Check Genre
+        if (!series.getPrimaryGenre().equals("None")) {
+            if (processedTag.equals(TagProcessor.process(series.getPrimaryGenre()))) {
+                return "Duplicate Genre Tag";
+            }
+        }
+        if (!series.getSecondaryGenre().equals("None")) {
+            if (processedTag.equals(TagProcessor.process(series.getSecondaryGenre()))) {
+                return "Duplicate Genre Tag";
+            }
+        }
+
+        SeriesTag newSeriesTag = new SeriesTag();
+        newSeriesTag.setSeries(series);
+        newSeriesTag.setTag(processedTag);
+        seriesTagRepository.save(newSeriesTag);
+
+        return "#" + processedTag + " Successfully Added";
+    }
+
 }
 

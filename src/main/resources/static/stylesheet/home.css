@@ -168,8 +168,7 @@
 }
 
 .post-action-liked-top:hover {
-    color: #3973a0;
-    cursor: pointer;
+    /*color: #3973a0;*/
 }
 
 .post-action-liked a:link, .post-action-liked a:visited {
@@ -195,8 +194,8 @@
 }
 
 .post-action-stared-top:hover {
-    color: goldenrod;
-    cursor: pointer;
+    /*color: goldenrod;*/
+    /*cursor: pointer;*/
 }
 
 .post-action-stared a:link, .post-action-stared a:visited {
@@ -246,7 +245,7 @@
 .post-avatar-image {
     width: 1.75em;
     border-radius: 50%;
-    border: #30c5c5 1px solid;
+    border: #cccccc 1px solid;
     background: white;
 }
 

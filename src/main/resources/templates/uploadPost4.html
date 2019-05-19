@@ -6,6 +6,7 @@
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv='refresh' content='0; URL=/mainPage'>
     <!-- Style Sheet -->
     <link href="../static/stylesheet/theme.css" type="text/css" rel="stylesheet">
     <link href="../static/stylesheet/fonts.css" type="text/css" rel="stylesheet">
@@ -107,23 +108,23 @@
 </form>
 
 <script type="text/javascript">
-    window.onload = function () {
-        var auto = setTimeout(function () {
-            autoRefresh();
-        }, 100);
-
-        function submitform() {
-            document.forms["myForm"].submit();
-        }
-
-        function autoRefresh() {
-            clearTimeout(auto);
-            auto = setTimeout(function () {
-                submitform();
-                autoRefresh();
-            }, 100);
-        }
-    }
+    // window.onload = function () {
+    //     var auto = setTimeout(function () {
+    //         autoRefresh();
+    //     }, 1);
+    //
+    //     function submitform() {
+    //         document.forms["myForm"].submit();
+    //     }
+    //
+    //     function autoRefresh() {
+    //         clearTimeout(auto);
+    //         auto = setTimeout(function () {
+    //             submitform();
+    //             autoRefresh();
+    //         }, 1);
+    //     }
+    // }
 </script>
 <div style="padding: 5em;"></div>
 </body>

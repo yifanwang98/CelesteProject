@@ -1,6 +1,5 @@
 package celeste.comic_community_4_1.Controllers;
 
-import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.*;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
@@ -57,17 +56,30 @@ public class DiscoverController {
 
     @GetMapping("/discover")
     public String discover(ModelMap model, HttpServletRequest request) throws Exception {
-        long t1 = System.currentTimeMillis();
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
+        // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
                 return "blocked";
             }
             user.setBlockStatus("none");
@@ -229,8 +241,9 @@ public class DiscoverController {
             return "signUp";
         }
 
+        username = username.trim();
         User newUser = new User();
-        newUser.setUsername(username.trim());
+        newUser.setUsername(username);
         newUser.setCreatedAt(new Date());
         password = PasswordChecker.encryptSHA512(password);
         newUser.setPassword(password);
@@ -241,8 +254,34 @@ public class DiscoverController {
         newUser.setAvatar(base64);
         userRepository.save(newUser);
         model.addAttribute("User", newUser);
+        request.getSession().setAttribute("username", username);
 
-        return discover(model, request);
+        return mainPageDemo(model, request);
+    }
+
+    @GetMapping("/mainPageDemo")
+    public String mainPageDemo(ModelMap model, HttpServletRequest request) throws Exception {
+
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        
+        // Get Following & Followers
+        model.addAttribute("following", 0);
+        model.addAttribute("followers", 0);
+
+        //All the post by this user
+        model.addAttribute("postsCount", 0);
+        model.addAttribute("seriesCount", 0);
+        model.addAttribute("starCount", 0);
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
+
+        return "mainPageDemo";//discover(model, request);
     }
 
     @ResponseBody

@@ -62,25 +62,32 @@ public class MainPageController {
 
     @GetMapping(value = {"/mainPage", "/", "home"})
     public String mainPage(ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
             return "index";
         }
 
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getMembership().equals("None")) {
-                if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
-                    return "blocked";
-                }
-            } else {
-                if (user.getBlockedSince().after(Notification.getDaysBefore(1))) {
-                    return "blocked";
-                }
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
             }
             user.setBlockStatus("none");
             userRepository.save(user);
@@ -244,6 +251,8 @@ public class MainPageController {
         request.getSession().removeAttribute("postDraft");
         request.getSession().removeAttribute("discoverList");
         request.getSession().removeAttribute("mainPageList");
+        request.getSession().removeAttribute("discoverListIndex");
+        request.getSession().removeAttribute("mainPageListIndex");
         return "index";
     }
 

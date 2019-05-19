@@ -57,16 +57,44 @@ public class SettingController {
     @Autowired
     SeriesRepository seriesRepository;
 
+    @Autowired
+    ReportInfoRepository reportInfoRepository;
+
+    @Autowired
+    SeriesTagRepository seriesTagRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    PostAnalysisRepository postAnalysisRepository;
+
+    @Autowired
+    PostTagRepository postTagRepository;
+
+    @Autowired
+    DrawingSavingRepository drawingSavingRepository;
+
+
     @GetMapping("/setting")
     public String setting(ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
             if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
@@ -212,14 +240,21 @@ public class SettingController {
 
     @GetMapping({"upgradeAccount"})
     public String upgrade(ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
             return "index";
         }
 
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
             if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
@@ -241,41 +276,21 @@ public class SettingController {
     public String resetAccount(ModelMap model, HttpServletRequest request) throws Exception {
 
         String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
-        List<Post> postList = postRepository.findByUser(user);
-        for (Post post : postList) {
-            if (!post.isRepost()) {
-                List<PostContent> postContentList = postContentRepository.findByPostIndentityPostPostID(post.getPostID());
-                for (PostContent postContent : postContentList) {
-                    Work work = postContent.getPostIndentity().getWork();
-                    postContentRepository.delete(postContent);
-                    List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
-                    for (SeriesContent sc : seriesContentList)
-                        seriesContentRepository.delete(sc);
-                    workRepository.delete(work);
-                }
-                List<Post> repostList = postRepository.findByOriginalPostIDAndIsRepost(post.getPostID(), true);
-                for (Post repost : repostList) {
-                    postRepository.delete(repost);
-                }
-                List<Like> likeList = likeRepository.findByPostIndentityPost(post);
-                for (Like like : likeList) {
-                    likeRepository.delete(like);
-                }
-                List<Star> starList = starRepository.findByPostIndentityPost(post);
-                for (Star star : starList) {
-                    starRepository.delete(star);
-                }
-            }
-            postRepository.delete(post);
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
         }
 
-        List<Series> seriesList = seriesRepository.findByUser(user);
-        for (Series i : seriesList) {
-            seriesRepository.delete(i);
-        }
+        reset(username);
 
         model.addAttribute("User", user);
         return "setting";
@@ -284,13 +299,121 @@ public class SettingController {
     @GetMapping("/closeAccount")
     public String closeAccount(ModelMap model, HttpServletRequest request) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
 
-        resetAccount(model, request);
+        reset(username);
+
+        List<SeriesFollow> seriesFollowList = seriesFollowRepository.findSeriesFollowBySeriesFollowIndentityUser(user);
+        for (SeriesFollow seriesFollow : seriesFollowList)
+            seriesFollowRepository.delete(seriesFollow);
+
+        List<Follow> followList = followRepository.findFollowByFollowIndentityUseroneOrFollowIndentityUsertwo(user, user);
+        for (Follow follow : followList)
+            followRepository.delete(follow);
+
+        List<ReportInfo> reportInfoList = reportInfoRepository.findReportInfoByReporteeOrReporter(user, user);
+        for (ReportInfo reportInfo : reportInfoList)
+            reportInfoRepository.delete(reportInfo);
+
+        List<Like> likeList = likeRepository.findByPostIndentityUser(user);
+        for (Like like : likeList)
+            likeRepository.delete(like);
+
+        List<Star> starList = starRepository.findByPostIndentityUser(user);
+        for (Star star : starList)
+            starRepository.delete(star);
+
+        List<Comment> commentList = commentRepository.findCommentByUser(user);
+        for (Comment comment : commentList)
+            commentRepository.delete(comment);
+
         userRepository.delete(user);
-
         return "index";
+    }
+
+    private void reset(String username) {
+        User user = userRepository.findUserByUsername(username);
+
+        List<Post> postList = postRepository.findPostByUser(user);
+        for (Post post : postList) {
+            // Remove Likes/Star
+            List<Like> likeList = likeRepository.findByPostIndentityPost(post);
+            for (Like like : likeList)
+                likeRepository.delete(like);
+            List<Star> starList = starRepository.findByPostIndentityPost(post);
+            for (Star star : starList)
+                starRepository.delete(star);
+            // Remove Comments
+            List<Comment> commentList = commentRepository.findByPost(post);
+            for (Comment comment : commentList)
+                commentRepository.delete(comment);
+            // Post Analysis
+            List<PostAnalysis> postAnalysisList = postAnalysisRepository.findPostAnalysisByPost(post);
+            for (PostAnalysis postAnalysis : postAnalysisList)
+                postAnalysisRepository.delete(postAnalysis);
+            // Tag
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            for (PostTag postTag : postTagList)
+                postTagRepository.delete(postTag);
+            // Report
+            List<ReportInfo> reportInfoList = reportInfoRepository.findReportInfoByPost(post);
+            for (ReportInfo reportInfo : reportInfoList)
+                reportInfoRepository.delete(reportInfo);
+
+            // Content
+            List<PostContent> postContentList = postContentRepository.findByPostIndentityPostPostID(post.getPostID());
+            for (PostContent postContent : postContentList) {
+                Work work = postContent.getPostIndentity().getWork();
+                List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentityWork(work);
+                for (SeriesContent sc : seriesContentList)
+                    seriesContentRepository.delete(sc);
+                postContentRepository.delete(postContent);
+                workRepository.delete(work);
+            }
+
+            // Repost
+            if (post.isRepost()) {
+                List<Post> repostList = postRepository.findByOriginalPostIDAndIsRepost(post.getPostID(), true);
+                for (Post repost : repostList)
+                    postRepository.delete(repost);
+            }
+            postRepository.delete(post);
+        }
+
+        List<Series> seriesList = seriesRepository.findByUser(user);
+        for (Series series : seriesList) {
+            List<SeriesFollow> seriesFollowList = seriesFollowRepository.findBySeriesFollowIndentitySeries(series);
+            for (SeriesFollow seriesFollow : seriesFollowList)
+                seriesFollowRepository.delete(seriesFollow);
+
+            List<SeriesTag> seriesTagList = seriesTagRepository.findSeriesTagBySeries(series);
+            for (SeriesTag seriesTag : seriesTagList)
+                seriesTagRepository.delete(seriesTag);
+
+            List<SeriesContent> seriesContentList = seriesContentRepository.findSeriesContentBySeriesContentIndentitySeries(series);
+            for (SeriesContent seriesContent : seriesContentList)
+                seriesContentRepository.delete(seriesContent);
+
+            seriesRepository.delete(series);
+        }
+
+        drawingSavingRepository.delete(drawingSavingRepository.findDrawingSavingByUserone(user));
+        List<Work> workList = workRepository.findByUserUsername(username);
+        for (Work work : workList)
+            workRepository.delete(work);
+
     }
 
 }

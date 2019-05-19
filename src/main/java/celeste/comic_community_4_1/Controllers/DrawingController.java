@@ -29,30 +29,35 @@ public class DrawingController {
     @GetMapping("/drawingInstruction")
     public String goToDrawingInstruction(ModelMap model,
                                          HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getMembership().equals("None")) {
-                if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
-                    return "blocked";
-                }
-            } else {
-                if (user.getBlockedSince().after(Notification.getDaysBefore(1))) {
-                    return "blocked";
-                }
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
             }
             user.setBlockStatus("none");
             userRepository.save(user);
         }
-
         model.addAttribute("User", user);
 
 
@@ -63,25 +68,30 @@ public class DrawingController {
     public String goTodrawing(ModelMap model,
                               HttpServletRequest request) throws Exception {
 
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getMembership().equals("None")) {
-                if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
-                    return "blocked";
-                }
-            } else {
-                if (user.getBlockedSince().after(Notification.getDaysBefore(1))) {
-                    return "blocked";
-                }
+            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
             }
             user.setBlockStatus("none");
             userRepository.save(user);

@@ -12,4 +12,6 @@ public interface DrawingSavingRepository extends JpaRepository<DrawingSaving, Lo
     List<DrawingSaving> findByUserone(User user1);
 
     DrawingSaving findDrawingSavingByUserone(User user);
+
+    void deleteDrawingSavingByUserone(User user);
 }
