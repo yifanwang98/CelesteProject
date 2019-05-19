@@ -21,5 +21,9 @@ public interface ReportInfoRepository extends JpaRepository<ReportInfo, Long> {
 
     List<ReportInfo> findReportInfoByPost(Post post);
 
+    List<ReportInfo> findReportInfoByReporteeOrReporter(User a, User b);
+
     void deleteReportInfoByReporterOrReportee(User reporter, User reportee);
+
+    void deleteReportInfoByPost(Post post);
 }

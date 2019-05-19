@@ -1,5 +1,6 @@
 package celeste.comic_community_4_1.repository;
 
+import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.model.Work;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,4 +13,6 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
     List<Work> findByGenre(String genre);
 
     Work findWorkByWorkID(long id);
+
+    void deleteWorkByUser(User user);
 }

@@ -15,6 +15,8 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, PostIndentity> {
     List<Comment> findByPost(Post post);
 
+    List<Comment> findCommentByUser(User user);
+
     List<Comment> findCommentByCreatedAtAfterAndPost(Date after, Post post);
 
     long countCommentByPost(Post post);
@@ -22,7 +24,6 @@ public interface CommentRepository extends JpaRepository<Comment, PostIndentity>
     Comment findCommentByCommentID(long commentID);
 
     void deleteCommentByUser(User user);
-
     void deleteCommentByPost(Post post);
 
 }
