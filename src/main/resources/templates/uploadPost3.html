@@ -78,7 +78,10 @@
 <!---------------------------------------->
 <!---------------------------------------->
 <form id="uploadPostInfo" method="post" action="uploadPostInfo"
-      onsubmit="document.getElementById('uploading').style.display = ''; document.getElementById('infoTable').style.display = 'None'; document.getElementById('footer').style.display = 'None';"></form>
+      onsubmit="document.getElementById('uploading').style.display = '';
+                  document.getElementById('infoTable').style.display = 'None';
+                  document.getElementById('footer').style.display = 'None';">
+</form>
 <table style="width: 100%; padding: 2em 25%;" class="webfont" id="infoTable">
     <!-- Title -->
     <tr>
@@ -113,7 +116,8 @@
             <div>
                 <span th:each="draft, iter: ${postDraft.getThumbnails()}">
                     <span style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                        <image th:src="'data:image/png;base64,'+${draft.toString()}" class="upload-post-tiny-image"/>
+                        <image th:src="'data:image/png;base64,'+${draft.toString()}"
+                               class="upload-post-tiny-image"></image>
                     </span>
                 </span>
             </div>
