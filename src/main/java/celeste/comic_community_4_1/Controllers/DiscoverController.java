@@ -241,8 +241,9 @@ public class DiscoverController {
             return "signUp";
         }
 
+        username = username.trim();
         User newUser = new User();
-        newUser.setUsername(username.trim());
+        newUser.setUsername(username);
         newUser.setCreatedAt(new Date());
         password = PasswordChecker.encryptSHA512(password);
         newUser.setPassword(password);
@@ -253,8 +254,34 @@ public class DiscoverController {
         newUser.setAvatar(base64);
         userRepository.save(newUser);
         model.addAttribute("User", newUser);
+        request.getSession().setAttribute("username", username);
 
-        return discover(model, request);
+        return mainPageDemo(model, request);
+    }
+
+    @GetMapping("/mainPageDemo")
+    public String mainPageDemo(ModelMap model, HttpServletRequest request) throws Exception {
+
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        
+        // Get Following & Followers
+        model.addAttribute("following", 0);
+        model.addAttribute("followers", 0);
+
+        //All the post by this user
+        model.addAttribute("postsCount", 0);
+        model.addAttribute("seriesCount", 0);
+        model.addAttribute("starCount", 0);
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
+
+        return "mainPageDemo";//discover(model, request);
     }
 
     @ResponseBody
