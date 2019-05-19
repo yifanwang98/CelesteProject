@@ -110,7 +110,7 @@
     window.onload = function () {
         var auto = setTimeout(function () {
             autoRefresh();
-        }, 100);
+        }, 1);
 
         function submitform() {
             document.forms["myForm"].submit();
@@ -121,7 +121,7 @@
             auto = setTimeout(function () {
                 submitform();
                 autoRefresh();
-            }, 100);
+            }, 1);
         }
     }
 </script>

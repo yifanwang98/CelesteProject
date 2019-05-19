@@ -3,7 +3,10 @@ package celeste.comic_community_4_1.model;
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostContentIndentity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,24 +17,6 @@ public class PostContent implements Serializable {
 
     @EmbeddedId
     PostContentIndentity postIndentity;
-
-//    @MapsId("postID")
-//    @ManyToOne(fetch=FetchType.LAZY, optional=false)
-//    @JoinColumn(name="post_ID", referencedColumnName = "postid")
-//    private Post post;
-
-//    @MapsId("workID")
-//    @ManyToOne
-//    @JoinColumn(name="work_ID", referencedColumnName = "workid")
-//    private Work work;
-
-
-    //    @ManyToOne(optional = false)
-//    @JoinColumns(value = {
-//            @JoinColumn(name = "postID", referencedColumnName = "postID"),
-//            @JoinColumn(name = "workID", referencedColumnName = "workID") })
-//    private Post post;
-
 
     @Override
     public boolean equals(Object o) {

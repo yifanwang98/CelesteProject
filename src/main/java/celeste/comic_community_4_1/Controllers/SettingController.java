@@ -57,6 +57,15 @@ public class SettingController {
     @Autowired
     SeriesRepository seriesRepository;
 
+    @Autowired
+    ReportInfoRepository reportInfoRepository;
+
+    @Autowired
+    SeriesTagRepository seriesTagRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
+
     @GetMapping("/setting")
     public String setting(ModelMap model, HttpServletRequest request) throws Exception {
         if (request.getSession().getAttribute("username") == null) {
@@ -274,6 +283,9 @@ public class SettingController {
 
         List<Series> seriesList = seriesRepository.findByUser(user);
         for (Series i : seriesList) {
+            seriesFollowRepository.deleteSeriesFollowByAndSeriesFollowIndentitySeries(i);
+            seriesTagRepository.deleteSeriesTagBySeries(i);
+            seriesContentRepository.deleteSeriesContentBySeriesContentIndentitySeries(i);
             seriesRepository.delete(i);
         }
 
@@ -288,8 +300,10 @@ public class SettingController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
         resetAccount(model, request);
-        userRepository.delete(user);
+        likeRepository.deleteLikeByPostIndentityUser(user);
+        starRepository.deleteStarByPostIndentityUser(user);
 
+        userRepository.delete(user);
         return "index";
     }
 

@@ -4,6 +4,7 @@ package celeste.comic_community_4_1.repository;
 import celeste.comic_community_4_1.model.Comment;
 import celeste.comic_community_4_1.model.EmbeddedClasses.PostIndentity;
 import celeste.comic_community_4_1.model.Post;
+import celeste.comic_community_4_1.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,10 @@ public interface CommentRepository extends JpaRepository<Comment, PostIndentity>
     long countCommentByPost(Post post);
 
     Comment findCommentByCommentID(long commentID);
+
+    void deleteCommentByUser(User user);
+
+    void deleteCommentByPost(Post post);
 
 }
 
