@@ -68,6 +68,19 @@
         <button id="load-button"> load_button</button>
         <button id="download-button"> download button</button>
         <button id="post-button"> post my work!</button>
+		<br>
+        <button id="select-button"> Select</button>
+        <button id="undo-button"> Undo</button>
+        <button id="redo-button"> Redo</button>
+        <button id="zoomin-button"> Zoomin</button>
+        <button id="zoomout-button"> Zoomout</button>
+        <button id="arrow-button"> Arrow</button>
+        <button id="rectangle-button"> Rectangle</button>
+        <button id="circle-button"> Circle</button>
+        <button id="line-button"> Line</button>
+        <button id="copy-button"> copy</button>
+        <button id="paste-button"> paste</button>
+
     </zwibbler>
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script> 
     <script src="http://zwibbler.com/zwibbler-demo.js"></script> 
@@ -79,9 +92,78 @@
         defaultBrushWidth: 2
     });
     
+	
     loadDrawing();
     // set autosve.   60sec 
     setTimeout( autoSave, 1000 * 60 ); 
+	
+	$('#select-button').click(function(){
+        var nodes = ctx.findNodes("treasure-markers");
+        ctx.selectNodes(nodes);
+    });
+
+    $('#undo-button').click(function(){
+        ctx.undo();
+    });
+
+    $('#redo-button').click(function(){
+        ctx.redo();
+    });
+
+    $('#zoomin-button').click(function(){
+        ctx.zoomIn();
+    });
+
+    $('#zoomout-button').click(function(){
+        ctx.zoomOut();
+    });
+
+    $('#brush-button').click(function(){
+        ctx.useBrushTool({
+            lineWidth: 10, // optional
+        });
+    });
+
+    $('#eraser-button').click(function(){
+        ctx.useBrushTool({
+            lineWidth: 10, // optional
+            strokeStyle: "erase"
+        });
+    });
+
+    $('#arrow-button').click(function(){
+        ctx.useArrowTool({
+            arrowStyle: "solid",
+            doubleArrow: true
+        }); 
+    });
+
+    $('#rectangle-button').click(function(){
+        ctx.useRectangleTool();
+    });
+
+    $('#circle-button').click(function(){
+        ctx.useCircleTool();
+    });
+    
+    $('#line-button').click(function(){
+        ctx.useLineTool({
+            lineWidth: 5
+        }, {
+            singleLine: true
+        });
+    });
+
+    $('#copy-button').click(function(){
+        // Copy and paste the current page, creating a duplicate page.
+        var node = ctx.getPageNode(ctx.getCurrentPage());
+        var snippet = ctx.copy(true, [node]);
+    
+    });
+
+    $('#paste-button').click(function(){
+        ctx.paste(snippet);
+    });
 
     $('#post-button').click(function(){
         var currentpage = ctx.getCurrentPage();

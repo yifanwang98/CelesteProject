@@ -57,6 +57,7 @@ public class PaymentController {
                     "payment description",
                     cancelUrl,
                     successUrl);
+            System.out.println("im in try");
             for (Links links : payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
                     return "redirect:" + links.getHref();
@@ -73,22 +74,16 @@ public class PaymentController {
                              @RequestParam("PayerID") String payerId,
                              ModelMap model,
                              HttpServletRequest request) {
-        // debug
-        System.out.println("I'm in success");
-        System.out.println("PaymentID = "+paymentId);
-        System.out.println("PayerID = " + payerId);
-
         String username = (String) request.getSession().getAttribute("username");
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         try {
             Payment payment = paypalService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-                //Debug
-                System.out.println("Im in success-> try");
                 // Blocked User
                 user.setMembership("1");
                 userRepository.save(user);
+                System.out.println("Im in success-> try");
             }
         } catch (PayPalRESTException e) {
             log.error(e.getMessage());
