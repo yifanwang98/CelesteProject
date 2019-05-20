@@ -58,6 +58,9 @@ public class ProfileController {
     @Autowired
     PostTagRepository postTagRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
     @GetMapping("/view_profile")
     public String viewProfile(@RequestParam(value = "user") String linkedUsername,
                               ModelMap model, HttpServletRequest request) throws Exception {
@@ -563,8 +566,42 @@ public class ProfileController {
             }
         }
         postRepository.delete(postToBeDeleted);
+        updateGenre();
 
         return viewProfile(username, model, request);
+    }
+
+    private void updateGenre() {
+        for (String genreName : ComicGenre.GENRE) {
+            if (genreName.equalsIgnoreCase("none"))
+                continue;
+
+            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+
+            String genreCover = null;
+            if (total != 0) {
+                Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+                if (tempPost != null) {
+                    genreCover = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID()).getPostIndentity().getWork().getThumbnail();
+                }
+                if (genreCover == null) {
+                    Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+                    if (tempSeries != null) {
+                        genreCover = tempSeries.getCover();
+                    }
+                }
+            }
+
+            if (genreCover == null) {
+                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+            }
+
+            Genre genre = genreRepository.findGenreByGenre(genreName);
+            genre.setImages(genreCover);
+            genre.setCount(total);
+            genreRepository.save(genre);
+        }
     }
 
 

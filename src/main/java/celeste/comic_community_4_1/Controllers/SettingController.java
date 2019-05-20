@@ -1,6 +1,7 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.ComicGenre;
 import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.miscellaneous.PasswordChecker;
 import celeste.comic_community_4_1.miscellaneous.ThumbnailConverter;
@@ -77,6 +78,9 @@ public class SettingController {
 
     @Autowired
     DrawingSavingRepository drawingSavingRepository;
+
+    @Autowired
+    GenreRepository genreRepository;
 
 
     @GetMapping("/setting")
@@ -414,6 +418,40 @@ public class SettingController {
         for (Work work : workList)
             workRepository.delete(work);
 
+        updateGenre();
+    }
+
+    private void updateGenre() {
+        for (String genreName : ComicGenre.GENRE) {
+            if (genreName.equalsIgnoreCase("none"))
+                continue;
+
+            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+
+            String genreCover = null;
+            if (total != 0) {
+                Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+                if (tempPost != null) {
+                    genreCover = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID()).getPostIndentity().getWork().getThumbnail();
+                }
+                if (genreCover == null) {
+                    Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+                    if (tempSeries != null) {
+                        genreCover = tempSeries.getCover();
+                    }
+                }
+            }
+
+            if (genreCover == null) {
+                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+            }
+
+            Genre genre = genreRepository.findGenreByGenre(genreName);
+            genre.setImages(genreCover);
+            genre.setCount(total);
+            genreRepository.save(genre);
+        }
     }
 
 }
