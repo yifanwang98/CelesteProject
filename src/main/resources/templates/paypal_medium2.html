@@ -2,28 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>Insert title here</title>
+    <meta http-equiv='refresh' content='0; URL=/setting'>
+    <title>Redirecting...</title>
 </head>
-<body>
-<form id="myForm" action="/setting">
-    <script type="text/javascript">
-        window.onload = function () {
-            var auto = setTimeout(function () {
-                autoRefresh();
-            }, 1);
-
-            function submitform() {
-                document.forms["myForm"].submit();
-            }
-
-            function autoRefresh() {
-                clearTimeout(auto);
-                auto = setTimeout(function () {
-                    submitform();
-                    autoRefresh();
-                }, 2);
-            }
-        }
-    </script>
-</body>
+<body></body>
 </html>

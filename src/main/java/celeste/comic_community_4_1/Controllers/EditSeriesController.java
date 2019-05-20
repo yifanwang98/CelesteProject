@@ -55,6 +55,9 @@ public class EditSeriesController {
     @Autowired
     SeriesTagRepository seriesTagRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
     @GetMapping("/editSeries")
     public String goToEditSeries(@RequestParam(value = "id") long seriesId,
                                  ModelMap model,
@@ -294,6 +297,7 @@ public class EditSeriesController {
             seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
         }
         model.addAttribute("seriesDataList", seriesDataList);
+        updateGenre();
         return "profile_series";
     }
 
@@ -374,9 +378,42 @@ public class EditSeriesController {
             seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
         }
         model.addAttribute("seriesDataList", seriesDataList);
+        updateGenre();
         return "profile_series";
     }
 
+    private void updateGenre() {
+        for (String genreName : ComicGenre.GENRE) {
+            if (genreName.equalsIgnoreCase("none"))
+                continue;
+
+            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+
+            String genreCover = null;
+            if (total != 0) {
+                Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+                if (tempPost != null) {
+                    genreCover = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID()).getPostIndentity().getWork().getThumbnail();
+                }
+                if (genreCover == null) {
+                    Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+                    if (tempSeries != null) {
+                        genreCover = tempSeries.getCover();
+                    }
+                }
+            }
+
+            if (genreCover == null) {
+                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+            }
+
+            Genre genre = genreRepository.findGenreByGenre(genreName);
+            genre.setImages(genreCover);
+            genre.setCount(total);
+            genreRepository.save(genre);
+        }
+    }
 
 }
 
