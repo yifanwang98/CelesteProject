@@ -80,6 +80,8 @@
         <button id="line-button"> Line</button>
         <button id="copy-button"> copy</button>
         <button id="paste-button"> paste</button>
+		<button id="keyboardInfo-button"> Keyboard Control Info</button>
+
 
     </zwibbler>
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script> 
@@ -96,6 +98,10 @@
     loadDrawing();
     // set autosve.   60sec 
     setTimeout( autoSave, 1000 * 60 ); 
+	
+	$('#keyboardInfo-button').click(function(){
+        window.open("https://zwibbler.com/docs/#keyboard-configuration");
+    })
 	
 	$('#select-button').click(function(){
         var nodes = ctx.findNodes("treasure-markers");
