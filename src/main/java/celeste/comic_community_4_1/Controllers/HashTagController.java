@@ -1,6 +1,5 @@
 package celeste.comic_community_4_1.Controllers;
 
-import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.HashtagResultData;
 import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.model.*;
@@ -65,19 +64,30 @@ public class HashTagController {
                           ModelMap model,
                           HttpServletRequest request) throws Exception {
 
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
                 request.getSession().removeAttribute("username");
                 request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
                 return "blocked";
             }
             user.setBlockStatus("none");
@@ -127,6 +137,90 @@ public class HashTagController {
         // Top Search
         List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
         model.addAttribute("top10Searches", top10Searches);
+
+        model.addAttribute("displayHashTag", true);
+
+        return "hashtag";
+    }
+
+    @GetMapping("/genre")
+    public String genre(@RequestParam(value = "genre") String genre,
+                        ModelMap model,
+                        HttpServletRequest request) throws Exception {
+
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }// Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
+        model.addAttribute("User", user);
+
+        List<String> postImageList = new ArrayList<>();
+        List<Long> postIdList = new ArrayList<>();
+
+        List<String> seriesImageList = new ArrayList<>();
+        List<Long> seriesIdList = new ArrayList<>();
+
+        // genre In Post
+        List<Post> postList = postRepository.findDistinctByPrimaryGenreOrSecondaryGenre(genre, genre);
+        for (Post post : postList) {
+            List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(post.getPostID());
+            for (int j = 0; j < postContents.size(); j++) {
+                Work work = postContents.get(j).getPostIndentity().getWork();
+                postImageList.add(work.getThumbnail());
+                postIdList.add(post.getPostID());
+                break;
+            }
+        }
+        List<Series> seriesList = seriesRepository.findDistinctByPrimaryGenreOrSecondaryGenre(genre, genre);
+        for (Series series : seriesList) {
+            seriesImageList.add(series.getCover());
+            seriesIdList.add(series.getSeriesID());
+        }
+
+        HashtagResultData hrd = new HashtagResultData(genre, postImageList, postIdList, seriesImageList, seriesIdList);
+        model.addAttribute("hashtagResultData", hrd);
+
+
+        //Get Follows
+        List<Follow> c = followRepository.findByFollowIndentityUserone(user);
+        model.addAttribute("following", c.size());
+        //Get Followers
+        List<Follow> d = followRepository.findByFollowIndentityUsertwo(user);
+        model.addAttribute("followers", d.size());
+
+        model.addAttribute("postsCount", postRepository.findByUser(user).size());
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(user));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(user));
+
+        // Top Search
+        List<SearchWords> top10Searches = searchWordsRepository.findTop10ByOrderByHeatDesc();
+        model.addAttribute("top10Searches", top10Searches);
+
+        model.addAttribute("displayHashTag", false);
 
         return "hashtag";
     }

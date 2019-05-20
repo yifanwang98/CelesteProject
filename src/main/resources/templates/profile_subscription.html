@@ -234,7 +234,7 @@
                 <td>
                     <div style="padding: 0 1.5em">
                         <div class="subscription-series-title">
-                            <a href=""><span th:text="${seriesData.series.getSeriesName()}"></span></a>
+                            <a href="#"><span th:text="${seriesData.series.getSeriesName()}"></span></a>
                         </div>
                         <div class="subscription-series-date">
                             <span class="semibold">Created On: </span><span
@@ -251,15 +251,18 @@
                         </div>
                         <div class="subscription-series-tag">
                             <span th:if="${!seriesData.series.getPrimaryGenre().equals('None')}">
-                                <a href="">#<span th:text="${seriesData.series.getPrimaryGenre()}"></span></a>
+                                <a th:href="'/genre?genre=' + ${seriesData.series.getPrimaryGenre()}">
+                                    <i class='far fa-bookmark'></i>
+                                    <span th:text="${seriesData.series.getPrimaryGenre()}"></span></a>
                             </span>
                             <span th:if="${!seriesData.series.getSecondaryGenre().equals('None')}">
-                                <a href="">#<span th:text="${seriesData.series.getSecondaryGenre()}"></span></a>
+                                <a th:href="'/genre?genre=' + ${seriesData.series.getSecondaryGenre()}">
+                                    <i class='far fa-bookmark'></i>
+                                    <span th:text="${seriesData.series.getSecondaryGenre()}"></span></a>
                             </span>
                             <span th:each="tag: ${seriesData.tags}">
-                                <a href="">#<span th:text="${tag}"></span></a>
+                                <a th:href="'/hashtag?tag=' + ${tag}">#<span th:text="${tag}"></span></a>
                             </span>
-                            <a href="" class="series-add-tag" th:if="${seriesData.owner}">+</a>
                         </div>
                     </div>
                 </td>
@@ -267,7 +270,9 @@
                 <td>
                     <div style="margin: 0.75em 0;">
                         <div th:if="${seriesData.owner}" class="subscription-series-unsubscribe">
-                            <a href=""><i class='far fa-edit'></i> Edit</a>
+                            <a th:href="'/editSeries?id=' + ${seriesData.series.getSeriesID()}">
+                                <i class='far fa-edit'></i> Edit
+                            </a>
                         </div>
                     </div>
                     <div th:if="${seriesData.subscribed}" class="subscription-series-unsubscribe">

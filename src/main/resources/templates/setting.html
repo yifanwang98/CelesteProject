@@ -2,7 +2,7 @@
 <html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Setting</title>
+    <title>Setting - Celeste</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -81,7 +81,7 @@
                     }
                 });
 
-            })
+            });
 
             $('#profile-form').submit(function(event) {
                 event.preventDefault();
@@ -207,7 +207,8 @@
                         Avatar
                     </td>
                     <td style="text-align: center;">
-                        <image id="useravatar"th:src="'data:image/png;base64,'+${User.getAvatar()}" class="setting-avatar"></image>
+                        <image id="useravatar" th:src="'data:image/png;base64,'+${User.getAvatar()}"
+                               class="setting-avatar"></image>
                     </td>
                     <td style="text-align: right">
                         <input type="file" accept=".jpg,.png" style="display: none;" id="new-avatar"  name = "file">
@@ -234,20 +235,22 @@
                 <tr>
                     <td class="setting-subtitle">Password</td>
                     <td>
-                        <input type="password"  name="new-password" class="setting-textfield"  th:value="${User.getPassword()}">
+                        <input type="password" name="new-password" class="setting-textfield" maxlength="24"
+                               placeholder="******">
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle" id = "Confirm_Password">Confirm Password</td>
                     <td>
-                        <input type="password"  name="confirm-new-password"
-                               class="setting-textfield" th:value="${User.getPassword()}">
+                        <input type="password" name="confirm-new-password" placeholder="******"
+                               class="setting-textfield" maxlength="24">
                     </td>
                 </tr>
                 <tr>
                     <td class="setting-subtitle">Email</td>
                     <td>
-                        <input type="email" id = "email"  name="new-email" class="setting-textfield" th:value="${User.getEmail()}">
+                        <input type="email" id="email" name="new-email" class="setting-textfield"
+                               th:value="${User.getEmail()}" required>
                     </td>
                 </tr>
                 <tr>
@@ -276,10 +279,9 @@
 
                 <tr>
                     <td></td>
-                    <td>
-                        <!--<a href="" class="setting-edit-btn"><i class='far fa-edit'></i></a>-->
-                    </td>
+                    <td></td>
                 </tr>
+
                 <tr>
                     <td><a href="" class="setting-cancel-btn">Cancel</a></td>
                     <td>

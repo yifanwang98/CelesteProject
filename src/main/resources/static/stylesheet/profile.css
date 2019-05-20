@@ -6,7 +6,7 @@
 
 .avatar-image {
     margin: 1em;
-    border: #30c5c5 2px solid;
+    border: #cccccc 1px solid;
     border-radius: 50%;
     width: 8em;
     height: 8em;
@@ -67,6 +67,7 @@
 
 .profile-follow-content:hover {
     color: #218787;
+    cursor: pointer;
 }
 
 .profile-button-table {
@@ -105,6 +106,7 @@
     text-decoration: none;
     color: #218787;
     font-style: italic;
+    cursor: pointer;
 }
 
 .profile-index-cell-unselected {
@@ -121,6 +123,7 @@
     text-decoration: none;
     color: #269b9b;
     font-style: italic;
+    cursor: pointer;
 }
 
 .post-stared {
@@ -136,6 +139,7 @@
 .post-stared a:hover {
     color: #666666;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .post-liked {
@@ -151,6 +155,7 @@
 .post-liked a:hover {
     color: #666666;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .series-subscription-card {
@@ -179,6 +184,7 @@
 
 .subscription-series-title a:hover {
     color: #218787;
+    cursor: pointer;
 }
 
 .subscription-series-author, .subscription-series-date {
@@ -220,6 +226,7 @@
 
 .subscription-series-tag-removal:hover {
     color: #218787;
+    cursor: pointer;
 }
 
 .subscription-series-unsubscribe {
@@ -234,6 +241,7 @@
 
 .subscription-series-unsubscribe:hover {
     border: #218787 1.5px solid;
+    cursor: pointer;
 }
 
 .subscription-series-unsubscribe a:link, .subscription-series-unsubscribe a:visited {
@@ -257,6 +265,7 @@
 
 .series-add-tag:hover {
     border: #218787 1px solid;
+    cursor: pointer;
 }
 
 .analysis-card {
@@ -315,4 +324,17 @@
     color: #218787;
     font-weight: 500;
     text-decoration: none;
+    cursor: pointer;
+}
+
+.create-post-banner, .create-post-banner:link, .create-post-banner:visited {
+    display: block;
+    color: #218787;
+    text-decoration: none;
+    padding: 0.25em 0;
+}
+
+.create-post-banner:hover {
+    font-weight: bold;
+    color: #269b9b;
 }

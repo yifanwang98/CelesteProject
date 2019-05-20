@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Sign Up</title>
     <!-- Metadata -->
@@ -74,7 +74,8 @@
         <div class="loginInfo webfont" id = "uuu">
             Username: <span id="usernameError" style="color:#d33f42;"></span><br>
         </div>
-        <input type="text" name="username" value="" maxlength="24" class="loginTextfield webfont" required><br>
+        <input type="text" name="username" th:value="${username}" maxlength="24" class="loginTextfield webfont"
+               required><br>
 
         <div class="loginInfo webfont">
             Password:<br>
@@ -90,7 +91,7 @@
             Email Address: <br>
         </div>
 
-        <input type="email" name="email" value="" class="loginTextfield webfont" ><br>
+        <input type="email" name="email" th:value="${email}" class="loginTextfield webfont"><br>
 
 
 
@@ -104,10 +105,16 @@
                     <td>
                         Gender:
                     </td>
-                    <td>
+                    <td th:if="${gender.equalsIgnoreCase('male')}">
                         <input type="radio" value="male" checked="checked" name="gender"> Male
                     </td>
-                    <td>
+                    <td th:unless="${gender.equalsIgnoreCase('male')}">
+                        <input type="radio" value="male" name="gender"> Male
+                    </td>
+                    <td th:if="${gender.equalsIgnoreCase('female')}">
+                        <input type="radio" value="female" checked="checked" name="gender"> Female
+                    </td>
+                    <td th:unless="${gender.equalsIgnoreCase('female')}">
                         <input type="radio" value="female" name="gender"> Female
                     </td>
                 </tr>
@@ -115,9 +122,8 @@
         </div>
         <br>
         <!-- Display error message if necessary -->
-        <div class="error webfont">
+        <div class="error webfont" th:text="${errors}"></div>
 
-        </div>
         <input type="submit" value="Sign Up" class="button webfont" name = "submit">
     </form>
     <div style="width: 100%" class="linkText">
@@ -126,7 +132,8 @@
         </a>
     </div>
 </div>
-<div style="height: 45em;">
+<div style="height: 50em;">
+
 </div>
 </body>
 </html>

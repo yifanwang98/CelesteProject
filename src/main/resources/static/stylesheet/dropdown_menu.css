@@ -38,15 +38,18 @@
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {
     background-color: #ddd;
-    color: #269b9b
+    color: #269b9b;
+    cursor: pointer;
 }
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
     display: block;
+    cursor: pointer;
 }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-    color: #269b9b
+    color: #269b9b;
+    cursor: pointer;
 }

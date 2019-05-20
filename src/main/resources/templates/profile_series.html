@@ -248,6 +248,17 @@
         </tr>
     </table>
 </div>
+<div class="profile-index-section webfont" th:if="${!isOthersProfile}" style="margin-top: 0.5em; margin-bottom: 0.5em;">
+    <table width="100%">
+        <tr>
+            <td>
+                <a href="/createSeries" class="create-post-banner">
+                    <i class='fas fa-sticky-note'></i> Create New Series
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
 <!---------------------------------------->
 <!---------------------------------------->
 <div class="webfont" style="margin: 1em 12.5%;">
@@ -291,11 +302,13 @@
                         </div>
                         <div class="subscription-series-tag">
                             <span th:if="${!seriesData.series.getPrimaryGenre().equals('None')}">
-                                <a href=""><i class='far fa-bookmark'></i> <span
+                                <a th:href="'/genre?genre=' + ${seriesData.series.getPrimaryGenre()}"><i
+                                        class='far fa-bookmark'></i> <span
                                         th:text="${seriesData.series.getPrimaryGenre()}"></span></a>
                             </span>
                             <span th:if="${!seriesData.series.getSecondaryGenre().equals('None')}">
-                                <a href=""><i class='far fa-bookmark'></i> <span
+                                <a th:href="'/genre?genre=' + ${seriesData.series.getSecondaryGenre()}"><i
+                                        class='far fa-bookmark'></i> <span
                                         th:text="${seriesData.series.getSecondaryGenre()}"></span></a>
                             </span>
                             <span th:each="tag, iter: ${seriesData.tags}">
@@ -307,7 +320,7 @@
                                 </span>
                                 <span th:unless="${tag != null}"
                                       th:id="'T' + ${seriesData.series.getSeriesID()} + '-' + ${iter.index}">
-                                    <a href="" style="display: none"
+                                    <a href="#" style="display: none"
                                        th:id="'TT' + ${seriesData.series.getSeriesID()} + '-' + ${iter.index}"></a>
                                 </span>
                             </span>

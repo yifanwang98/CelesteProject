@@ -2,7 +2,7 @@
 <html lang="en">
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Sign In</title>
+    <title>Sign In - Celeste</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -45,17 +45,18 @@
         <div class="loginInfo webfont">
             Password: <br>
         </div>
-        <input type="password" name="password" value="" maxlength="24" class="loginTextfield webfont" required><br><br>
+        <input type="password" name="password" value="" maxlength="24" class="loginTextfield webfont" required><br>
         <!-- Display error message if necessary -->
-        <div class="error webfont" th:text="${errors}">
-
-        </div>
-        <input type="submit" value="Login" class="button webfont" style="cursor: pointer;">
+        <div class="error webfont" th:text="${errors}"></div>
+        <input type="submit" value="Login" class="login-button webfont" style="cursor: pointer;">
     </form>
     <div style="width: 100%" class="linkText">
-
         <a href="signup">
             New to Celeste? Join now!
+        </a>
+        <br>
+        <a href="forgetPassword">
+            Forget Password?
         </a>
     </div>
 

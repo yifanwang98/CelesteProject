@@ -51,13 +51,37 @@
                 cache : false,
                 success : function(data) {
                     srcc =  "data:image/png;base64,"+data.toString();
-                    var imgHtml = '<div id = "abcd" style="width: 100%;height: 100vh;overflow: auto;background: rgba(0,0,0,0.5);text-align: center;position: fixed;top: 0;left: 0;z-index: 1000;"><img id="abcde" style="margin-top: 100px;width: 70%;margin-bottom: 100px;" src='+srcc+' /><p style="font-size: 50px;position: fixed;top: 30px;right: 30px;color: white;cursor: pointer;" onclick="$(\'#abcd\').remove();">×</p></div>'
+                    var imgHtml = '<div id = "abcd" style="width: 100%;height: 100vh;overflow: auto;background: rgba(0,0,0,0.5);text-align: center;position: fixed;top: 0;left: 0;z-index: 1000;"><img id="abcde" style="margin-top: 100px;width: 70%;margin-bottom: 100px; background: white;" src=' + srcc + ' /><p style="font-size: 50px;position: fixed;top: 30px;right: 30px;color: white;cursor: pointer;" onclick="$(\'#abcd\').remove();">×</p></div>'
                     $('body').append(imgHtml);
                 },
                 error: function(){
                     alert(arguments[1]);
                 }
             });
+        }
+
+        function reportAPost(postID) {
+            var reason = prompt("Please describe the reason:", "");
+            if (reason != null) {
+                $.ajax({
+                    type: "POST",
+                    url: 'singlepostReport',
+                    data: {postID: postID, reason: reason},
+                    cache: false,
+                    success: function (data) {
+                        if (data == "Report has been sent. Please wait for our reply.") {
+                            alert(data);
+                            //location.reload();
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+                    error: function () {
+                        alert(arguments[1]);
+                    }
+                });
+            }
         }
 
         function deleteComment(link) {
@@ -251,7 +275,9 @@
                         <table width="100%">
                             <tr>
                                 <td>
-                                    <span class="post-author" th:text="${postToDisplay.getUser().getUsername()}"></span>
+                                    <a th:href="'view_profile?user=' + ${postToDisplay.getUser().getUsername()}"
+                                       class="post-author"
+                                       th:text="${postToDisplay.getUser().getUsername()}"></a>
                                     <span th:if="${postToDisplay.getUser().getGender() == 'male'}"
                                           class="follow-male"><i class='fas fa-mars'></i></span>
                                     <span th:unless="${postToDisplay.getUser().getGender() == 'male'}"
@@ -270,7 +296,8 @@
                                          th:unless="${User.getUsername() == postToDisplay.getUser().getUsername()}">
                                         <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                         <div class="dropdown-content">
-                                            <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
+                                            <a th:href="'javascript:reportAPost(' + ${postToDisplay.getPostID()} + ');'">
+                                                    <i class="fas fa-exclamation-triangle"></i> Report</a>
                                         </div>
                                     </div>
                                 </td>
@@ -281,17 +308,21 @@
                 <!-- Text -->
                 <tr>
                     <td></td>
-                    <td>
+                    <td style="word-break: break-word;">
                         <div th:text="${postToDisplay.getPostComment()}" class="post-text"></div>
                         <div class="post-genre" th:if="${!postToDisplay.isRepost()}">
-                            <span th:if="${!postToDisplay.getPrimaryGenre().equals('None')}" class="post-genre-text">
+                            <a th:if="${!postToDisplay.getPrimaryGenre().equals('None')}"
+                               th:href="'/genre?genre=' + ${postToDisplay.getPrimaryGenre()}"
+                               class="post-genre-text">
                                 <i class='far fa-bookmark'></i>
                                 <span th:text="${postToDisplay.getPrimaryGenre()} + ' '"></span>
-                            </span>
-                            <span th:if="${!postToDisplay.getSecondaryGenre().equals('None')}" class="post-genre-text">
+                            </a>
+                            <a th:if="${!postToDisplay.getSecondaryGenre().equals('None')}"
+                               th:href="'/genre?genre=' + ${postToDisplay.getSecondaryGenre()}"
+                               class="post-genre-text">
                                 <i class='far fa-bookmark'></i>
                                 <span th:text="${postToDisplay.getSecondaryGenre()} + ' '"></span>
-                            </span>
+                            </a>
                             <span th:each="tag: ${postTags}">
                                 <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
                                     <span th:text="'#' + ${tag}" class="post-genre-text"></span>
@@ -303,7 +334,7 @@
                 <!-- From Series -->
                 <tr th:if="${!fromSeries.isEmpty() && !postToDisplay.isRepost()}">
                     <td></td>
-                    <td>
+                    <td style="word-break: break-word;">
                         <span class="post-genre semibold">From Series: </span>
                         <span th:each="series: ${fromSeries}">
                             <a class="post-genre-text" th:text="${series.getSeriesName()}"
@@ -330,8 +361,9 @@
                                         <table width="100%">
                                             <tr>
                                                 <td>
-                                                    <span class="post-author"
-                                                          th:text="${originalPost.getUser().getUsername()}"></span>
+                                                    <a th:href="'view_profile?user=' + ${originalPost.getUser().getUsername()}"
+                                                       class="post-author"
+                                                       th:text="${originalPost.getUser().getUsername()}"></a>
                                                     <span th:if="${originalPost.getUser().getGender() == 'male'}"
                                                           class="follow-male"><i class='fas fa-mars'></i></span>
                                                     <span th:unless="${originalPost.getUser().getGender() == 'male'}"
@@ -348,19 +380,21 @@
                                 <!-- Text -->
                                 <tr>
                                     <td></td>
-                                    <td>
+                                    <td style="word-break: break-word;">
                                         <div th:text="${originalPost.getPostComment()}" class="post-text"></div>
                                         <div class="post-genre">
-                                            <span th:if="${!originalPost.getPrimaryGenre().equals('None')}"
-                                                  class="post-genre-text">
+                                            <a th:if="${!originalPost.getPrimaryGenre().equals('None')}"
+                                               th:href="'/genre?genre=' + ${originalPost.getPrimaryGenre()}"
+                                               class="post-genre-text">
                                                 <i class='far fa-bookmark'></i>
                                                 <span th:text="${originalPost.getPrimaryGenre()} + ' '"></span>
-                                            </span>
-                                            <span th:if="${!originalPost.getSecondaryGenre().equals('None')}"
+                                            </a>
+                                            <a th:if="${!originalPost.getSecondaryGenre().equals('None')}"
+                                               th:href="'/genre?genre=' + ${originalPost.getSecondaryGenre()}"
                                                   class="post-genre-text">
                                                 <i class='far fa-bookmark'></i>
                                                 <span th:text="${originalPost.getSecondaryGenre()} + ' '"></span>
-                                            </span>
+                                            </a>
                                             <span th:each="tag: ${postTags}">
                                                 <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
                                                     <span th:text="'#' + ${tag}" class="post-genre-text"></span>
@@ -372,7 +406,7 @@
                                 <!-- From Series -->
                                 <tr th:if="${!fromSeries.isEmpty() && !originalPost.isRepost()}">
                                     <td></td>
-                                    <td>
+                                    <td style="word-break: break-word;">
                                         <span class="post-genre semibold">From Series: </span>
                                         <span th:each="series: ${fromSeries}">
                                             <a class="post-genre-text" th:text="${series.getSeriesName()}"
@@ -522,7 +556,6 @@
                                              th:unless="${User.getUsername() == comment.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                             <div class="dropdown-content">
-                                                <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
                                                 <span th:if="${User.getUsername() == postToDisplay.getUser().getUsername()}">
                                                     <!-- If I am the post owner-->
                                                     <a href="#" onclick="deleteComment(this)"
@@ -539,8 +572,8 @@
                     <!-- Text -->
                     <tr>
                         <td></td>
-                        <td>
-                            <div th:text="${comment.getContent()}" class="post-text"></div>
+                        <td style="word-break: break-word;">
+                            <div th:text="${comment.getContent()}" class="post-text">fajfkljakahdkghakgjhasigjwoighiowrhgfajfkljakahdkghakgjhasigjwoighiowrhgfajfkljakahdkghakgjhasigjwoighiowrhgfajfkljakahdkghakgjhasigjwoighio</div>
                         </td>
                     </tr>
                 </table>

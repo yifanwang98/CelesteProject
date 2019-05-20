@@ -32,6 +32,7 @@ body {
 .headerSelected:hover {
     color: #218787;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .headerUnselected:link, .headerUnselected:visited {
@@ -44,6 +45,7 @@ body {
 .headerUnselected:hover {
     color: #218787;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .headerCellPadding {

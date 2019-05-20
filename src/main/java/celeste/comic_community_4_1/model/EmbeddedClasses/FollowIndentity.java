@@ -42,14 +42,15 @@ public class FollowIndentity implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FollowIndentity)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         FollowIndentity that = (FollowIndentity) o;
-        return Objects.equals(getUser1(), that.getUser1()) &&
-                Objects.equals(getUser2(), that.getUser2());
+        return Objects.equals(userone, that.userone) &&
+                Objects.equals(usertwo, that.usertwo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUser1(), getUser2());
+
+        return Objects.hash(userone, usertwo);
     }
 }

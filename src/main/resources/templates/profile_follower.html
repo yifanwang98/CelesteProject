@@ -2,7 +2,7 @@
 <html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Following</title>
+    <title>Follower</title>
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -25,8 +25,6 @@
                 success : function(data) {
                     if(data == "Remove Success!"  ){
                         alert(data)
-                        // ( $('#'+id).text("  Follow"))
-                        // ( $('#'+id).prepend("<i class='fas fa-plus'></i>"))
                          location.reload();
                     }
                     else  {
@@ -86,7 +84,6 @@
                 }
             });
         }
-
 
         function unfollowUser2(link) {
             var username2 = link.id.substring(3);
@@ -216,22 +213,27 @@
         </span>
         <tr>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (2)</a>
+                <a th:href="'view_profile?user=' + ${profileOwner.getUsername()}">Post (<span
+                        th:text="${postsCount}"></span>)</a>
             </td>
             <td class="profile-index-cell-border profile-index-cell-unselected">
-                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (1)</a>
+                <a th:href="'view_profile_series?user=' + ${profileOwner.getUsername()}">Series (<span
+                        th:text="${seriesCount}"></span>)</a>
             </td>
             <span th:if="${isOthersProfile}">
                 <td class="profile-index-cell-selected">
-                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (<span
+                            th:text="${subscriptionCount}"></span>)</a>
                 </td>
             </span>
             <span th:unless="${isOthersProfile}">
                 <td class="profile-index-cell-border profile-index-cell-selected">
-                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (1)</a>
+                    <a th:href="'view_profile_subscription?user=' + ${profileOwner.getUsername()}">Subscription (<span
+                            th:text="${subscriptionCount}"></span>)</a>
                 </td>
                 <td class="profile-index-cell-border profile-index-cell-unselected">
-                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (1)</a>
+                    <a th:href="'view_profile_star?user=' + ${profileOwner.getUsername()}">Stars (<span
+                            th:text="${starCount}"></span>)</a>
                 </td>
                 <td class="profile-index-cell-unselected">
                     <a th:href="'profile_analysis'">Analysis</a>
@@ -270,8 +272,8 @@
                     </td>
                     <td>
                         <span th:if="${isOthersProfile}">
-                            <span th:if="${crossCheckedFollowList.get(iter.index) == false}">
-                                <span th:if="${!follow.getFollowIndentity().getUser1().getUsername().equals(User.getUsername())}">
+                            <span th:if="${crossCheckedFollowList.get(iter.index).booleanValue() == false}">
+                                <span th:if="${!follow.getFollowIndentity().getUser1().equals(User)}">
                                     <div class="subscription-series-unsubscribe">
                                         <a th:id="'AA-' + ${follow.getFollowIndentity().getUser1().getUsername()}"
                                            onclick="followUser2(this)"
@@ -279,7 +281,7 @@
                                     </div>
                                 </span>
                             </span>
-                            <span th:unless="${crossCheckedFollowList.get(iter.index) == false}">
+                            <span th:unless="${crossCheckedFollowList.get(iter.index).booleanValue() == false}">
                                 <span th:if="${!follow.getFollowIndentity().getUser1().getUsername().equals(User.getUsername())}">
                                     <div class="follow-following">
                                         Following

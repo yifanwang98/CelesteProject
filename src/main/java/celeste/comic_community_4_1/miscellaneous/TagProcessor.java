@@ -6,10 +6,11 @@ public class TagProcessor {
     public static final int MAX_TAG_LENGTH = 10;
 
     public static boolean validTag(String tag) {
-        return !tag.trim().isEmpty();
+        return !tag.replaceAll("#", " ").trim().isEmpty();
     }
 
     public static String process(String tag) {
+        tag = tag.replaceAll("#", " ").trim();
         String[] words = tag.split(" ");
         StringBuilder sb = new StringBuilder();
         String temp;
