@@ -30,6 +30,7 @@
 }
 
 .notification-link:hover {
+    cursor: pointer;
     color: #666666;
     font-weight: 500;
 }

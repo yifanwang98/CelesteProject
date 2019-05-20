@@ -58,22 +58,37 @@ public class ProfileController {
     @Autowired
     PostTagRepository postTagRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
     @GetMapping("/view_profile")
     public String viewProfile(@RequestParam(value = "user") String linkedUsername,
                               ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
             return "index";
         }
 
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
                 request.getSession().removeAttribute("username");
                 request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
                 return "blocked";
             }
             user.setBlockStatus("none");
@@ -106,7 +121,7 @@ public class ProfileController {
         for (int i = 0; i < postList.size(); i++) {
             // Post Content
             Post post = postList.get(i);
-            Post originalPost = null;
+            Post originalPost = post;
             if (post.isRepost()) {
                 originalPost = postRepository.findPostByPostID(post.getOriginalPostID());
             }
@@ -127,7 +142,7 @@ public class ProfileController {
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, profileOwner);
 
             List<String> postTags = new ArrayList<>();
-            List<PostTag> postTagList = postTagRepository.findPostTagByPost(post);
+            List<PostTag> postTagList = postTagRepository.findPostTagByPost(originalPost);
             for (PostTag tag : postTagList) {
                 postTags.add(tag.getTag());
             }
@@ -145,19 +160,31 @@ public class ProfileController {
     @GetMapping("/view_profile_series")
     public String viewProfileSeries(@RequestParam(value = "user") String linkedUsername,
                                     ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
-            return "index";
-        }
-
         // Session User
         String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
                 request.getSession().removeAttribute("username");
                 request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
                 return "blocked";
             }
             user.setBlockStatus("none");
@@ -210,19 +237,30 @@ public class ProfileController {
     @GetMapping("/view_profile_subscription")
     public String viewProfileSubscription(@RequestParam(value = "user") String linkedUsername,
                                           ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         // Blocked User
         if (user.getBlockStatus().equals("1")) {
-            if (user.getBlockedSince().after(Notification.getDaysBefore(3))) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
                 request.getSession().removeAttribute("username");
                 request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
                 return "blocked";
             }
             user.setBlockStatus("none");
@@ -270,16 +308,20 @@ public class ProfileController {
     public String subscribe_Unsubscribe_Series(@RequestParam("seriesID") Long seriesID,
                                   ModelMap model, HttpServletRequest request) throws Exception {
 
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         List<SeriesFollow> x = seriesFollowRepository.findSeriesFollowBySeriesFollowIndentityUserAndSeriesFollowIndentitySeriesSeriesID(user, seriesID);
         if (x.size() == 0) {
             SeriesFollow newsf = new SeriesFollow();
@@ -300,15 +342,20 @@ public class ProfileController {
     public String subscribeSeries(@RequestParam("seriesID") Long seriesID,
                                   ModelMap model, HttpServletRequest request) throws Exception {
 
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
 
         List<SeriesFollow> x = seriesFollowRepository.findSeriesFollowBySeriesFollowIndentityUserAndSeriesFollowIndentitySeriesSeriesID(user, seriesID);
         if (x.size() == 0) {
@@ -348,14 +395,35 @@ public class ProfileController {
     @GetMapping("/view_profile_star")
     public String viewProfileStar(@RequestParam(value = "user") String linkedUsername,
                                   ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         User profileOwner = user;
@@ -394,12 +462,6 @@ public class ProfileController {
                 images.add(postContents.get(j).getPostIndentity().getWork().getThumbnail());
             }
 
-            // Count
-            long shareCount = postRepository.countByoriginalPostIDAndIsRepost(post.getOriginalPostID(), true);
-            long commentCount = commentRepository.countCommentByPost(post);
-            long starCount = starRepository.countStarByPostIndentityPost(post);
-            long likeCount = likeRepository.countLikeByPostIndentityPost(post);
-
             boolean myLike = likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user);
 
             List<String> postTags = new ArrayList<>();
@@ -408,19 +470,21 @@ public class ProfileController {
                 postTags.add(tag.getTag());
             }
 
-            postDataList.add(new PostData(post, originalPost, images, shareCount, commentCount, starCount, likeCount,
+            postDataList.add(new PostData(post, originalPost, images, 0, 0, 0, 0,
                     true, myLike, fromSeries, postTags));
+        }
 
-            if (profileOwner.getUsername().equals(post.getUser().getUsername())) {
+        Collections.sort(postDataList);
+
+        for (int i = 0; i < postDataList.size(); i++) {
+            if (profileOwner.getUsername().equals(postDataList.get(i).post.getUser().getUsername())) {
                 followingStatus.add(FollowStatus.SELF);
-            } else if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(profileOwner, post.getUser())) {
+            } else if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(profileOwner, postDataList.get(i).post.getUser())) {
                 followingStatus.add(FollowStatus.FOLLOWING);
             } else {
                 followingStatus.add(FollowStatus.NOT_FOLLOWED);
             }
         }
-
-        Collections.sort(postDataList);
 
         model.addAttribute("followingStatus", followingStatus);
         model.addAttribute("postDataList", postDataList);
@@ -432,14 +496,20 @@ public class ProfileController {
     @PostMapping("/deleteStarredPost")
     public String deleteStarredPost(@RequestParam(value = "postID") long postID,
                                     ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
 
         Post postToBeDeleted = postRepository.findPostByPostID(postID);
         if (postToBeDeleted == null)
@@ -452,14 +522,20 @@ public class ProfileController {
     @PostMapping("/deletePost")
     public String deletePost(@RequestParam(value = "postID") long postID,
                              ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
 
         Post postToBeDeleted = postRepository.findPostByPostID(postID);
         if (postToBeDeleted == null)
@@ -490,8 +566,42 @@ public class ProfileController {
             }
         }
         postRepository.delete(postToBeDeleted);
+        updateGenre();
 
         return viewProfile(username, model, request);
+    }
+
+    private void updateGenre() {
+        for (String genreName : ComicGenre.GENRE) {
+            if (genreName.equalsIgnoreCase("none"))
+                continue;
+
+            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+
+            String genreCover = null;
+            if (total != 0) {
+                Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+                if (tempPost != null) {
+                    genreCover = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID()).getPostIndentity().getWork().getThumbnail();
+                }
+                if (genreCover == null) {
+                    Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+                    if (tempSeries != null) {
+                        genreCover = tempSeries.getCover();
+                    }
+                }
+            }
+
+            if (genreCover == null) {
+                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+            }
+
+            Genre genre = genreRepository.findGenreByGenre(genreName);
+            genre.setImages(genreCover);
+            genre.setCount(total);
+            genreRepository.save(genre);
+        }
     }
 
 

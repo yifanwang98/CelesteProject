@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
+    <script type="text/javascript" th:inline="javascript">
         function deletePost(post) {
             document.getElementById('deletePost' + post.id.substring(2)).submit();
         }
@@ -123,7 +123,7 @@
         </span>
         <span id="top-unfollow" th:if="${isOthersProfile && isFollowing}">
             <br><a href="#"
-                   onclick="unfollowUser()"
+                   onclick="unfollowUser(this)"
                    class="profile-top-unfollow"><i class='fas fa-minus'></i> Unfollow</a>
         </span>
 
@@ -186,6 +186,17 @@
         </tr>
     </table>
 </div>
+<div class="profile-index-section webfont" th:if="${!isOthersProfile}" style="margin-top: 0.5em; margin-bottom: 0.5em;">
+    <table width="100%">
+        <tr>
+            <td>
+                <a href="/createPostOption" class="create-post-banner">
+                    <i class='fas fa-pen-nib'></i> Create New Post
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
 <!---------------------------------------->
 <!---------------------------------------->
 <div class="webfont" style="margin: 1em 12.5%;">
@@ -215,13 +226,6 @@
                                    onclick="deletePost(this)"
                                    th:if="${User.getUsername() == postData.post.getUser().getUsername()}"
                                    class="post-action-more"><i class='far fa-trash-alt'></i></a>
-                                <div class="dropdown"
-                                     th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
-                                    <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
-                                    <div class="dropdown-content">
-                                        <a href="#"><i class="fas fa-exclamation-triangle"></i> Report</a>
-                                    </div>
-                                </div>
                             </td>
                         </tr>
                     </table>
@@ -230,18 +234,25 @@
             <!-- Text -->
             <tr>
                 <td></td>
-                <td>
+                <td style="word-break: break-word;">
                     <div th:text="${postData.post.getPostComment()}" class="post-text"></div>
                     <div class="post-genre">
-                        <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
-                              class="post-genre-text">
+                        <a th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                           th:href="'/genre?genre=' + ${postData.post.getPrimaryGenre()}"
+                           class="post-genre-text">
                                 <i class='far fa-bookmark'></i>
                                 <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
-                        </span>
-                        <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                        </a>
+                        <a th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                           th:href="'/genre?genre=' + ${postData.post.getSecondaryGenre()}"
                               class="post-genre-text">
                             <i class='far fa-bookmark'></i>
                             <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
+                        </a>
+                        <span th:each="tag: ${postData.postTags}" th:if="${!postData.post.isRepost()}">
+                            <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                            </a>
                         </span>
                     </div>
                 </td>
@@ -278,19 +289,26 @@
                             <!-- Text -->
                             <tr>
                                 <td></td>
-                                <td>
+                                <td style="word-break: break-word;">
                                     <div th:text="${postData.originalPost.getPostComment()}"
                                          class="post-text"></div>
                                     <div class="post-genre">
-                                        <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                              class="post-genre-text">
+                                        <a th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
+                                           th:href="'/genre?genre=' + ${postData.originalPost.getPrimaryGenre()}"
+                                           class="post-genre-text">
                                             <i class='far fa-bookmark'></i>
                                             <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
-                                        </span>
-                                        <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                        </a>
+                                        <a th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                           th:href="'/genre?genre=' + ${postData.originalPost.getPrimaryGenre()}"
                                               class="post-genre-text">
                                             <i class='far fa-bookmark'></i>
                                             <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
+                                        </a>
+                                        <span th:each="tag: ${postData.postTags}">
+                                            <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
+                                                <span th:text="'#' + ${tag}" class="post-genre-text"></span>
+                                            </a>
                                         </span>
                                     </div>
                                 </td>

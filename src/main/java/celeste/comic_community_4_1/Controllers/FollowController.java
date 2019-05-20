@@ -1,8 +1,10 @@
 package celeste.comic_community_4_1.Controllers;
 
 import celeste.comic_community_4_1.exception.ResourceNotFoundException;
+import celeste.comic_community_4_1.miscellaneous.Notification;
 import celeste.comic_community_4_1.model.EmbeddedClasses.FollowIndentity;
 import celeste.comic_community_4_1.model.Follow;
+import celeste.comic_community_4_1.model.Post;
 import celeste.comic_community_4_1.model.User;
 import celeste.comic_community_4_1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,6 @@ import java.util.List;
 @Controller
 public class FollowController {
 
-
     @Autowired
     UserRepository userRepository;
 
@@ -36,18 +37,64 @@ public class FollowController {
     @Autowired
     PostContentRepository postContentRepository;
 
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
+
+    @Autowired
+    StarRepository starRepository;
+
+    @Autowired
+    SeriesRepository seriesRepository;
+
+    @Autowired
+    SeriesContentRepository seriesContentRepository;
+
+    @Autowired
+    SeriesFollowRepository seriesFollowRepository;
+
+    @Autowired
+    SeriesTagRepository seriesTagRepository;
+
+    @Autowired
+    PostTagRepository postTagRepository;
+
     @GetMapping("/following")
     public String viewFollowing(@RequestParam(value = "user") String linkedUsername,
                                 ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
+            return "index";
+        }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
             return "index";
         }
 
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
 
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         model.addAttribute("User", user);
 
         // Is the same user
@@ -56,6 +103,13 @@ public class FollowController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
         model.addAttribute("profileOwner", linkedUser);
         model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
+
+        //All the post by this user
+        List<Post> postList = postRepository.findByUser(linkedUser);
+        model.addAttribute("postsCount", postList.size());
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(linkedUser));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(linkedUser));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(linkedUser));
 
         // Get Following
         List<Follow> following = followRepository.findByFollowIndentityUserone(linkedUser);
@@ -78,15 +132,36 @@ public class FollowController {
     @GetMapping("/follower")
     public String viewFollowers(@RequestParam(value = "user") String linkedUsername,
                                 ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
 
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         model.addAttribute("User", user);
 
         // Is the same user
@@ -95,6 +170,13 @@ public class FollowController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", linkedUsername));
         model.addAttribute("profileOwner", linkedUser);
         model.addAttribute("isOthersProfile", !linkedUsername.equals(username));
+
+        //All the post by this user
+        List<Post> postList = postRepository.findByUser(linkedUser);
+        model.addAttribute("postsCount", postList.size());
+        model.addAttribute("seriesCount", seriesRepository.countSeriesByUser(linkedUser));
+        model.addAttribute("subscriptionCount", seriesFollowRepository.countSeriesFollowBySeriesFollowIndentityUser(linkedUser));
+        model.addAttribute("starCount", starRepository.countStarByPostIndentityUser(linkedUser));
 
         // Get Following
         List<Follow> following = followRepository.findByFollowIndentityUserone(linkedUser);
@@ -105,7 +187,7 @@ public class FollowController {
         model.addAttribute("followers", follower.size());
 
         if (!linkedUsername.equals(username)) {
-            model.addAttribute("crossCheckedFollowList", crossCheckFollowing(user, follower));
+            model.addAttribute("crossCheckedFollowList", crossCheckFollower(user, follower));
             model.addAttribute("isSubscribing", isSubscribing(user, linkedUser));
         }
 
@@ -117,15 +199,20 @@ public class FollowController {
     @PostMapping("/Remove")
     public String unfollow(@RequestParam(value = "remove") String toBeUnfollow,
                            ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         model.addAttribute("User", user);
         model.addAttribute("profileOwner", user);
         model.addAttribute("isOthersProfile", false);
@@ -141,20 +228,16 @@ public class FollowController {
 
     private List<Boolean> crossCheckFollowing(User me, List<Follow> othersFollowing) {
         List<Boolean> result = new ArrayList<>();
-        List<Follow> myFollowing = followRepository.findByFollowIndentityUserone(me);
-        boolean found;
         for (Follow f : othersFollowing) {
-            found = false;
-            for (Follow myF : myFollowing) {
-                if (myF.getFollowIndentity().getUser2().getUsername().equals(f.getFollowIndentity().getUser2().getUsername())) {
-                    result.add(true);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                result.add(false);
-            }
+            result.add(followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(me, f.getFollowIndentity().getUser2()));
+        }
+        return result;
+    }
+
+    private List<Boolean> crossCheckFollower(User me, List<Follow> othersFollowing) {
+        List<Boolean> result = new ArrayList<>();
+        for (Follow f : othersFollowing) {
+            result.add(followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(me, f.getFollowIndentity().getUser1()));
         }
         return result;
     }

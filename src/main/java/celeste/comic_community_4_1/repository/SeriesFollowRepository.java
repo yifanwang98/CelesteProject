@@ -25,5 +25,9 @@ public interface SeriesFollowRepository extends JpaRepository<SeriesFollow, Seri
     long countSeriesFollowBySeriesFollowIndentitySeries(Series series);
 
     boolean existsSeriesFollowBySeriesFollowIndentitySeriesAndSeriesFollowIndentityUser(Series series, User user);
+
+    void deleteSeriesFollowBySeriesFollowIndentitySeries(Series series);
+
+    void deleteSeriesFollowBySeriesFollowIndentityUser(User user);
 }
 

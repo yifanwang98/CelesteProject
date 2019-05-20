@@ -102,6 +102,7 @@
 }
 
 .backSubLink:hover {
+    cursor: pointer;
     color: #aaaaaa;
 }
 
@@ -114,6 +115,7 @@
     bottom: 0;
     width: 100%;
     height: 5em;
+    max-height: 5em;
     background-color: black;
     background-image: url("../images/escheresque.png");;
     margin: 0;
@@ -144,6 +146,7 @@
 }
 
 .series-footer-r-btn:hover {
+    cursor: pointer;
     background: white;
     color: #218787;
     border: #218787 1px solid;
@@ -199,9 +202,9 @@
 }
 
 .series-upgrade-link:hover {
+    cursor: pointer;
     color: #30c5c5;
     font-size: 2em;
-    cursor: pointer;
 }
 
 .single-author-link, .single-author-link:link, .single-author-link:visited {
@@ -210,6 +213,7 @@
 }
 
 .single-author-link:hover {
+    cursor: pointer;
     color: #218787;
     font-weight: 500;
 }

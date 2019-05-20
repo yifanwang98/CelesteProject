@@ -1,6 +1,5 @@
 package celeste.comic_community_4_1.Controllers;
 
-import celeste.comic_community_4_1.exception.ResourceNotFoundException;
 import celeste.comic_community_4_1.miscellaneous.*;
 import celeste.comic_community_4_1.model.*;
 import celeste.comic_community_4_1.repository.*;
@@ -56,18 +55,42 @@ public class EditSeriesController {
     @Autowired
     SeriesTagRepository seriesTagRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
     @GetMapping("/editSeries")
     public String goToEditSeries(@RequestParam(value = "id") long seriesId,
                                  ModelMap model,
                                  HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
         model.addAttribute("User", user);
 
         boolean exists = seriesRepository.existsSeriesBySeriesID(seriesId);
@@ -170,14 +193,20 @@ public class EditSeriesController {
                                  ModelMap model,
                                  HttpServletRequest request) throws Exception {
 
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         model.addAttribute("User", user);
 
         if (seriesRepository.existsSeriesBySeriesID(seriesId)) {
@@ -268,6 +297,7 @@ public class EditSeriesController {
             seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
         }
         model.addAttribute("seriesDataList", seriesDataList);
+        updateGenre();
         return "profile_series";
     }
 
@@ -276,14 +306,20 @@ public class EditSeriesController {
                                ModelMap model,
                                HttpServletRequest request) throws Exception {
 
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         model.addAttribute("User", user);
 
         if (seriesRepository.existsSeriesBySeriesID(seriesId)) {
@@ -342,9 +378,42 @@ public class EditSeriesController {
             seriesDataList.add(new SeriesData(series, tags, subscriptionCount, subscribed, owner));
         }
         model.addAttribute("seriesDataList", seriesDataList);
+        updateGenre();
         return "profile_series";
     }
 
+    private void updateGenre() {
+        for (String genreName : ComicGenre.GENRE) {
+            if (genreName.equalsIgnoreCase("none"))
+                continue;
+
+            long total = postRepository.countPostByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+            total += seriesRepository.countSeriesByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+
+            String genreCover = null;
+            if (total != 0) {
+                Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
+                if (tempPost != null) {
+                    genreCover = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID()).getPostIndentity().getWork().getThumbnail();
+                }
+                if (genreCover == null) {
+                    Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
+                    if (tempSeries != null) {
+                        genreCover = tempSeries.getCover();
+                    }
+                }
+            }
+
+            if (genreCover == null) {
+                genreCover = ThumbnailConverter.DEFAULT_SERIES_COVER;
+            }
+
+            Genre genre = genreRepository.findGenreByGenre(genreName);
+            genre.setImages(genreCover);
+            genre.setCount(total);
+            genreRepository.save(genre);
+        }
+    }
 
 }
 

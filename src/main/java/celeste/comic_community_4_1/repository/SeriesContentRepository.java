@@ -17,5 +17,7 @@ public interface SeriesContentRepository extends JpaRepository<SeriesContent, Se
     List<SeriesContent> findSeriesContentBySeriesContentIndentitySeriesOrderByCreatedAtAsc(Series series);
 
     List<SeriesContent> findSeriesContentBySeriesContentIndentityWork(Work work);
+
+    void deleteSeriesContentBySeriesContentIndentitySeries(Series series);
 }
 

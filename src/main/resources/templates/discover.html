@@ -15,8 +15,13 @@
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" th:inline="javascript">
-        $(document).ready(function(){
-
+        $(document).ready(function () {
+            var w = document.getElementById("dgContainer").offsetWidth;
+            document.getElementById("dgScroll").style.width = "" + w + 'px';
+        });
+        $(window).resize(function () {
+            var w = document.getElementById("dgContainer").offsetWidth;
+            document.getElementById("dgScroll").style.width = "" + w + 'px';
         });
 
         function linkForTopSearch(link) {
@@ -24,11 +29,33 @@
             document.getElementById('TSForm' + keyword).submit();
         }
 
+        function loadMore() {
+            document.getElementById("loadMore-btn").style.display = 'None';
+            document.getElementById("loadMore-spin").style.display = '';
+            $.ajax({
+                type: "POST",
+                url: 'discoverLoadMore',
+                data: {},
+                cache: false,
+                success: function (data) {
+                    if (data.substring(0, 1) == '0') {
+                        document.getElementById("loadMore").style.display = 'None';
+                    } else {
+                        document.getElementById("loadMore-btn").style.display = '';
+                        document.getElementById("loadMore-spin").style.display = 'None';
+                    }
+                    $('#moreContent').append(data.substring(1));
+                },
+                error: function () {
+                    alert(arguments[1]);
+                }
+            });
+        }
+
     </script>
 </head>
 <body>
 <!-- Header Banner -->
-<!--div class="header"-->
 <table class="header webfont semibold">
     <tbody style="padding: 0; margin: 0;">
     <tr>
@@ -56,7 +83,7 @@
             <table style="padding: 0; margin: 0; align: right;">
                 <tr style="align: right;">
                     <td class="headerCellPadding">
-                        <a href="" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
+                        <a href="/notification" class="headerUnselected"><i class='fas fa-envelope headerIcon'></i></a>
                     </td>
                     <td class="headerCellPadding">
                         <a href="/setting" class="headerUnselected"><i class='fas fa-cog headerIcon'></i></a>
@@ -85,6 +112,30 @@
         <!---------------------------------------->
         <!-- Left Part -->
         <td style="vertical-align: top;">
+            <div class="discover-sub-title">Explore Genres</div>
+            <div class="discover-genre-outer-container">
+                <div class="discover-genre-inner-container">
+                    <div id="dgContainer" style="width: 100%;">
+                        <div id="dgScroll" style="overflow-x: scroll; white-space: nowrap; width: 20em;">
+                            <span th:each="genreData:${genreDataList}">
+                                <a class="discover-genre-card"
+                                   th:href="'/genre?genre=' + ${genreData.genreName}"
+                                   style="text-align: center; display: inline-block;">
+                                    <img th:src="'data:image/png;base64,'+${genreData.thumbnail}"
+                                         style="width: 10em; height: 10em; border: 1px solid #eeeeee;"><br/>
+                                    <span th:text="${genreData.genreName} + ' (' + ${genreData.total} + ')'"></span>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="discover-sub-title"
+                 th:if="${!postDataList.isEmpty()}">
+                Posts You May Like
+            </div>
 
             <div th:each="postData:${postDataList}" class="home-posts-card">
                 <table style="border-spacing: 0em; padding-top: 0.75em; margin-bottom: 0.5em;" width="100%">
@@ -123,21 +174,23 @@
                     <!-- Text -->
                     <tr>
                         <td></td>
-                        <td>
+                        <td style="word-break: break-word;">
                             <div th:text="${postData.post.getPostComment()}" class="post-text"
                                  th:if="${!postData.post.getPostComment().isEmpty()}"></div>
                             <div class="post-genre" th:if="${!postData.post.isRepost()}">
                                 <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
-                                    <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
-                                          class="post-genre-text">
+                                    <a th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                                       th:href="'genre?genre=' + ${postData.post.getPrimaryGenre()}"
+                                       class="post-genre-text">
                                         <i class='far fa-bookmark'></i>
                                         <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
-                                    </span>
-                                    <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
-                                          class="post-genre-text">
+                                    </a>
+                                    <a th:href="'genre?genre=' + ${postData.post.getSecondaryGenre()}"
+                                       th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                                       class="post-genre-text">
                                         <i class='far fa-bookmark'></i>
                                         <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
-                                    </span>
+                                    </a>
                                 </span>
                                 <span th:each="tag: ${postData.postTags}">
                                     <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
@@ -150,7 +203,7 @@
                     <!-- From Series -->
                     <tr th:if="${!postData.fromSeries.isEmpty() && !postData.post.isRepost()}">
                         <td></td>
-                        <td>
+                        <td style="word-break: break-word;">
                             <span class="post-genre semibold">From Series: </span>
                             <span th:each="fromSeries: ${postData.fromSeries}">
                                 <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
@@ -162,92 +215,12 @@
                     <tr>
                         <td></td>
                         <td>
-                            <!-- Repost -->
-                            <div th:if="${postData.post.isRepost()}">
-                                <table style="border-spacing: 0em; padding-top: 0.5em; margin-bottom: 0.5em; width:100%; border-left: 2px solid lightgrey;">
-                                    <!-- Header -->
-                                    <tr>
-                                        <td class="post-avatar">
-                                            <a th:href="'view_profile?user=' + ${postData.originalPost.getUser().getUsername()}">
-                                                <image th:src="'data:image/png;base64,'+${postData.originalPost.getUser().getAvatar()}"
-                                                       class="post-avatar-image"></image>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <table width="100%">
-                                                <tr>
-                                                    <td>
-                                                        <span class="post-author"
-                                                              th:text="${postData.originalPost.getUser().getUsername()}"></span><br>
-                                                        <span class="post-time"
-                                                              th:text="${postData.originalPostCreatedAt()}"></span>
-                                                    </td>
-                                                    <td></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <!-- Text -->
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <div th:text="${postData.originalPost.getPostComment()}"
-                                                 th:if="${!postData.originalPost.getPostComment().isEmpty()}"
-                                                 class="post-text"></div>
-                                            <div class="post-genre"
-                                                 th:if="${!postData.originalPost.getPrimaryGenre().equals('None') || !postData.originalPost.getSecondaryGenre().equals('None')}">
-                                                <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                      class="post-genre-text">
-                                                    <i class='far fa-bookmark'></i>
-                                                    <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
-                                                </span>
-                                                <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
-                                                      class="post-genre-text">
-                                                    <i class='far fa-bookmark'></i>
-                                                    <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
-                                                </span>
-                                                <span th:each="tag: ${postData.postTags}">
-                                                    <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
-                                                        <span th:text="'#' + ${tag}" class="post-genre-text"></span>
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <!-- From Series -->
-                                    <tr th:if="${!postData.fromSeries.isEmpty()}">
-                                        <td></td>
-                                        <td>
-                                            <span class="post-genre semibold">From Series: </span>
-                                            <span th:each="fromSeries: ${postData.fromSeries}">
-                                                <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
-                                                   th:href="'singleSeries?id=' + ${fromSeries.getSeriesID()} + '&index=0'"></a>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <!-- Images -->
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <div>
-                                                <span th:each="work:${postData.images}">
-                                                    <a th:href="'singlePost?id=' + ${postData.post.getPostID()}"
-                                                       class="imageLink">
-                                                        <image th:src="'data:image/png;base64,'+${work}"
-                                                               class="post-image-multiple"></image>
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
                             <!-- Original -->
                             <div th:unless="${postData.post.isRepost()}">
                                 <span th:each="work:${postData.images}">
                                     <a th:href="'singlePost?id=' + ${postData.post.getPostID()}" class="imageLink">
                                         <image th:src="'data:image/png;base64,'+${work}"
-                                               th:class="${postData.images.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
+                                               class="post-image-single"></image>
                                     </a>
                                 </span>
                             </div>
@@ -257,146 +230,17 @@
                 <!-- Old 转赞评 -->
                 <div style="padding: 0.1em;"></div>
             </div>
-        </td>
-        <!---------------------------------------->
-        <!---------------------------------------->
-        <!---------------------------------------->
-        <!-- Right Part -->
-        <td class="profileColumn-td">
-            <div class="profileColumn">
-                <div style="text-align: center; padding: 1.618em 0 0.25em 0;">
-                    <a th:href="'view_profile?user=' + ${User.getUsername()}" class="headerUnselected">
-                        <img th:src="'data:image/png;base64,'+${User.getAvatar()}"
-                             style="width: 38.2%; border-radius: 100%; border: #cccccc 1px solid;">
-                    </a>
-                </div>
-                <!------------------------------------>
-                <!-- Profile Info -->
-                <div style="border-bottom: #f3f3f3 2px solid;">
-                    <table style="width: 100%; text-align: center; padding: 0.61803em 0;">
-                        <col width="50%"/>
-                        <col width="50%"/>
-                        <tr>
-                            <td class="button-link">
-                                <a th:href="'/following?user=' + ${User.getUsername()}">
-                                    <div>
-                                        <span class="semibold" style="font-size: 1.05em;">Following</span><br><span
-                                            th:text="${following}" class="semibold" style="font-size: 1.05em;"></span>
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="button-link">
-                                <a th:href="'/follower?user=' + ${User.getUsername()}">
-                                    <div>
-                                        <span class="semibold" style="font-size: 1.05em;">Follower</span><br><span
-                                            th:text="${followers}" class="semibold" style="font-size: 1.05em;"></span>
-                                    </div>
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div style="border-bottom: #f3f3f3 2px solid;">
-                    <table style="width: 100%; text-align: center; border-spacing: 5px; padding: 0.61803em 0;">
-                        <col width="33.333333%"/>
-                        <col width="33.333333%"/>
-                        <col width="33.333333%"/>
-                        <tr>
-                            <td class="button-link">
-                                <a th:href="'view_profile?user=' + ${User.getUsername()}">
-                                    <div>
-                                        <span class="semibold" style="font-size: 1.05em;">Posts</span><br><span
-                                            th:text="${postsCount}" class="semibold" style="font-size: 1.05em;"></span>
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="button-link">
-                                <a th:href="'view_profile_series?user=' + ${User.getUsername()}">
-                                    <div>
-                                        <span class="semibold" style="font-size: 1.05em;">Series</span><br><span
-                                            th:text="${seriesCount}" class="semibold" style="font-size: 1.05em;"></span>
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="button-link">
-                                <a th:href="'view_profile_star?user=' + ${User.getUsername()}">
-                                    <div>
-                                        <span class="semibold" style="font-size: 1.05em;">Stars</span><br><span
-                                            th:text="${starCount}" class="semibold" style="font-size: 1.05em;"></span>
-                                    </div>
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <!------------------------------------>
-                <!-- Creation Link -->
-                <div style="border-bottom: #f3f3f3 2px solid;">
-                    <div style="margin: 1em 1em -0.4em 1.35em; color: #9a9a9a;"
-                         class="semibold">
-                        <i class='fas fa-feather'></i> Creation Center
-                    </div>
-                    <table style="width: 100%; text-align: center; border-spacing: 5px;">
-                        <col width="33.333333%"/>
-                        <col width="33.333333%"/>
-                        <col width="33.333333%"/>
-                        <tr>
-                            <td class="button-link">
-                                <a href="/createPostOption">
-                                    <div style="padding: 1em 0;">
-                                        <i class='fas fa-pen-nib button-icon'></i><br>Single
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="button-link">
-                                <a href="createSeries">
-                                    <div>
-                                        <i class='fas fa-sticky-note button-icon'></i><br>Series
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="button-link">
-                                <a href="/profile_analysis">
-                                    <div>
-                                        <i class='fas fa-chart-line button-icon'></i><br>Analysis
-                                    </div>
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <!------------------------------------>
-                <!-- Top Search -->
-                <div class="top-search-block">
-                    <div style="color: #9a9a9a;" class="semibold">
-                        <i class='fas fa-fire'></i> Top Search
-                    </div>
-                    <table width="100%" style="padding-top: 0.5em">
-                        <span th:each="searchWord, iter:${top10Searches}">
-                            <tr>
-                                <td class="trendingNum semibold"><span th:text="${iter.count}"></span></td>
-                                <td>
-                                    <div style="margin-left: 1em;" class="button-link">
-                                        <form method="post"
-                                              th:id="'TSForm' + ${searchWord.getWord()}"
-                                              action="/topSearchForm">
-                                            <input hidden th:value="${searchWord.getWord()}"
-                                                   name="searchContent">
-                                        </form>
-                                        <a href="#" th:id="'TS' + ${searchWord.getWord()}"
-                                           onclick="linkForTopSearch(this);">
-                                            <span th:text="${searchWord.getWord()}"></span>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </span>
-                    </table>
-                </div>
-            </div>
+            <span id="moreContent"></span>
         </td>
     </tr>
 </table>
-
+<div id="loadMore" style="text-align: center; margin-bottom: 3em;" th:if="${!postDataList.isEmpty()}">
+    <div id="loadMore-btn">
+        <button onclick="loadMore()" class="discover-load-more">- Load More -</button>
+    </div>
+    <div id="loadMore-spin" style="display: none;">
+        <i class="fa fa-spinner fa-spin discover-load-more discover-load-more-spin"></i>
+    </div>
+</div>
 </body>
 </html>

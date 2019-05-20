@@ -24,9 +24,6 @@ public class SinglePostController {
     UserRepository userRepository;
 
     @Autowired
-    FollowRepository followRepository;
-
-    @Autowired
     WorkRepository workRepository;
 
     @Autowired
@@ -58,16 +55,38 @@ public class SinglePostController {
 
 
     @GetMapping("/singlePost")
-    public String userprofile(@RequestParam(value = "id") long postId,
-                              ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+    public String singlePost(@RequestParam(value = "id") long postId,
+                             ModelMap model, HttpServletRequest request) throws Exception {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
+        // Blocked User
+        if (user.getBlockStatus().equals("1")) {
+            if ((user.getBlockedSince().after(Notification.getDaysBefore(3)) && user.getMembership().equals("none")) ||
+                    (user.getBlockedSince().after(Notification.getDaysBefore(1)) && user.getMembership().equals("1"))) {
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("postDraft");
+                request.getSession().removeAttribute("discoverList");
+                request.getSession().removeAttribute("mainPageList");
+                request.getSession().removeAttribute("discoverListIndex");
+                request.getSession().removeAttribute("mainPageListIndex");
+                return "blocked";
+            }
+            user.setBlockStatus("none");
+            userRepository.save(user);
+        }
 
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         model.addAttribute("User", user);
 
         // Find Post
@@ -82,7 +101,7 @@ public class SinglePostController {
 
         Post originalPost = postToDisplay;
         if (postToDisplay.isRepost()) {
-            originalPost = postRepository.findByPostID(postToDisplay.getOriginalPostID()).get(0);
+            originalPost = postRepository.findPostByPostID(postToDisplay.getOriginalPostID());
             model.addAttribute("originalPost", originalPost);
         }
 
@@ -189,15 +208,20 @@ public class SinglePostController {
     @PostMapping("/singlepostLike")
     public String singlepostLike(@RequestParam(value = "postID") long postID,
                                  ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         Like newLike = new Like();
         PostIndentity newPi = new PostIndentity();
         newPi.setUser(user);
@@ -294,15 +318,20 @@ public class SinglePostController {
     @PostMapping("/singlepostStar")
     public String singlepostReport(@RequestParam(value = "postID") long postID,
                                    ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
             return "index";
         }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            request.getSession().removeAttribute("username");
+            request.getSession().removeAttribute("postDraft");
+            request.getSession().removeAttribute("discoverList");
+            request.getSession().removeAttribute("mainPageList");
+            request.getSession().removeAttribute("discoverListIndex");
+            request.getSession().removeAttribute("mainPageListIndex");
+            return "index";
+        }
         Star newStar = new Star();
         PostIndentity newPi = new PostIndentity();
         newPi.setUser(user);
@@ -326,8 +355,7 @@ public class SinglePostController {
                                       @RequestParam(value = "index") int index,
                                       ModelMap model, HttpServletRequest request) throws Exception {
         List<PostContent> temp = postContentRepository.findByPostIndentityPostPostID(postID);
-        String src = temp.get(index).getPostIndentity().getWork().getContent();
-        return src;
+        return temp.get(index).getPostIndentity().getWork().getContent();
 
     }
 
@@ -345,11 +373,13 @@ public class SinglePostController {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
+        Post currentPost = postRepository.findPostByPostID(postID);
+
         Post newRepost = new Post();
-        newRepost.setOriginalPostID(postID);
+        newRepost.setOriginalPostID(currentPost.getOriginalPostID());
         newRepost.setRepost(true);
         newRepost.setUser(user);
-        newRepost.setPostComment(comment);
+        newRepost.setPostComment(comment.trim());
         postRepository.save(newRepost);
         return "Repost Success!";
     }
@@ -359,14 +389,14 @@ public class SinglePostController {
     public String deleteComment(@RequestParam(value = "postID") long postID,
                                 @RequestParam(value = "commentID") long commentID,
                                 ModelMap model, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute("username") == null) {
-            return "index";
-        }
-
-        // Session User
-        String username = (String) request.getSession().getAttribute("username");
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+//        if (request.getSession().getAttribute("username") == null) {
+//            return "index";
+//        }
+//
+//        // Session User
+//        String username = (String) request.getSession().getAttribute("username");
+//        User user = userRepository.findById(username)
+//                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
         Post post = postRepository.findPostByPostID(postID);
         if (post == null)

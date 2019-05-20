@@ -16,7 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript" th:inline="javascript">
-        $(document).ready(function(){
+        $(document).ready(function () {
 
         });
 
@@ -25,14 +25,37 @@
             document.getElementById('TSForm' + keyword).submit();
         }
 
+        function loadMore() {
+            document.getElementById("loadMore-btn").style.display = 'None';
+            document.getElementById("loadMore-spin").style.display = '';
+            $.ajax({
+                type: "POST",
+                url: 'mainPageLoadMore',
+                data: {},
+                cache: false,
+                success: function (data) {
+                    if (data.substring(0, 1) == '0') {
+                        document.getElementById("loadMore").style.display = 'None';
+                    } else {
+                        document.getElementById("loadMore-btn").style.display = '';
+                        document.getElementById("loadMore-spin").style.display = 'None';
+                    }
+                    $('#moreContent').append(data.substring(1));
+                },
+                error: function () {
+                    alert(arguments[1]);
+                }
+            });
+        }
+
         function starAPost(postID) {
             $.ajax({
-                type : "POST",
-                url : 'singlepostStar',
-                data:{postID:postID},
-                cache : false,
-                success : function(data) {
-                    if(data == "Star Success!" || data =="Unstar Success!"){
+                type: "POST",
+                url: 'singlepostStar',
+                data: {postID: postID},
+                cache: false,
+                success: function (data) {
+                    if (data == "Star Success!" || data == "Unstar Success!") {
                         alert(data)
                         location.reload();
 
@@ -41,19 +64,20 @@
                         alert(data)
                     }
                 },
-                error: function(){
+                error: function () {
                     alert(arguments[1]);
                 }
             });
         }
+
         function likeAPost(postID) {
             $.ajax({
-                type : "POST",
-                url : 'singlepostLike',
-                data:{postID:postID},
-                cache : false,
-                success : function(data) {
-                    if(data == "Like Success!" || data =="Unlike Success!"){
+                type: "POST",
+                url: 'singlepostLike',
+                data: {postID: postID},
+                cache: false,
+                success: function (data) {
+                    if (data == "Like Success!" || data == "Unlike Success!") {
                         alert(data)
                         location.reload();
 
@@ -62,21 +86,22 @@
                         alert(data)
                     }
                 },
-                error: function(){
+                error: function () {
                     alert(arguments[1]);
                 }
             });
         }
+
         function repostAPost(postID) {
-            var comment = prompt("Share a post","Repost");
-            if (comment==null) comment = ""
+            var comment = prompt("Share a post", "Repost");
+            if (comment == null) comment = ""
             $.ajax({
-                type : "POST",
-                url : 'singlepostRepost',
-                data:{postID:postID,comment:comment},
-                cache : false,
-                success : function(data) {
-                    if(data == "Repost Success!"){
+                type: "POST",
+                url: 'singlepostRepost',
+                data: {postID: postID, comment: comment},
+                cache: false,
+                success: function (data) {
+                    if (data == "Repost Success!") {
                         alert(data)
                         location.reload();
 
@@ -85,33 +110,34 @@
                         alert(data)
                     }
                 },
-                error: function(){
+                error: function () {
                     alert(arguments[1]);
                 }
             });
         }
 
         function reportAPost(postID) {
-            var reason = prompt("Please describe the reason:","");
-            if (reason == null) reason = "";
-            $.ajax({
-                type : "POST",
-                url : 'singlepostReport',
-                data:{postID:postID,reason:reason},
-                cache : false,
-                success : function(data) {
-                    if(data == "Report has been sent. Please wait for our reply."){
-                        alert(data);
-                        //location.reload();
+            var reason = prompt("Please describe the reason:", "");
+            if (reason != null) {
+                $.ajax({
+                    type: "POST",
+                    url: 'singlepostReport',
+                    data: {postID: postID, reason: reason},
+                    cache: false,
+                    success: function (data) {
+                        if (data == "Report has been sent. Please wait for our reply.") {
+                            alert(data);
+                            //location.reload();
+                        }
+                        else {
+                            alert(data)
+                        }
+                    },
+                    error: function () {
+                        alert(arguments[1]);
                     }
-                    else {
-                        alert(data)
-                    }
-                },
-                error: function(){
-                    alert(arguments[1]);
-                }
-            });
+                });
+            }
         }
 
     </script>
@@ -201,9 +227,6 @@
                                         <span th:if="${postData.liked}" class="post-action-liked-top">
                                             <i class='fas fa-thumbs-up'></i>
                                         </span>
-                                        <!--<a href=""-->
-                                        <!--th:if="${User.getUsername() == postData.post.getUser().getUsername()}"-->
-                                        <!--class="post-action-more"><i class='far fa-trash-alt'></i></a>-->
                                         <div class="dropdown" hidden
                                              th:unless="${User.getUsername() == postData.post.getUser().getUsername()}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
@@ -220,23 +243,25 @@
                     <!-- Text -->
                     <tr>
                         <td></td>
-                        <td>
+                        <td style="word-break: break-word;">
                             <div th:text="${postData.post.getPostComment()}" class="post-text"
                                  th:if="${!postData.post.getPostComment().isEmpty()}"></div>
                             <div class="post-genre" th:if="${!postData.post.isRepost()}">
                                 <span th:if="${!postData.post.getPrimaryGenre().equals('None') || !postData.post.getSecondaryGenre().equals('None')}">
-                                    <span th:if="${!postData.post.getPrimaryGenre().equals('None')}"
-                                          class="post-genre-text">
+                                    <a th:if="${!postData.post.getPrimaryGenre().equals('None')}"
+                                       th:href="'/genre?genre=' + ${postData.post.getPrimaryGenre()}"
+                                       class="post-genre-text">
                                         <i class='far fa-bookmark'></i>
                                         <span th:text="${postData.post.getPrimaryGenre()} + ' '"></span>
-                                    </span>
-                                    <span th:if="${!postData.post.getSecondaryGenre().equals('None')}"
-                                          class="post-genre-text">
+                                    </a>
+                                    <a th:if="${!postData.post.getSecondaryGenre().equals('None')}"
+                                       th:href="'/genre?genre=' + ${postData.post.getSecondaryGenre()}"
+                                       class="post-genre-text">
                                         <i class='far fa-bookmark'></i>
                                         <span th:text="${postData.post.getSecondaryGenre()} + ' '"></span>
-                                    </span>
+                                    </a>
                                 </span>
-                                <span th:each="tag: ${postData.postTags}">
+                                <span th:each="tag: ${postData.postTags}" th:if="${!postData.post.isRepost()}">
                                     <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
                                         <span th:text="'#' + ${tag}" class="post-genre-text"></span>
                                     </a>
@@ -247,7 +272,7 @@
                     <!-- From Series -->
                     <tr th:if="${!postData.fromSeries.isEmpty() && !postData.post.isRepost()}">
                         <td></td>
-                        <td>
+                        <td style="word-break: break-word;">
                             <span class="post-genre semibold">From Series: </span>
                             <span th:each="fromSeries: ${postData.fromSeries}">
                                 <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
@@ -288,22 +313,24 @@
                                     <!-- Text -->
                                     <tr>
                                         <td></td>
-                                        <td>
+                                        <td style="word-break: break-word;">
                                             <div th:text="${postData.originalPost.getPostComment()}"
                                                  th:if="${!postData.originalPost.getPostComment().isEmpty()}"
                                                  class="post-text"></div>
                                             <div class="post-genre"
                                                  th:if="${!postData.originalPost.getPrimaryGenre().equals('None') || !postData.originalPost.getSecondaryGenre().equals('None')}">
-                                                <span th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
-                                                      class="post-genre-text">
+                                                <a th:if="${!postData.originalPost.getPrimaryGenre().equals('None')}"
+                                                   th:href="'/genre?genre=' + ${postData.originalPost.getPrimaryGenre()}"
+                                                   class="post-genre-text">
                                                     <i class='far fa-bookmark'></i>
                                                     <span th:text="${postData.originalPost.getPrimaryGenre()} + ' '"></span>
-                                                </span>
-                                                <span th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
-                                                      class="post-genre-text">
+                                                </a>
+                                                <a th:if="${!postData.originalPost.getSecondaryGenre().equals('None')}"
+                                                   th:href="'/genre?genre=' + ${postData.originalPost.getSecondaryGenre()}"
+                                                   class="post-genre-text">
                                                     <i class='far fa-bookmark'></i>
                                                     <span th:text="${postData.originalPost.getSecondaryGenre()} + ' '"></span>
-                                                </span>
+                                                </a>
                                                 <span th:each="tag: ${postData.postTags}">
                                                     <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
                                                         <span th:text="'#' + ${tag}" class="post-genre-text"></span>
@@ -315,7 +342,7 @@
                                     <!-- From Series -->
                                     <tr th:if="${!postData.fromSeries.isEmpty()}">
                                         <td></td>
-                                        <td>
+                                        <td style="word-break: break-word;">
                                             <span class="post-genre semibold">From Series: </span>
                                             <span th:each="fromSeries: ${postData.fromSeries}">
                                                 <a class="post-genre-text" th:text="${fromSeries.getSeriesName()}"
@@ -345,7 +372,7 @@
                                 <span th:each="work:${postData.images}">
                                     <a th:href="'singlePost?id=' + ${postData.post.getPostID()}" class="imageLink">
                                         <image th:src="'data:image/png;base64,'+${work}"
-                                           th:class="${postData.images.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
+                                               th:class="${postData.images.size()>1} ? 'post-image-multiple': 'post-image-single'"></image>
                                     </a>
                                 </span>
                             </div>
@@ -354,6 +381,15 @@
                 </table>
                 <!-- Old 转赞评 -->
                 <div style="padding: 0.1em;"></div>
+            </div>
+            <div id="moreContent"></div>
+            <div id="loadMore" style="text-align: center; margin-bottom: 3em;" th:if="${!postDataList.isEmpty()}">
+                <div id="loadMore-btn">
+                    <button onclick="loadMore()" class="discover-load-more">- Load More -</button>
+                </div>
+                <div id="loadMore-spin" style="display: none;">
+                    <i class="fa fa-spinner fa-spin discover-load-more discover-load-more-spin"></i>
+                </div>
             </div>
         </td>
         <!---------------------------------------->
@@ -495,6 +531,5 @@
         </td>
     </tr>
 </table>
-
 </body>
 </html>

@@ -285,14 +285,18 @@
                     <td>
                         <div th:text="${postToDisplay.getPostComment()}" class="post-text"></div>
                         <div class="post-genre" th:if="${!postToDisplay.isRepost()}">
-                            <span th:if="${!postToDisplay.getPrimaryGenre().equals('None')}" class="post-genre-text">
+                            <a th:if="${!postToDisplay.getPrimaryGenre().equals('None')}"
+                               th:href="'/genre?genre=' + ${postToDisplay.getPrimaryGenre()}"
+                               class="post-genre-text">
                                 <i class='far fa-bookmark'></i>
                                 <span th:text="${postToDisplay.getPrimaryGenre()} + ' '"></span>
-                            </span>
-                            <span th:if="${!postToDisplay.getSecondaryGenre().equals('None')}" class="post-genre-text">
+                            </a>
+                            <a th:if="${!postToDisplay.getSecondaryGenre().equals('None')}"
+                               th:href="'/genre?genre=' + ${postToDisplay.getSecondaryGenre()}"
+                               class="post-genre-text">
                                 <i class='far fa-bookmark'></i>
                                 <span th:text="${postToDisplay.getSecondaryGenre()} + ' '"></span>
-                            </span>
+                            </a>
                             <span th:each="tag: ${postTags}">
                                 <a th:href="'/hashtag?tag=' + ${tag}" style="text-decoration: none">
                                     <span th:text="'#' + ${tag}" class="post-genre-text"></span>
