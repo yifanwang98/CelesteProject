@@ -211,20 +211,30 @@ public class EditSeriesController {
 
         if (seriesRepository.existsSeriesBySeriesID(seriesId)) {
             Set<String> set = new HashSet<>();
-            if (!(tag1 == null || tag1.length() <= 0)) {
-                set.add(TagProcessor.process(tag1));
+            if (!(tag1 == null)) {
+                tag1 = tag1.trim();
+                if (!tag1.isEmpty())
+                    set.add(TagProcessor.process(tag1));
             }
-            if (!(tag2 == null || tag2.length() <= 0)) {
-                set.add(TagProcessor.process(tag2));
+            if (!(tag2 == null)) {
+                tag2 = tag2.trim();
+                if (!tag2.isEmpty())
+                    set.add(TagProcessor.process(tag2));
             }
-            if (!(tag3 == null || tag3.length() <= 0)) {
-                set.add(TagProcessor.process(tag3));
+            if (!(tag3 == null)) {
+                tag3 = tag3.trim();
+                if (!tag3.isEmpty())
+                    set.add(TagProcessor.process(tag3));
             }
-            if (!(tag4 == null || tag4.length() <= 0)) {
-                set.add(TagProcessor.process(tag4));
+            if (!(tag4 == null)) {
+                tag4 = tag4.trim();
+                if (!tag4.isEmpty())
+                    set.add(TagProcessor.process(tag4));
             }
-            if (!(tag5 == null || tag5.length() <= 0)) {
-                set.add(TagProcessor.process(tag5));
+            if (!(tag5 == null)) {
+                tag5 = tag5.trim();
+                if (!tag5.isEmpty())
+                    set.add(TagProcessor.process(tag5));
             }
 
             if (genre1.equals(genre2) && !genre1.equals("None")) {
@@ -247,6 +257,8 @@ public class EditSeriesController {
             }
 
             for (String tag : set) {
+                if(tag.isEmpty())
+                    continue;
                 SeriesTag seriesTag = new SeriesTag();
                 seriesTag.setSeries(seriesToBeEdited);
                 seriesTag.setTag(tag);

@@ -378,6 +378,9 @@ public class SearchController {
             if (p.isRepost()) {
                 originalPost = postRepository.findPostByPostID(p.getOriginalPostID());
             }
+            if(originalPost==null){
+                continue;
+            }
             List<PostContent> postContents = postContentRepository.findByPostIndentityPostPostID(p.getOriginalPostID());
             List<String> images = new ArrayList<>();
 
