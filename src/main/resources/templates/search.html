@@ -334,7 +334,9 @@
                 <col width="19%"/>
                 <tr>
                     <td>
-                        <input type="text" placeholder="Boom" name="searchContent"
+                        <input type="text"
+                               th:placeholder="${top10Searches.get(0) != null ? top10Searches.get(0).getWord() : ''}"
+                               name="searchContent"
                                class="searchTextfield" form="searchForm" maxlength="15"
                                th:value="${searchContent}"
                                required>

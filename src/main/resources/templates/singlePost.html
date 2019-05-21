@@ -553,15 +553,15 @@
                                            th:if="${User.getUsername() == comment.getUser().getUsername()}"
                                            class="post-action-more"><i class='far fa-trash-alt'></i></a>
                                         <div class="dropdown"
-                                             th:unless="${User.getUsername() == comment.getUser().getUsername()}">
+                                             th:if="${postToDisplay.getUser().getUsername().equals(User.getUsername())}">
                                             <button class="dropbtn"><i class='fas fa-ellipsis-v'></i></button>
                                             <div class="dropdown-content">
-                                                <span th:if="${User.getUsername() == postToDisplay.getUser().getUsername()}">
+                                                <!--<span th:if="${User.getUsername() == postToDisplay.getUser().getUsername()}">-->
                                                     <!-- If I am the post owner-->
                                                     <a href="#" onclick="deleteComment(this)"
                                                        th:id="'DC' + ${comment.getCommentID()}"><i
                                                             class='fas fa-trash-alt'></i> Delete</a>
-                                                </span>
+                                                <!--</span>-->
                                             </div>
                                         </div>
                                     </td>

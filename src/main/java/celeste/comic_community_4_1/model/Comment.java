@@ -1,6 +1,5 @@
 package celeste.comic_community_4_1.model;
 
-import celeste.comic_community_4_1.model.EmbeddedClasses.PostIndentity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
