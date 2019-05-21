@@ -64,25 +64,33 @@
 <div style="height: 2.75em;"></div>
 <!---------------------------------------->
 <!---------------------------------------->
-<table class="mainContent webfont" style="border-spacing: 1em;">
-    <div id="zwibbler" style="background-color: white; margin-left:auto;margin-right:auto;border:2px solid red;width:1024px;height:768px;"></div> 
-    <zwibbler>
-        <button id="save-button"> save_button</button>
-        <button id="load-button"> load_button</button>
-        <button id="download-button"> download button</button>
-		<br>
-        <button id="select-button"> Select</button>
-        <button id="undo-button"> Undo</button>
-        <button id="redo-button"> Redo</button>
-        <button id="zoomin-button"> Zoomin</button>
-        <button id="zoomout-button"> Zoomout</button>
-        <button id="arrow-button"> Arrow</button>
-        <button id="rectangle-button"> Rectangle</button>
-        <button id="circle-button"> Circle</button>
-        <button id="line-button"> Line</button>
-        <button id="copy-button"> copy</button>
-        <button id="paste-button"> paste</button>
-
+<div id="zwibbler" style="" class="drawing-canvas"></div>
+<!--<div>-->
+<!--<zwibbler>-->
+<!--<button id="save-button">Save</button>-->
+<!--<button id="load-button">Load</button>-->
+<!--<button id="download-button">Download</button>-->
+<!--&lt;!&ndash;<button id="post-button"> post my work!</button>&ndash;&gt;-->
+<!--</zwibbler>-->
+<!--</div>-->
+<!-- Footer Banner -->
+<table class="footer webfont semibold" id="footer" style="padding: 0; margin: 0; border-spacing: 0;">
+    <tr>
+        <td style="text-align: left">
+            <button id="keyboardInfo-button" class="drawing-button" style="padding: 0 1.5em;">
+                <i class='fas fa-info-circle'></i>
+            </button>
+            <button id="load-button" style="padding: 0 1.5em;"
+                    class="drawing-button">Load From Server
+            </button>
+        </td>
+        <td style="text-align: right">
+            <button id="upload-button" class="drawing-button">Upload</button>
+            <button id="save-button" class="drawing-button">Save</button>
+            <button id="download-button" class="drawing-button">Download</button>
+        </td>
+    </tr>
+</table>
     </zwibbler>
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script> 
     <script src="http://zwibbler.com/zwibbler-demo.js"></script> 
@@ -166,6 +174,10 @@
 
     $('#paste-button').click(function(){
         ctx.paste(snippet);
+    });
+
+    $('#keyboardInfo-button').click(function () {
+        window.open("https://zwibbler.com/docs/#keyboard-configuration");
     });
 
     $('#upload-button').click(function () {

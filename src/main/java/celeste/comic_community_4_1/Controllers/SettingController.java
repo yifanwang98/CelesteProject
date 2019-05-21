@@ -413,7 +413,9 @@ public class SettingController {
             seriesRepository.delete(series);
         }
 
-        drawingSavingRepository.delete(drawingSavingRepository.findDrawingSavingByUserone(user));
+        DrawingSaving saving = drawingSavingRepository.findDrawingSavingByUserone(user);
+        if (saving != null)
+            drawingSavingRepository.delete(saving);
         List<Work> workList = workRepository.findByUserUsername(username);
         for (Work work : workList)
             workRepository.delete(work);

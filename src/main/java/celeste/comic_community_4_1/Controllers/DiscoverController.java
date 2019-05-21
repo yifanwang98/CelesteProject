@@ -94,12 +94,13 @@ public class DiscoverController {
 
         //All the post by this user
         List<Post> postList;
-        List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
+//        List<SearchWords> wordsList = searchWordsRepository.findTop10ByOrderByHeatDesc();
 
         postList = postRepository.findPostsByCreatedAtAfterAndIsRepostAndUserIsNot(Notification.getDaysBefore(30), false, user);
 
-        HashMap<Post, Integer> postHashMap = new HashMap<>();
-        String ww;
+        List<Post> tempPostList = new ArrayList<>();
+//        HashMap<Post, Integer> postHashMap = new HashMap<>();
+//        String ww;
         for (Post post : postList) {
             if (followRepository.existsFollowByFollowIndentityUseroneAndFollowIndentityUsertwo(user, post.getUser()))
                 continue;
@@ -108,32 +109,44 @@ public class DiscoverController {
             if (likeRepository.existsLikeByPostIndentityPostAndPostIndentityUser(post, user))
                 continue;
 
-            int heat = 0;
-
-            for (SearchWords sw : wordsList) {
-                ww = sw.getWord().toLowerCase();
-                if (post.getPostComment().toLowerCase().contains(ww))
-                    heat -= 1;
-                if (post.getUser().getUsername().toLowerCase().contains(ww))
-                    heat -= 1;
-            }
-
-            heat -= starRepository.countStarByPostIndentityPost(post) / 2;
-            heat -= likeRepository.countLikeByPostIndentityPost(post) / 2;
-
-            postHashMap.put(post, heat);
-        }
-
-        List<Map.Entry<Post, Integer>> list = new ArrayList<>(postHashMap.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-
-        postList.clear();
-
-        for (Map.Entry<Post, Integer> entry : list) {
-            postList.add(entry.getKey());
-            if (postList.size() >= 50)
+            tempPostList.add(post);
+            if (tempPostList.size() > 60)
                 break;
+//
+//            int heat = 0;
+//
+//            for (SearchWords sw : wordsList) {
+//                ww = sw.getWord().toLowerCase();
+//                if (post.getPostComment().toLowerCase().contains(ww))
+//                    heat -= 1;
+//                if (post.getUser().getUsername().toLowerCase().contains(ww))
+//                    heat -= 1;
+//            }
+//
+//            heat -= starRepository.countStarByPostIndentityPost(post) / 2;
+//            heat -= likeRepository.countLikeByPostIndentityPost(post) / 2;
+//
+//            postHashMap.put(post, heat);
         }
+
+        Collections.sort(tempPostList, new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+            }
+        });
+
+//        List<Map.Entry<Post, Integer>> list = new ArrayList<>(postHashMap.entrySet());
+//        list.sort(Map.Entry.comparingByValue());
+
+//        postList.clear();
+        postList = tempPostList;
+
+//        for (Map.Entry<Post, Integer> entry : list) {
+//            postList.add(entry.getKey());
+//            if (postList.size() >= 100)
+//                break;
+//        }
         // Organize Info
         int endIndex = 2;
         if (endIndex > postList.size())
