@@ -91,20 +91,90 @@
         </td>
     </tr>
 </table>
-
-<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-<script src="http://zwibbler.com/zwibbler-demo.js"></script>
-<script type="text/javascript">
-    var ctx = Zwibbler.create("zwibbler", {
+    </zwibbler>
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script> 
+    <script src="http://zwibbler.com/zwibbler-demo.js"></script> 
+    <script type="text/javascript"> 
+        var ctx = Zwibbler.create("zwibbler", {
         showPropertyPanel: true,
         showPageSelector: true,
         showShapeBrushTool: true,
         defaultBrushWidth: 2,
         background: "white"
     });
-
+    
+	
     loadDrawing();
-    setTimeout(autoSave, 1000 * 60);
+    // set autosve.   60sec 
+    setTimeout( autoSave, 1000 * 60 ); 
+	
+	$('#select-button').click(function(){
+        var nodes = ctx.findNodes("treasure-markers");
+        ctx.selectNodes(nodes);
+    });
+
+    $('#undo-button').click(function(){
+        ctx.undo();
+    });
+
+    $('#redo-button').click(function(){
+        ctx.redo();
+    });
+
+    $('#zoomin-button').click(function(){
+        ctx.zoomIn();
+    });
+
+    $('#zoomout-button').click(function(){
+        ctx.zoomOut();
+    });
+
+    $('#brush-button').click(function(){
+        ctx.useBrushTool({
+            lineWidth: 10, // optional
+        });
+    });
+
+    $('#eraser-button').click(function(){
+        ctx.useBrushTool({
+            lineWidth: 10, // optional
+            strokeStyle: "erase"
+        });
+    });
+
+    $('#arrow-button').click(function(){
+        ctx.useArrowTool({
+            arrowStyle: "solid",
+            doubleArrow: true
+        }); 
+    });
+
+    $('#rectangle-button').click(function(){
+        ctx.useRectangleTool();
+    });
+
+    $('#circle-button').click(function(){
+        ctx.useCircleTool();
+    });
+    
+    $('#line-button').click(function(){
+        ctx.useLineTool({
+            lineWidth: 5
+        }, {
+            singleLine: true
+        });
+    });
+
+    $('#copy-button').click(function(){
+        // Copy and paste the current page, creating a duplicate page.
+        var node = ctx.getPageNode(ctx.getCurrentPage());
+        var snippet = ctx.copy(true, [node]);
+    
+    });
+
+    $('#paste-button').click(function(){
+        ctx.paste(snippet);
+    });
 
     $('#keyboardInfo-button').click(function () {
         window.open("https://zwibbler.com/docs/#keyboard-configuration");
