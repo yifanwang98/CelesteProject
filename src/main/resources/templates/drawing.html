@@ -77,7 +77,10 @@
 <table class="footer webfont semibold" id="footer" style="padding: 0; margin: 0; border-spacing: 0;">
     <tr>
         <td style="text-align: left">
-            <button id="load-button"
+            <button id="keyboardInfo-button" class="drawing-button" style="padding: 0 1.5em;">
+                <i class='fas fa-info-circle'></i>
+            </button>
+            <button id="load-button" style="padding: 0 1.5em;"
                     class="drawing-button">Load From Server
             </button>
         </td>
@@ -102,6 +105,10 @@
 
     loadDrawing();
     setTimeout(autoSave, 1000 * 60);
+
+    $('#keyboardInfo-button').click(function () {
+        window.open("https://zwibbler.com/docs/#keyboard-configuration");
+    });
 
     $('#upload-button').click(function () {
         saveDrawing();

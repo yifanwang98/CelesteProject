@@ -44,7 +44,7 @@ public class DiscoverHTML {
         for (String tag : postData.postTags) {
             sb.append("<a style=\"text-decoration: none\" href=\"/hashtag?tag=");
             sb.append(tag).append("\"><span class=\"post-genre-text\">#");
-            sb.append(tag).append("</span></a>");
+            sb.append(tag).append(" </span></a>");
         }
 
         sb.append("</td></tr>");

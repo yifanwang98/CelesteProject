@@ -47,6 +47,7 @@ public class PaymentController {
     public String pay(HttpServletRequest request) {
         String cancelUrl = URLUtils.getBaseURl(request) + "/" + PAYPAL_CANCEL_URL;
         String successUrl = URLUtils.getBaseURl(request) + "/" + PAYPAL_SUCCESS_URL;
+        System.out.println(successUrl);
         try {
             Payment payment = paypalService.createPayment(
                     9.99,
@@ -56,6 +57,7 @@ public class PaymentController {
                     "payment description",
                     cancelUrl,
                     successUrl);
+            System.out.println("im in try");
             for (Links links : payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
                     return "redirect:" + links.getHref();
@@ -78,10 +80,10 @@ public class PaymentController {
         try {
             Payment payment = paypalService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-
                 // Blocked User
                 user.setMembership("1");
                 userRepository.save(user);
+                System.out.println("Im in success-> try");
             }
         } catch (PayPalRESTException e) {
             log.error(e.getMessage());
