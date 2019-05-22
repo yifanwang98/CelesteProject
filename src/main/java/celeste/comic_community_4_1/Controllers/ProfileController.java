@@ -583,7 +583,9 @@ public class ProfileController {
             if (total != 0) {
                 Post tempPost = postRepository.findFirstByPrimaryGenreOrSecondaryGenre(genreName, genreName);
                 if (tempPost != null) {
-                    genreCover = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID()).getPostIndentity().getWork().getThumbnail();
+                    PostContent tempPostContent = postContentRepository.findFirstByPostIndentityPostPostID(tempPost.getOriginalPostID());
+                    if(tempPostContent != null)
+                        genreCover = tempPostContent.getPostIndentity().getWork().getThumbnail();
                 }
                 if (genreCover == null) {
                     Series tempSeries = seriesRepository.findFirstBySecondaryGenreOrPrimaryGenre(genreName, genreName);
