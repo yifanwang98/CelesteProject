@@ -223,26 +223,31 @@ public class MainPageController {
     public String firstLogin(@RequestParam(value = "username", required = false) String username,
                              @RequestParam(value = "password", required = false) String password,
                              ModelMap model, HttpServletRequest request) throws Exception {
-        if (password != null && password.length() > 0) {
-            if (!userRepository.existsById(username)) {
-                model.addAttribute("errors", "This username doesn't exist.");
-                return "index";
+        try{
+            if (password != null && password.length() > 0) {
+                if (!userRepository.existsById(username)) {
+                    model.addAttribute("errors", "This username doesn't exist.");
+                    return "index";
+                }
+                User user = userRepository.findUserByUsername(username);
+                password = PasswordChecker.encryptSHA512(password);
+                if (!password.equals(user.getPassword())) {
+                    model.addAttribute("errors", "Your password is incorrect.");
+                    return "index";
+                }
+                request.getSession().setAttribute("username", username);
+                request.getSession().setAttribute("password", password);
             }
-            User user = userRepository.findUserByUsername(username);
-            password = PasswordChecker.encryptSHA512(password);
-            if (!password.equals(user.getPassword())) {
-                model.addAttribute("errors", "Your password is incorrect.");
-                return "index";
-            }
-            request.getSession().setAttribute("username", username);
-            request.getSession().setAttribute("password", password);
-        }
 
-        if (request.getSession().getAttribute("username") == null) {
+            if (request.getSession().getAttribute("username") == null) {
+                return "index";
+            }
+
+            return mainPage(model, request);
+        }catch (Exception e){
             return "index";
         }
 
-        return mainPage(model, request);
     }
 
     @PostMapping("signOut")

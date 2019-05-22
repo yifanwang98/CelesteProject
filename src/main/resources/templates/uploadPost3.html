@@ -14,17 +14,22 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <!-- Script -->
-    <script src="http://code.jquery.com/jquery-1.5.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
-        function countChar(val) {
-            var len = val.value.length;
-            var newLines = val.value.match(/(\r\n|\n|\r)/g);
-            var addition = 0;
-            if (newLines != null) {
-                addition = newLines.length;
-            }
-            $('#charCount').text(len + addition);
-        };
+        $(document).ready(function(){
+            $('#description_ta').on("input propertychange",function() {
+                var val = this;
+                var len = val.value.length;
+                var newLines = val.value.match(/(\r\n|\n|\r)/g);
+                var addition = 0;
+                if (newLines != null) {
+                    addition = newLines.length;
+                }
+                $('#charCount').text(len + addition);
+            });
+        })
+
+
 
         function submitForm() {
             document.getElementById('uploading').style.display = '';
@@ -139,7 +144,7 @@
     <tr>
         <td>
             <textarea class="content-textarea webfont" placeholder="Enter Optional Text Here" maxlength="140"
-                      name="description" form="uploadPostInfo" onkeyup="countChar(this)" id="description_ta"></textarea>
+                      name="description" form="uploadPostInfo"  id="description_ta"></textarea>
         </td>
     </tr>
     <tr>
